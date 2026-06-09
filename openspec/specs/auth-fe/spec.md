@@ -1,0 +1,447 @@
+## Purpose
+
+Auth core frontend の要件を定義し、低強調ログイン導線、パスキー専用ログイン、復旧専用 route、no-store auth route、logout と session-expiry の遷移、ブランド制約、ULID 識別子方針を扱う。
+
+## Requirements
+
+### Requirement: 低強調のパスキーログイン導線を提供する
+
+低強調のパスキーログイン導線は、公開面の主要 CTA を保ったまま passkey-only な `/login` へ到達できる体験を SHALL 提供しなければならない。
+
+**Customer Context**
+
+公開面は社外向けの発信サイトとして見せつつ、社内利用者は同じドメインから認証面へ入れる必要があります。企画書とサイトマップは、公開面で内部文脈を露出せず、ログイン導線を低強調に保ちながら、`/login` ではパスキーだけで認証を始められることを求めています。
+
+**Requirement**
+
+- システムは public-to-login handoff を低強調に保ち、`/login` を passkey-only sign-in surface として提示しなければならない（SHALL/MUST）。
+- public surface のログイン handoff は、補助ナビゲーションまたはフッターに留まる低強調導線を SHALL 保ち、主要 CTA や hero action に拡張してはならない。
+- `/login` route は、passkey sign-in action、`/login/recovery` への recovery link、公開面へ戻る導線を持つ passkey 専用 sign-in 画面を SHALL 表示する。
+- `/login` route で認証が成功した後の client auth state は、HttpOnly Cookie credential と session-bound CSRF token で `/api/v1/*` を利用できる Web Cookie session 契約に SHALL 接続される。
+- クライアントが保持・表示・遷移判定に使う `accountId`、`sessionId`、`passkeyCredentialId`、`recoverySessionId`、および auth notification / audit / action correlation ID などシステム所有の resource ID が必要な箇所は ULID を SHALL 前提とする。
+- `/login` route は、password input、password reset copy、invite registration control、Guest onboarding copy を表示してはならない（MUST NOT）。
+- 認証導線の画面は、`WitWire` 表記、IBM Plex Sans / IBM Plex Sans JP、token-based color、8px grid、Flat & Bright、shadow / glow 禁止の brand system に SHALL 準拠する。
+
+#### Scenario: 公開面の低強調 handoff から `/login` へ到達する (AUTH-FE-S001)
+
+- **GIVEN** 利用者が低強調ログイン handoff を持つ公開ページを閲覧している
+- **WHEN** 利用者がその handoff から認証導線へ遷移する
+- **THEN** 利用者は主要 CTA を増やさずに `/login` へ到達する
+
+#### Scenario: ログイン画面はパスキー専用でサインインを提供する (AUTH-FE-S002)
+
+- **GIVEN** 利用者が `/login` を開く
+- **WHEN** ログイン画面が読み込まれる
+- **THEN** 画面には passkey sign-in action と recovery link が表示され、password entry や invite registration control は表示されない
+
+### Requirement: 復旧導線は既存アカウントの passkey 再登録だけを扱う
+
+復旧導線とデバイスリンク導線は、既存アカウントの passkey 登録だけを招待導線や規約同意導線と分離したまま SHALL 提供しなければならない。トークンの kind に応じて、復旧用と新端末追加用で完了後の体験を分岐する。
+
+**Customer Context**
+
+パスキーを紛失した利用者（kind=recovery）と、新端末でログインを有効にしたい利用者（kind=device-link）は、どちらも invite onboarding へ戻らずに、登録済みアカウントの passkey を安全に登録できる必要がある。同時にこれらの導線は、アカウント有無や招待状態を UI から推測できない体験でなければならない。また、kind に応じて登録完了後の説明文面が異なるため、UI は kind を認識して適切なメッセージを表示する必要がある。
+
+**Requirement**
+
+- システムは既存アカウント向けの recovery/device-link route family を提供し、invite onboarding と consent flow をこれらの route に混在させてはならない（SHALL/MUST）。
+- `/login/recovery` route は登録済みメールアドレスを受け取り、受理された依頼を `/login/recovery/sent` へ接続する recovery request を SHALL 送信できる。
+- `/login/recovery/sent` route は recovery URL を送信したことを SHALL 表示し、`/login` へ戻る導線を SHALL 提供する。
+- recovery request の結果表示は、アカウント有無、送信抑止、temporary lock を UI から判別できない共通の受理メッセージを SHALL 保つ。
+- `/login/recovery/consume` route は token を検証し、token の `kind` に応じて遷移先を分岐しなければならない（SHALL）。`kind=recovery` の場合は `/login/recovery/register` へ、`kind=device-link` の場合はデバイスリンク登録画面へ遷移する。
+- `/login/recovery/register` route は recovery/device-link branch のみを使って、既存アカウントに対する passkey 登録を SHALL 完了できる。登録完了後、kind に応じた完了メッセージを表示しなければならない。
+- 登録成功後の client auth state は、HttpOnly Cookie credential と session-bound CSRF token で `/api/v1/*` を利用できる Web Cookie session 契約に SHALL 接続される。
+- request / consume / register の view model、route state、navigation payload、toast / notice / telemetry payload などで ID が必要な箇所は ULID を SHALL 用い、UUID 前提の copy / mock / sample を残してはならない。
+- これらの routes は invitation token、invite consent、Guest onboarding copy、TermsConsent UI を表示・保存・参照してはならない（MUST NOT）。
+
+#### Scenario: 復旧依頼は送信完了画面へ進む (AUTH-FE-S003)
+
+- **GIVEN** 利用者が `/login/recovery` を開く
+- **WHEN** 利用者がメールアドレスを送信し、その依頼が受理される
+- **THEN** 体験は `/login/recovery/sent` に遷移し、アカウント有無を明かさない共通メッセージで recovery URL 送信を案内する
+
+#### Scenario: 有効な復旧リンク (kind=recovery) はパスキー再登録へ進む (AUTH-FE-S004)
+
+- **GIVEN** 利用者が kind=recovery の valid token 付きで `/login/recovery/consume` を開く
+- **WHEN** token validation が成功する
+- **THEN** 利用者は `/login/recovery/register` へ進み、invite onboarding UI や TermsConsent UI なしで既存アカウントの passkey を登録できる
+
+#### Scenario: 有効なデバイスリンク (kind=device-link) はパスキー登録へ進む (AUTH-FE-S038)
+
+- **GIVEN** 利用者が kind=device-link の valid token 付きで `/login/recovery/consume` を開く
+- **WHEN** token validation が成功する
+- **THEN** 利用者は device-link 用のパスキー登録画面へ進み、invite onboarding UI や TermsConsent UI なしで既存アカウントの passkey を登録できる
+
+#### Scenario: 無効な復旧リンクは再試行案内へ戻す (AUTH-FE-S005)
+
+- **GIVEN** 利用者が無効、期限切れ、または消費済みの token で `/login/recovery/consume` を開く
+- **WHEN** token validation が失敗する
+- **THEN** UI は登録 action を出さず、retry guidance と `/login/recovery` へ戻る導線を表示する
+
+### Requirement: auth routes は no-store な認証面として配信する
+
+auth routes は、edge / browser cache から stale な認証 UI や session-bound state を再提示しない no-store surface として SHALL 配信されなければならない。
+
+**Customer Context**
+
+Auth コアは auth endpoint だけでなく auth route も no-store scope に含める前提で設計されています。`/login*` や `/logout` が cacheable になると、Cloudflare/WAF 配下や browser の戻る操作で古い認証状態が再表示され、session lifecycle と logout 導線の整合が崩れます。
+
+**Requirement**
+
+- システムは `/login`、`/login/recovery*`、`/logout` を no-store auth route として配信し、edge/browser cache が stale な auth entry state を再提示しないようにしなければならない（SHALL/MUST）。
+- `/login`, `/login/recovery`, `/login/recovery/sent`, `/login/recovery/consume`, `/login/recovery/register`, `/logout` route responses は auth endpoint と揃った no-store cache semantics を SHALL 保つ。
+- auth routes は公開検索面や cacheable bootstrap state に依存せず、直前の login / recovery / logout / device enablement intent を基準に最新の auth presentation を SHALL 表示する。
+- Secret-bearing route input は browser-visible URL、route state、telemetry、persistent storage に必要以上に保持してはならない（MUST NOT）。
+- Auth route presentation は account existence、token validity、temporary lock state、recovery token state を UI 文言から推測できない generic error semantics を SHALL 維持する。
+
+#### Scenario: auth routes は no-store surface として配信される (AUTH-FE-S009)
+
+- **GIVEN** 利用者が `/login`、`/login/recovery*`、または `/logout` を browser または edge 経由で開く
+- **WHEN** auth route response が配信される
+- **THEN** システムはその route を no-store auth surface として扱い、stale な auth UI や session-bound state を再利用しない
+
+### Requirement: session expiry と logout は未認証導線を明確に分離する
+
+session expiry と logout の導線は、expired / revoked session と missing session を区別しながら未認証状態への復帰導線を SHALL 提供しなければならない。
+
+**Customer Context**
+
+`/*` に入る基盤では、利用者が「未ログインなのか」「認証が切れたのか」を迷わないことが重要です。session expiry と logout の導線が曖昧だと、再認証、公開面への退避、エラー画面 owner の責務が混線します。
+
+**Requirement**
+
+- システムは expired / revoked session と missing session を区別し、logout は unauthenticated state へ遷移させなければならない（SHALL/MUST）。
+- 現在の session が有効である間、`/*` 上の authenticated navigation は SHALL 継続する。
+- 以前は有効だった session が expired または revoked と判定されたとき、クライアントは利用者を `/session-expired` へ SHALL 遷移させる。
+- `/session-expired` route の presentation は auth routes から独立した owner に保たれ、Auth コアは redirect trigger と route selection だけを SHALL 担当する。
+- 現在の Web Cookie session を持たない初回の `/*` アクセスは、通常の未認証ログイン導線へ SHALL 留まり、`/session-expired` と混同してはならない。
+- クライアントは browser-readable token を session credential として保持してはならず（MUST NOT）、tab または browser を閉じた後の再訪では refresh outcome に基づいて missing session と同じ `unauthenticated` 扱いへ SHALL 正規化し、`/session-expired` へ送ってはならない。
+- `/logout` route は現在の Web Cookie session を SHALL revoke し、クライアントが保持する session metadata と CSRF token を消去し、利用者を public route または login route の非認証状態へ戻す。
+- `/logout` route は public utility route として存在しても、logout 実行自体は canonical な `POST /api/v1/auth/logout` を呼び出して完了しなければならない（SHALL）。
+- logout / expiry handling でクライアントが参照する session ID、account ID、event ID、request ID、notification ID などの識別子が必要な箇所は ULID を SHALL 用い、opaque bearer token や cache key を ULID resource ID と混同してはならない。
+- `/logout` 導線は、invite onboarding や権限管理 copy を混在させない抑制された auth presentation を SHALL 保つ。
+
+#### Scenario: セッション失効時は再認証画面へリダイレクトする (AUTH-FE-S006)
+
+- **GIVEN** 利用者が `/*` 内で操作している
+- **WHEN** 現在の session が expired または revoked として報告される
+- **THEN** 利用者は `/session-expired` へ遷移し、その後の画面 presentation はその route contract に委ねられる
+
+#### Scenario: logout は利用者を非認証 route へ戻す (AUTH-FE-S007)
+
+- **GIVEN** 利用者が active な authenticated session を持っている
+- **WHEN** 利用者が `/logout` を開く
+- **THEN** Web Cookie session state は消去され、利用者は signed in として振る舞わない public route または login route に到達する
+
+#### Scenario: session を持たない `/*` 到達は通常の未認証導線に留まる (AUTH-FE-S008)
+
+- **GIVEN** 利用者が有効な Web Cookie session を持たずに `/*` を開く
+- **WHEN** app が current session の不在を検知する
+- **THEN** 利用者は通常の login 導線へ進み、`/session-expired` へは遷移しない
+
+### Requirement: 認証済みユーザーはアプリ内でパスキーを一覧・追加・削除できる
+
+利用者は MacBook・iPhone・セキュリティキーなど複数のデバイスでパスキーを使い分けたい。また、古いデバイスや紛失したデバイスのパスキーを削除して鍵を整理したい。登録済みパスキーを確認・追加・削除できる管理画面が必要である。さらに、新しい端末でログインを有効にするためのデバイスリンク送信機能も提供しなければならない（SHALL）。
+
+**Requirement**
+
+- システムは認証済みアプリ内にパスキー管理ページを SHALL 提供し、登録済みのすべての passkey credential の識別子と登録日時を一覧表示しなければならない。
+- パスキー管理ページは新しいパスキーを追加する WebAuthn 登録フローを SHALL 提供しなければならない（`POST /api/v1/passkeys/start` → `POST /api/v1/passkeys/finish`）。
+- パスキー管理ページは「新しい端末でログインを有効にする」アクションを SHALL 提供しなければならない。このアクションは既存パスキーによる WebAuthn 再認証を完了してから `POST /api/v1/passkeys/send-device-link` 経由で登録メールアドレスへのデバイスリンク送信を依頼する。再認証成功後に取得した reauthentication session ID は `X-Reauth-Session` HTTP header に設定して送信する。
+- UI は「パスキーを追加」や「credential」などの技術用語を主要 action label として使用せず、新しい端末でログインできるようにする目的を SHALL 表示する。
+- デバイスリンク送信後、UI は登録メールアドレスへ送信されたこと、有効期限（30分）、第三者に共有しないことを SHALL 案内する。平文トークンは API response や UI に表示してはならない。
+- パスキー管理ページは指定したパスキーを削除するアクションを SHALL 提供しなければならない（`DELETE /api/v1/passkeys/{id}`）。
+- passkey credential が 1 件しかない場合、削除アクションは SHALL 無効化または非表示にしなければならない。
+- パスキー追加フロー、デバイスリンク送信フロー、または削除フローでエラーが発生した場合は、エラーメッセージを SHALL 表示し、ページ状態を保持しなければならない。
+- 管理ページは Web Cookie session を必須とする認証済み surface であり、未認証アクセスは SHALL 拒否されなければならない。
+- 管理ページは `WitWire` ブランドシステム（M PLUS 1 / Noto Sans JP / IBM Plex Mono、token-based color、8px grid、Flat & Bright、shadow/glow 禁止）に SHALL 準拠する。
+- view model・route state・correlation ID など ID が必要な箇所は ULID を SHALL 使用しなければならない。
+
+#### Scenario: パスキー管理ページで登録済みパスキーを確認できる (AUTH-FE-S010)
+
+- **GIVEN** 利用者が認証済み状態でパスキー管理ページを開く
+- **WHEN** ページが読み込まれる
+- **THEN** 登録済みのすべてのパスキーの識別子と登録日時が一覧表示される
+
+#### Scenario: 新しいパスキーを追加できる (AUTH-FE-S011)
+
+- **GIVEN** 利用者がパスキー管理ページにいる
+- **WHEN** 「パスキーを追加」アクションを起動し WebAuthn 登録フローを完了する
+- **THEN** 新しいパスキーが一覧に追加され、既存のパスキーは変化しない
+
+#### Scenario: パスキーを削除できる (AUTH-FE-S012)
+
+- **GIVEN** 利用者が 2 件以上のパスキーを持つ状態でパスキー管理ページにいる
+- **WHEN** 特定のパスキーの削除アクションを実行する
+- **THEN** そのパスキーが一覧から削除され、残りのパスキーは変化しない
+
+#### Scenario: 最後の 1 件のパスキーは削除アクションが無効化される (AUTH-FE-S013)
+
+- **GIVEN** 利用者が passkey credential を 1 件だけ持つ状態でパスキー管理ページにいる
+- **WHEN** ページが表示される
+- **THEN** そのパスキーの削除アクションは無効化または非表示になっており、操作できない
+
+#### Scenario: パスキー追加フロー中にエラーが発生した場合は通知される (AUTH-FE-S014)
+
+- **GIVEN** 利用者がパスキー管理ページでパスキー追加フローを開始している
+- **WHEN** WebAuthn 操作がキャンセルまたは失敗する
+- **THEN** エラーメッセージが表示され、利用者はパスキー管理ページに留まる
+
+#### Scenario: パスキー削除フロー中にエラーが発生した場合は通知される (AUTH-FE-S015)
+
+- **GIVEN** 利用者がパスキー管理ページでパスキー削除アクションを実行している
+- **WHEN** API がエラーを返す
+- **THEN** エラーメッセージが表示され、一覧の状態は変化しない
+
+#### Scenario: パスキー管理ページでデバイスリンクを送信できる (AUTH-FE-S035)
+
+- **GIVEN** 利用者が認証済み状態でパスキー管理ページを開いている
+- **WHEN** 「新しい端末でログインを有効にする」アクションを起動する
+- **THEN** UI は WebAuthn 再認証を求め、成功後に登録メールアドレスへデバイスリンクを送信し、送信完了・有効期限・共有禁止の案内を表示する
+
+#### Scenario: WebAuthn assertion request と attestation request は userVerification required を使用する (AUTH-FE-S037)
+
+- **GIVEN** login または registration ceremony が開始されている
+- **WHEN** クライアントが WebAuthn options を構築する
+- **THEN** `userVerification` は `"required"` に設定され、`"preferred"` や `"discouraged"` は使用されない
+
+### Requirement: 認証 UI は secret leakage を抑える security presentation を提供する
+
+認証 UI は secret-bearing route input、auth state、telemetry、visible error message から credential secret が漏えいしない security presentation を提供しなければならない（MUST）。
+
+**Customer Context**
+
+認証画面では Web Cookie session metadata、CSRF token、recovery token、device login code などの機微情報が一時的に扱われる。利用者が browser history、Referer、画面共有、戻る操作、キャッシュ、XSS の影響を受けにくい体験を得るためには、UI と client state が secret を長く保持せず、表示やエラー文言から認証状態を推測できない必要がある。
+
+**Requirement**
+
+- システムは auth UI state、navigation state、history、telemetry、visible error message における secret exposure を最小化しなければならない。
+- `/login/recovery/consume` route は URL から recovery token を読み取った後、token を browser-visible URL から SHALL 即時除去する。
+- Auth UI は recovery token、OTP、bearer token、WebAuthn raw credential data を telemetry attribute、console output、visible debug UI、persistent route state に MUST 保存しない。
+- Auth routes と protected app routes は no-store と、`Content-Security-Policy`、`Strict-Transport-Security`、`Referrer-Policy`、`X-Content-Type-Options`、frame embedding prevention を含む browser security headers を持つ形で配信または deployment-configure されなければならない。
+- Client auth state persistence は bearer token の漏えいリスクを最小化し、browser close 後に session を復元しない auth contract を維持しなければならない。
+- Secret-bearing UI は copy/paste や画面表示が必要な場合でも TTL、用途、再発行導線、共有禁止の案内を SHALL 表示する。
+
+#### Scenario: recovery token は browser-visible URL から除去される (AUTH-FE-S019)
+
+- **GIVEN** 利用者が recovery token 付き URL で `/login/recovery/consume` を開いている
+- **WHEN** クライアントが token を読み取って consume request を開始する
+- **THEN** token は browser address bar と subsequent navigation URL から除去される
+
+#### Scenario: auth routes は security headers と no-store semantics を持つ (AUTH-FE-S020)
+
+- **GIVEN** 利用者が `/login`、`/login/recovery*`、`/logout`、または authenticated app route を開いている
+- **WHEN** route response が配信される
+- **THEN** route は no-store と browser security header semantics を持ち、stale auth UI や secret-bearing URL を replay しない
+
+### Requirement: 新端末からトークン型のデバイスリンクでパスキーを追加できる
+
+新端末の利用者は、メールで受信したデバイスリンク URL をクリックし、kind=device-link の token を消費した後、WebAuthn 登録フローを完了することでパスキーを追加できなければならない（SHALL）。UI は token の正当性を推測できない generic なエラーハンドリングを提供する。
+
+**Customer Context**
+
+新端末でログインできるようにしたい利用者は、6 桁のコードを手入力する必要なく、メール内のリンクをクリックするだけでパスキー登録を開始できる。登録が完了すると、kind=recovery の復旧とは異なり既存のセッションは維持される。
+
+**Requirement**
+
+- デバイスリンク URL の消費ページ（`/login/recovery/consume`）は、token 消費後に kind=device-link であることを認識し、適切な登録画面へ遷移しなければならない（SHALL）。
+- デバイスリンク用のパスキー登録画面は、WebAuthn 登録フロー（`navigator.credentials.create()` → `POST /api/v1/auth/passkey/register`）を SHALL 提供する。
+- 登録成功後、UI は「新しい端末でログインできるようになりました」という kind=device-link 用の完了メッセージを表示しなければならない。
+- 登録成功後、UI はログイン状態へ遷移しなければならない（SHALL transition to authenticated state）。
+- WebAuthn 操作のキャンセルまたは失敗時は、token の状態を露出しない generic なエラーメッセージを SHALL 表示し、再試行を可能にしなければならない。
+- token が無効・期限切れ・消費済みの場合、email の登録有無や token の正否を示さない generic なエラーメッセージを SHALL 表示する。
+- URL から token を読み取った後、token は browser-visible URL から SHALL 即時除去する。
+- token は persistent storage、telemetry、URL query に MUST 保存しない。
+
+#### Scenario: デバイスリンク URL から token を消費してパスキーを登録できる (AUTH-FE-S039)
+
+- **GIVEN** 利用者が新端末でデバイスリンク URL を開いている
+- **WHEN** token 消費が成功し WebAuthn 登録フローを完了する
+- **THEN** ログイン状態になり、「新しい端末でログインできるようになりました」と表示される
+
+#### Scenario: デバイスリンクの token が無効な場合は generic エラーが表示される (AUTH-FE-S040)
+
+- **GIVEN** 利用者が新端末で無効なデバイスリンク URL を開いている
+- **WHEN** token 消費が失敗する
+- **THEN** generic エラーメッセージが表示され、登録フローは開始されない
+
+#### Scenario: デバイスリンク URL の token は browser URL から除去される (AUTH-FE-S019)
+
+- **GIVEN** 利用者が token 付き URL で consume ページを開いている
+- **WHEN** クライアントが token を読み取って consume request を開始する
+- **THEN** token は browser address bar と subsequent navigation URL から除去される
+
+### Requirement: クライアントは JWT アクセストークンの有効期限を監視し自動更新する
+
+クライアントは Web Cookie session の有効性を server response と refresh endpoint で確認し、JavaScript から access credential を読まずに session を継続しなければならない（MUST）。クライアントは refreshToken を JavaScript から読める memory、localStorage、sessionStorage、IndexedDB、URL、telemetry、log に保存してはならない（MUST NOT）。refreshToken は `HttpOnly; Secure; SameSite=Lax` Cookie として browser に保持され、refresh request は same-origin `/api/v1/auth/refresh` に credentials を含めて送信されなければならない（SHALL）。refresh 成功時、クライアントは response body の session metadata と CSRF token を memory state に反映し、refreshToken Cookie の rotation は server response に委ねなければならない（MUST）。
+
+**Customer Context**
+
+利用者は操作中に認証が突然切れてデータを失う体験を避けたい。一方で refreshToken を JavaScript から読める場所に保持すると XSS 時の token 窃取リスクが高い。accessToken だけをブラウザーから読める state とし、refreshToken は HttpOnly Cookie に閉じることで安全性と継続利用を両立する。
+
+#### Scenario: 期限切れ間近の accessToken は Cookie refresh で更新される (AUTH-FE-S045)
+
+- **GIVEN** クライアントが有効期限まで 1 分未満の accessToken を保持している
+- **WHEN** 保護された API を呼び出そうとする
+- **THEN** クライアントは先に credentials を含めて `POST /api/v1/auth/refresh` を実行する
+- **AND** response body の session metadata と CSRF token を反映して API を呼び出す
+
+#### Scenario: refreshToken はブラウザーから読める storage に保存されない (AUTH-FE-S046)
+
+- **GIVEN** 利用者が login または refresh に成功する
+- **WHEN** client auth state、localStorage、sessionStorage、IndexedDB、URL state を確認する
+- **THEN** refreshToken 平文は存在せず、accessToken と session metadata だけがブラウザーから読める state に存在する
+
+#### Scenario: refresh 失敗時は対象 session だけを失効扱いにする (AUTH-FE-S047)
+
+- **GIVEN** クライアントが複数 session を保持している
+- **WHEN** 1 つの session の refresh request が失敗する
+- **THEN** クライアントは対象 session だけを失効扱いにし、他 session の session metadata は維持する
+
+### Requirement: クライアントは複数アカウントのセッションを同時に保持・切り替えできる
+
+クライアントは Product Web の Cookie session を 1 つの active session として扱い、browser-readable credential を使った複数 session switching を提供してはならない（MUST NOT）。ログイン成功時、クライアントは response body の session metadata と CSRF token を active session state として保持しなければならない（MUST）。refreshToken は HttpOnly Cookie としてサーバーが管理するため、クライアントの session state に refreshToken 平文を含めてはならない（MUST NOT）。保護された API 呼び出しは browser が送信する HttpOnly Cookie と memory state の CSRF token を使用しなければならない（MUST）。refresh が必要な場合、クライアントは same-origin refresh request を送り、サーバーに Cookie binding の検証と rotation を委ねなければならない（SHALL）。
+
+**Customer Context**
+
+複数アカウントを運用する利用者にとって、都度ログインし直さずに account を切り替えられる体験は必須である。同時に refreshToken をブラウザーから読める state に入れないことで、XSS 時の被害範囲を抑える。
+
+#### Scenario: ログイン成功時は active Cookie session metadata を置き換える (AUTH-FE-S048)
+
+- **GIVEN** 利用者が account A で既に login している
+- **WHEN** 利用者が account B で login する
+- **THEN** account B の session metadata と CSRF token が active session state を置き換える
+- **AND** refreshToken 平文は client state に含まれない
+
+#### Scenario: Product Web ではアカウント切り替え UI を表示しない (AUTH-FE-S049)
+
+- **GIVEN** Product Web が authenticated state にいる
+- **WHEN** 認証済みアプリ画面が表示される
+- **THEN** UI は複数アカウント切り替えコントロールを表示しない
+
+#### Scenario: logout は対象 session の Cookie revoke を server に依頼する (AUTH-FE-S050)
+
+- **GIVEN** クライアントが account A と account B の session を保持している
+- **WHEN** account A をアクティブにして logout する
+- **THEN** クライアントは active session state を削除し、サーバーは active session の refreshToken Cookie binding を revoke する
+- **AND** account B の session state は維持される
+
+### Requirement: session expiry と logout は未認証導線を明確に分離する
+
+session expiry と logout の導線は、expired / revoked session と missing session を区別しながら未認証状態への復帰導線を SHALL 提供しなければならない。
+
+**Customer Context**
+
+`/*` に入る基盤では、利用者が「未ログインなのか」「認証が切れたのか」を迷わないことが重要です。session expiry と logout の導線が曖昧だと、再認証、公開面への退避、エラー画面 owner の責務が混線します。JWT アクセストークンの導入により、クライアントは期限切れを事前に検知できるようになり、より滑らかなセッション遷移が可能になる。
+
+**Requirement**
+
+- システムは expired / revoked session と missing session を区別し、logout は unauthenticated state へ遷移させなければならない（SHALL/MUST）。
+- 現在の session が有効である間、`/*` 上の authenticated navigation は SHALL 継続する。
+- 以前は有効だった session が expired または revoked と判定されたとき、クライアントは利用者を `/session-expired` へ SHALL 遷移させる。
+- `/session-expired` route の presentation は auth routes から独立した owner に保たれ、Auth コアは redirect trigger と route selection だけを SHALL 担当する。
+- 現在の Web Cookie session を持たない初回の `/*` アクセスは、通常の未認証ログイン導線へ SHALL 留まり、`/session-expired` と混同してはならない。
+- クライアントは browser-readable token を session credential として保持してはならず（MUST NOT）、tab または browser を閉じた後の再訪では refresh outcome に基づいて missing session と同じ `unauthenticated` 扱いへ SHALL 正規化し、`/session-expired` へ送ってはならない。
+- `/logout` route は現在の active セッションを SHALL revoke し、クライアントが保持する Web Cookie session state を消去し、利用者を public route または login route の非認証状態へ戻す。
+- `/logout` route は public utility route として存在しても、logout 実行自体は canonical な `POST /api/v1/auth/logout` を呼び出して完了しなければならない（SHALL）。
+- logout / expiry handling でクライアントが参照する session ID、account ID、event ID、request ID、notification ID などの識別子が必要な箇所は ULID を SHALL 用い、opaque bearer token や cache key を ULID resource ID と混同してはならない。
+- `/logout` 導線は、invite onboarding や権限管理 copy を混在させない抑制された auth presentation を SHALL 保つ。
+- JWT アクセストークンの期限切れを検知した場合、クライアントはまず `POST /api/v1/auth/refresh` を試行し、リフレッシュ成功時はセッションを継続し、失敗時のみ `/session-expired` へ遷移しなければならない（MUST）。
+
+#### Scenario: セッション失効時は再認証画面へリダイレクトする (AUTH-FE-S006)
+
+- **GIVEN** 利用者が `/*` 内で操作している
+- **WHEN** 現在の session が expired または revoked として報告される
+- **THEN** 利用者は `/session-expired` へ遷移し、その後の画面 presentation はその route contract に委ねられる
+
+#### Scenario: logout は利用者を非認証 route へ戻す (AUTH-FE-S007)
+
+- **GIVEN** 利用者が active な authenticated session を持っている
+- **WHEN** 利用者が `/logout` を開く
+- **THEN** Web Cookie session state は消去され、利用者は signed in として振る舞わない public route または login route に到達する
+
+#### Scenario: session を持たない `/*` 到達は通常の未認証導線に留まる (AUTH-FE-S008)
+
+- **GIVEN** 利用者が有効な Web Cookie session を持たずに `/*` を開く
+- **WHEN** app が current session の不在を検知する
+- **THEN** 利用者は通常の login 導線へ進み、`/session-expired` へは遷移しない
+
+#### Scenario: access token 期限切れ時にリフレッシュ成功でセッションを継続する (AUTH-FE-S032)
+
+- **GIVEN** 利用者が操作中でアクセストークンが期限切れになる
+- **WHEN** クライアントが `POST /api/v1/auth/refresh` を実行し成功する
+- **THEN** 利用者は `/session-expired` へ遷移せず、操作中の画面を継続する
+
+#### Scenario: refresh 失敗時のみ session-expired へ遷移する (AUTH-FE-S033)
+
+- **GIVEN** 利用者が操作中でアクセストークンが期限切れになる
+- **WHEN** クライアントが `POST /api/v1/auth/refresh` を実行し失敗する
+- **THEN** 利用者は `/session-expired` へ遷移する
+
+### Requirement: suspended account は認証 UI で安全に案内される
+
+顧客向け frontend は HTTP 403 の `AuthFailureResponse` として `error="account-suspended"` を受け取った場合、該当 account の Web Cookie session state を MUST 消去し、アカウントが利用できないこととサポート問い合わせ導線を SHALL 表示する。public login start や recovery request の段階では account existence や suspended 状態を UI に表示してはならない（MUST NOT）。passkey finish 後、refresh 後、または既存 session credential の protected API 呼び出しで `account-suspended` を受け取った場合のみ、suspended account 向け案内を表示してよい（SHALL）。Product Web は複数 account の browser-readable accessToken / refreshToken を保持してはならない（MUST NOT）。
+
+**Customer Context**
+
+停止された顧客はログインできない理由と次の行動を知る必要がある。一方で、ログイン前の public surface で suspended 状態を返すとアカウント有無の推測につながる。credential 所持または既存 session credential が確認された後だけ明確な案内を出すことで、セキュリティと利用者体験を両立する。
+
+#### Scenario: suspended account の passkey login は案内画面に遷移する (AUTH-FE-S041)
+
+- **GIVEN** 利用者が suspended account の valid passkey を持っている
+- **WHEN** `/login` で passkey 認証を完了し、API が `account-suspended` を返す
+- **THEN** クライアントは access token / refresh token を保存せず、account suspended 案内とサポート問い合わせ導線を表示する
+
+#### Scenario: 既存 Cookie session が suspended と判定された場合は該当 session state を消去する (AUTH-FE-S042)
+
+- **GIVEN** 利用者が authenticated app route を開いている
+- **WHEN** protected API が `account-suspended` を返す
+- **THEN** クライアントは該当 account の Web Cookie session state を消去し、account suspended 案内へ遷移する
+
+#### Scenario: public login start では suspended 状態を推測できない (AUTH-FE-S043)
+
+- **GIVEN** 利用者が `/login` で email または identifier を入力している
+- **WHEN** passkey start または recovery request が受理される
+- **THEN** UI は account existence や suspended 状態を示す文言を表示しない
+
+#### Scenario: suspended account の Cookie session は active session state を消去する (AUTH-FE-S044)
+
+- **GIVEN** Product Web が active Web Cookie session を保持している
+- **WHEN** account A の API 呼び出しだけが `account-suspended` を返す
+- **THEN** account A の token state は消去され、account B の token state は維持される
+
+### Requirement: 認証済みユーザーはログイン中のデバイスを確認・管理できる
+
+認証済みユーザーは、自身がログイン中のデバイス（セッション）一覧を確認し、特定デバイスまたは他のすべてのデバイスのセッションを無効化できなければならない（SHALL）。
+
+**Customer Context**
+
+利用者は、どのデバイスやブラウザから自分のアカウントにアクセスされているかを把握したい。紛失した端末や公共 PC でのログインを忘れた場合、そのセッションをリモートで無効化できる必要がある。さらに、不審なアクティビティを検知した際に「他のすべてのデバイスをログアウト」して自分が現在使っているデバイスだけを残すことで、迅速にセキュリティを確保したい。デバイス情報はブラウザ名やログイン時刻など、利用者が直感的に判断できる情報を含むべきである。
+
+**Requirement**
+
+- クライアントはデバイス管理ページ（または画面）を提供し、認証済みユーザーが `GET /api/v1/sessions` から取得したログイン中デバイス一覧を表示しなければならない（MUST）。
+- デバイス一覧には各セッションのデバイス名（ブラウザ名や OS 名、User-Agent 由来）、ログイン時刻、最終アクティブ時刻、現在のデバイスであるかのインジケーターを含めなければならない（MUST）。
+- 各デバイスには「ログアウト」アクションを提供し、クリック時に `DELETE /api/v1/sessions/{id}` を呼び出して該当セッションを無効化しなければならない（MUST）。
+- デバイス管理ページには「他のすべてのデバイスをログアウト」ボタンを提供し、クリック時に `DELETE /api/v1/sessions/others` を呼び出して現在のセッション以外を一括無効化しなければならない（MUST）。
+- 現在のセッションを無効化した場合、クライアントはそのセッションをメモリから除去し、未認証導線へ遷移しなければならない（MUST）。
+- デバイス管理操作の失敗時、クライアントは汎用的なエラーメッセージを表示し、セッション情報やトークンなどの機密データを永続ストレージに残してはならない（MUST NOT）。
+- デバイス一覧の取得および無効化操作は、アクティブなアクセストークンを用いて認証済みリクエストとして実行しなければならない（MUST）。
+
+#### Scenario: デバイス管理ページでログイン中のデバイスを確認できる (AUTH-FE-S034)
+
+- **GIVEN** 利用者が複数のデバイスでログインしている
+- **WHEN** 利用者がデバイス管理ページを開く
+- **THEN** ログイン中のデバイス一覧が表示され、各デバイスの名前、ログイン時刻、最終アクティブ時刻、現在のデバイスかどうかが確認できる
+
+#### Scenario: デバイス管理ページで特定デバイスをログアウトできる (AUTH-FE-S035)
+
+- **GIVEN** 利用者がデバイス管理ページを開いている
+- **WHEN** 利用者が特定デバイスの「ログアウト」アクションを実行する
+- **THEN** `DELETE /api/v1/sessions/{id}` が呼び出され、該当デバイスのセッションが無効化される。一覧から該当デバイスが除去される
+
+#### Scenario: デバイス管理ページで他のすべてのデバイスをログアウトできる (AUTH-FE-S036)
+
+- **GIVEN** 利用者がデバイス管理ページを開いている
+- **WHEN** 利用者が「他のすべてのデバイスをログアウト」ボタンをクリックする
+- **THEN** `DELETE /api/v1/sessions/others` が呼び出され、現在のデバイスを除くすべてのセッションが無効化される。一覧からそれらのデバイスが除去され、現在のデバイスのみが残る

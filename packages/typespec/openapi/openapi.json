@@ -1,0 +1,3617 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "www-template API",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "auth"
+    },
+    {
+      "name": "status"
+    },
+    {
+      "name": "account-settings"
+    },
+    {
+      "name": "app-auth"
+    }
+  ],
+  "paths": {
+    "/api/v1/account/settings": {
+      "get": {
+        "operationId": "getAccountSettings",
+        "summary": "Gets the current account settings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountSettingResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["account-settings"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateAccountSettings",
+        "summary": "Updates the current account settings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountSettingResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["account-settings"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAccountSettingRequest"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/contexts/{authContextId}/refresh": {
+      "post": {
+        "operationId": "refreshToken",
+        "summary": "Refreshes an access token for one auth context",
+        "parameters": [
+          {
+            "name": "authContextId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UlidId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BearerContextRefreshRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "operationId": "logout",
+        "summary": "Revokes the current bearer session",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app-auth"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/passkey/finish": {
+      "post": {
+        "operationId": "finishPasskeyAuthentication",
+        "summary": "Finishes passkey authentication and returns a credential-mode-specific session",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductAuthSessionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasskeyFinishRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/passkey/register": {
+      "post": {
+        "operationId": "registerPasskey",
+        "summary": "Finishes a passkey registration ceremony and issues a session",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductAuthSessionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasskeyRegisterRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/passkey/register/start": {
+      "post": {
+        "operationId": "startPasskeyRegistration",
+        "summary": "Starts a passkey registration ceremony using a recovery session",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasskeyAddStartResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasskeyRegisterStartRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/passkey/start": {
+      "post": {
+        "operationId": "startPasskeyAuthentication",
+        "summary": "Starts a passkey authentication ceremony",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasskeyStartResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasskeyStartRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/reauth/finish": {
+      "post": {
+        "operationId": "finishReauthentication",
+        "summary": "Finishes a WebAuthn reauthentication ceremony and issues a reauthentication session",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReauthenticationSessionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app-auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReauthenticationFinishRequest"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/reauth/start": {
+      "post": {
+        "operationId": "startReauthentication",
+        "summary": "Starts a WebAuthn reauthentication ceremony for a high-risk operation",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasskeyStartResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app-auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReauthenticationStartRequest"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/recovery": {
+      "post": {
+        "operationId": "requestPasskeyRecovery",
+        "summary": "Accepts a recovery request without revealing account existence",
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": "The request has been accepted for processing, but processing has not yet completed.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryAcceptedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/recovery/consume": {
+      "post": {
+        "operationId": "consumeRecoveryToken",
+        "summary": "Consumes a recovery token and issues a recovery session",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecoveryConsumeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryConsumeRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/passkeys": {
+      "get": {
+        "operationId": "listPasskeys",
+        "summary": "Lists registered passkeys for the current account",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasskeyListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app-auth"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/passkeys/finish": {
+      "post": {
+        "operationId": "finishPasskeyAddition",
+        "summary": "Finishes adding a passkey for the current account",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasskeyListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app-auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasskeyAddFinishRequest"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/passkeys/send-device-link": {
+      "post": {
+        "operationId": "sendDeviceLink",
+        "summary": "Sends a device-link URL to the registered email for adding a passkey on a new device",
+        "parameters": [
+          {
+            "name": "X-Reauth-Session",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceLinkResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthFailureResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app-auth"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/passkeys/start": {
+      "post": {
+        "operationId": "startPasskeyAddition",
+        "summary": "Starts adding a passkey for the current account",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasskeyAddStartResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app-auth"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/passkeys/{id}": {
+      "delete": {
+        "operationId": "deletePasskey",
+        "summary": "Deletes a registered passkey for the current account",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UlidId"
+            }
+          },
+          {
+            "name": "X-Reauth-Session",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. ",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server could not understand the request due to invalid syntax.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthFailureResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request conflicts with the current state of the server.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app-auth"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/sessions": {
+      "get": {
+        "operationId": "listSessions",
+        "summary": "Lists active sessions for the current account",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app-auth"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/sessions/others": {
+      "delete": {
+        "operationId": "revokeOtherSessions",
+        "summary": "Revokes all other sessions except the current one",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. ",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app-auth"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/sessions/{id}": {
+      "delete": {
+        "operationId": "revokeSession",
+        "summary": "Revokes a specific session by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UlidId"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. ",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access is unauthorized.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access is forbidden.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/AuthOperationErrorResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthFailureResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "headers": {
+              "Cache-Control": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": ["no-store"]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthFailureResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["app-auth"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/status": {
+      "get": {
+        "operationId": "getStatus",
+        "summary": "Returns API status",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["status"]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountDetailResponse": {
+        "type": "object",
+        "required": ["requestId", "account"],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "詳細取得 request に対応する canonical ULID の追跡 ID。"
+          },
+          "account": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountSummary"
+              }
+            ],
+            "description": "対象 Product Account の read model。"
+          }
+        },
+        "description": "account 詳細 API の response。"
+      },
+      "AccountListResponse": {
+        "type": "object",
+        "required": ["requestId", "accounts"],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "一覧取得 request に対応する canonical ULID の追跡 ID。"
+          },
+          "accounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountSummary"
+            },
+            "description": "検索条件に一致した Product Account の要約一覧。"
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "次ページが存在するときだけ返す opaque cursor。"
+          }
+        },
+        "description": "account 一覧 API の response。requestId は監査・追跡に使用し、accounts は account concept read model として返す。"
+      },
+      "AccountLocale": {
+        "type": "string",
+        "enum": ["ja", "en"],
+        "description": "Product Account が表示と通知に使用する保存済みロケール。運用者向け設定や画面一時状態ではなく、AccountSetting.locale の値だけを表す。"
+      },
+      "AccountSetting": {
+        "type": "object",
+        "required": ["locale"],
+        "properties": {
+          "locale": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountLocale"
+              }
+            ],
+            "description": "現在の Product Account に保存されている表示・通知ロケール。対応値は AccountLocale の ja または en のみ。"
+          }
+        },
+        "description": "Product Account に属する現在の設定。AccountSetting は Account の表示・通知設定を表し、Auth 情報や運用者向け設定を含まない。"
+      },
+      "AccountSettingResponse": {
+        "type": "object",
+        "required": ["requestId", "setting"],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "AccountSetting 取得または更新 request に対応する canonical ULID の追跡 ID。"
+          },
+          "setting": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountSetting"
+              }
+            ],
+            "description": "現在の Product Account に属する保存済み AccountSetting。"
+          }
+        },
+        "description": "現在の Product Account の AccountSetting を返すレスポンス。requestId は追跡用であり、setting には Account 本人の保存済み設定だけを含める。"
+      },
+      "AccountSettingSnapshot": {
+        "type": "object",
+        "required": ["locale"],
+        "properties": {
+          "locale": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountLocale"
+              }
+            ],
+            "description": "refresh response の合成時点で Product Account に保存されていた表示・通知ロケール。"
+          }
+        },
+        "description": "認証処理の合成結果として返す Product AccountSetting のスナップショット。refresh token rotation 自体は Auth が担当し、この snapshot は確定した AccountID から AccountSetting を読み込んだ結果だけを表す。"
+      },
+      "AccountStatus": {
+        "type": "string",
+        "enum": ["active", "suspended"],
+        "description": "Admin surface で表示・監査に使う Product Account の状態。Product domain の永続値を Admin API の read model として表すだけで、Admin 固有状態を混ぜない。"
+      },
+      "AccountSummary": {
+        "type": "object",
+        "required": ["accountId", "email", "status", "createdAt", "passkeyCount"],
+        "properties": {
+          "accountId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "対象 Product Account の canonical ULID。"
+          },
+          "email": {
+            "type": "string",
+            "description": "Product Account の canonical email address。"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountStatus"
+              }
+            ],
+            "description": "API が観測した Product Account lifecycle state。"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Product Account が作成された日時。"
+          },
+          "passkeyCount": {
+            "type": "integer",
+            "format": "int32",
+            "description": "対象 Product Account に登録済みの passkey 数。"
+          }
+        },
+        "description": "Account 一覧と詳細で返す Product Account の要約。Admin route から参照できる account concept model であり、Admin surface 固有の catch-all DTO ではない。"
+      },
+      "AuthFailureClassification": {
+        "type": "string",
+        "enum": [
+          "unauthenticated",
+          "session-expired",
+          "account-suspended",
+          "credential-ambiguous",
+          "invalid-refresh-credential",
+          "internal-error"
+        ],
+        "description": "認証・認可 failure を Product/Admin の両 artifact で同じ語彙に正規化する分類。"
+      },
+      "AuthFailureResponse": {
+        "type": "object",
+        "required": ["requestId", "error"],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "request に対応する canonical ULID の追跡 ID。"
+          },
+          "error": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AuthFailureClassification"
+              }
+            ],
+            "description": "client が fail-close 処理を選ぶための normalized failure classification。"
+          }
+        },
+        "description": "認証・認可 failure の共通 response。requestId と normalized error だけを返し、token や Cookie 値は含めない。"
+      },
+      "AuthOperationErrorResponse": {
+        "type": "object",
+        "required": ["requestId", "error"],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "request に対応する canonical ULID の追跡 ID。"
+          },
+          "error": {
+            "type": "string",
+            "description": "client が表示・分岐に使う error code。secret や token 値は含めない。"
+          }
+        },
+        "description": "入力不正や操作競合など、認証 credential 検証以外の operation error response。"
+      },
+      "BearerAuth": {
+        "type": "object",
+        "required": ["type", "scheme"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["http"],
+            "description": "Http authentication"
+          },
+          "scheme": {
+            "type": "string",
+            "enum": ["bearer"],
+            "description": "bearer auth scheme"
+          }
+        },
+        "description": "JWT 形式のアクセストークンを使用した Bearer 認証。Authorization ヘッダーに `Bearer <JWT>` を付与すること。トークンは短命の JWT であり、subject・sessionID・iat・exp を含む。"
+      },
+      "BearerAuthEnvelope": {
+        "type": "object",
+        "required": [
+          "requestId",
+          "credentialMode",
+          "authContextId",
+          "sessionId",
+          "accessToken",
+          "refreshToken",
+          "expiresAt"
+        ],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "認証 request に対応する canonical ULID の追跡 ID。"
+          },
+          "credentialMode": {
+            "type": "string",
+            "enum": ["bearer"],
+            "description": "external bearer mode で発行されたことを示す discriminator。"
+          },
+          "authContextId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "refreshToken と session metadata を束縛する auth context。"
+          },
+          "sessionId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "対象 session の canonical ULID。"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "protected API に Authorization Bearer として送信する短命 accessToken。"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "external client が body で保持し、context refresh で rotation する opaque refreshToken。"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "accessToken の失効日時。"
+          }
+        },
+        "description": "Bearer mode session / refresh response が共有する auth envelope。Cookie command や browser context index hint を持たない。"
+      },
+      "BearerContextRefreshRequest": {
+        "type": "object",
+        "required": ["credentialMode", "refreshToken"],
+        "properties": {
+          "credentialMode": {
+            "type": "string",
+            "enum": ["bearer"],
+            "description": "external bearer mode refresh であることを示す discriminator。"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "rotation 対象の opaque refreshToken。Authorization header ではなく body だけで提示する。"
+          }
+        },
+        "description": "Bearer client が context refresh で送る request body。Cookie mode では body を送らず、path-scoped HttpOnly Cookie だけを提示する。"
+      },
+      "ContextIndexDisplayHint": {
+        "type": "object",
+        "required": ["label"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Account email や operator email など、UI 表示に使う非 secret label。"
+          },
+          "secondaryLabel": {
+            "type": "string",
+            "description": "補助表示に使う任意の非 secret text。role や locale など、認可判断に使わない値だけを入れる。"
+          }
+        },
+        "description": "browser context index に保存してよい非 secret の表示 hint。accessToken、refreshToken、Cookie 値、setup token は含めない。"
+      },
+      "ContextIndexUpdateAction": {
+        "type": "string",
+        "enum": ["upsert", "remove", "clear-surface"],
+        "description": "browser 内の context index に対する更新種別。token や Cookie 値を含めず、UI と refresh bootstrap の hint だけを更新する。"
+      },
+      "ContextIndexUpdateHint": {
+        "type": "object",
+        "required": ["action"],
+        "properties": {
+          "action": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContextIndexUpdateAction"
+              }
+            ],
+            "description": "context index に対して行う操作。"
+          },
+          "authContextId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "操作対象の auth context。clear-surface では省略できる。"
+          },
+          "sessionId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "対象 session の canonical ULID。upsert 時だけ返す。"
+          },
+          "displayHint": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContextIndexDisplayHint"
+              }
+            ],
+            "description": "token を含まない UI 表示用 hint。upsert 時だけ返す。"
+          },
+          "lastSeenAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "context が最後に server で確認された時刻。"
+          },
+          "expiresHintAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "context index entry を削除する目安時刻。認可可否は refresh response で再検証する。"
+          }
+        },
+        "description": "browser context index を更新するための非 secret hint。service artifact が Product/Admin context を決定するため、payload discriminator は持たない。"
+      },
+      "CookieAuthEnvelope": {
+        "type": "object",
+        "required": [
+          "requestId",
+          "credentialMode",
+          "authContextId",
+          "sessionId",
+          "accessToken",
+          "expiresAt",
+          "contextIndexUpdateHints",
+          "clearCookieCommands"
+        ],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "認証 request に対応する canonical ULID の追跡 ID。"
+          },
+          "credentialMode": {
+            "type": "string",
+            "enum": ["cookie"],
+            "description": "browser cookie mode で発行されたことを示す discriminator。"
+          },
+          "authContextId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "refresh path と session metadata を束縛する auth context。"
+          },
+          "sessionId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "対象 session の canonical ULID。"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "protected API に Authorization Bearer として送信する短命 accessToken。"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "accessToken の失効日時。"
+          },
+          "contextIndexUpdateHints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextIndexUpdateHint"
+            },
+            "description": "browser の origin-local context index を更新する非 secret hint。"
+          },
+          "clearCookieCommands": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CookieClearCommand"
+            },
+            "description": "logout / revoke / suspend などで削除すべき旧 refresh Cookie がある場合の command。通常 login では空配列。"
+          }
+        },
+        "description": "Cookie mode session / refresh response が共有する auth envelope。Product/Admin はこの単一定義を spread して同じ field 名を公開する。"
+      },
+      "CookieClearCommand": {
+        "type": "object",
+        "required": ["name", "path", "maxAge", "httpOnly", "secure", "sameSite", "authContextId"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "削除対象の Cookie 名。"
+          },
+          "path": {
+            "type": "string",
+            "description": "削除対象 Cookie の exact Path。context-scoped refresh path `/api/v1/auth/contexts/{authContextId}/refresh` を返す。"
+          },
+          "maxAge": {
+            "type": "number",
+            "enum": [0],
+            "description": "Cookie 削除を表す Max-Age 値。"
+          },
+          "httpOnly": {
+            "type": "boolean",
+            "enum": [true],
+            "description": "削除対象 Cookie が HttpOnly 属性を持つこと。"
+          },
+          "secure": {
+            "type": "boolean",
+            "enum": [true],
+            "description": "削除対象 Cookie が Secure 属性を持つこと。"
+          },
+          "sameSite": {
+            "type": "string",
+            "enum": ["Lax"],
+            "description": "削除対象 Cookie の SameSite 属性。"
+          },
+          "authContextId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "削除対象 Cookie が束縛されていた auth context。"
+          }
+        },
+        "description": "HttpOnly refresh Cookie を削除するために backend が返す command。transport adapter はこの内容から Set-Cookie Max-Age=0 を組み立てる。"
+      },
+      "CreateAccountRequest": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "作成対象 Product Account の email address。"
+          },
+          "locale": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountLocale"
+              }
+            ],
+            "description": "作成時に保存する Product AccountSetting locale。未指定時の default は backend application が決定する。"
+          }
+        },
+        "description": "operator が customer account を作成するときの request body。email と初期 locale だけを受け取り、Account 不変条件は Go backend domain object が検証する。"
+      },
+      "CreateAccountResponse": {
+        "type": "object",
+        "required": ["requestId", "account", "auditEventId"],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "作成 request に対応する canonical ULID の追跡 ID。"
+          },
+          "account": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountSummary"
+              }
+            ],
+            "description": "作成された Product Account の read model。"
+          },
+          "auditEventId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "Account 作成 intent/outcome を記録する Admin audit event の canonical ULID。"
+          }
+        },
+        "description": "account 作成 API の response。作成された Product Account と、対応する audit event の相関 ID だけを返す。"
+      },
+      "CredentialMode": {
+        "type": "string",
+        "enum": ["cookie", "bearer"],
+        "description": "認証 session credential の発行方式。browser は cookie mode を使い、external API / mobile / CLI / SDK は bearer mode を使う。"
+      },
+      "DeviceLinkResponse": {
+        "type": "object",
+        "required": ["requestId", "issued"],
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "issued": {
+            "type": "boolean",
+            "enum": [true]
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "InvitationPasskeyFinishRequest": {
+        "type": "object",
+        "required": ["invitation_session", "credentialMode", "credential"],
+        "properties": {
+          "invitation_session": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "credentialMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CredentialMode"
+              }
+            ],
+            "description": "session credential の発行方式。browser は cookie、external client は bearer を指定する。"
+          },
+          "credential": {
+            "$ref": "#/components/schemas/WebAuthnAttestationCredential"
+          }
+        },
+        "description": "Finish passkey registration ceremony using an invitation session."
+      },
+      "InvitationPasskeyStartRequest": {
+        "type": "object",
+        "required": ["invitation_session"],
+        "properties": {
+          "invitation_session": {
+            "$ref": "#/components/schemas/UlidId"
+          }
+        },
+        "description": "Start passkey registration ceremony using an invitation session."
+      },
+      "LogoutResponse": {
+        "type": "object",
+        "required": ["requestId", "revoked", "clearCookieCommands", "contextIndexUpdateHints"],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "logout / revoke request に対応する canonical ULID の追跡 ID。"
+          },
+          "revoked": {
+            "type": "boolean",
+            "enum": [true],
+            "description": "対象 session または refresh family が失効されたことを示す。"
+          },
+          "clearCookieCommands": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CookieClearCommand"
+            },
+            "description": "revocation 対象 refresh Cookie を exact Path で削除する command 一覧。"
+          },
+          "contextIndexUpdateHints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextIndexUpdateHint"
+            },
+            "description": "revocation 後に browser context index から対象 entry を削除するための hint。"
+          }
+        },
+        "description": "logout / revoke 処理の共通 response。accessToken claims で確定した context の Cookie clear と context index cleanup だけを返す。"
+      },
+      "PasskeyAddFinishRequest": {
+        "type": "object",
+        "required": ["credential"],
+        "properties": {
+          "credential": {
+            "$ref": "#/components/schemas/WebAuthnAttestationCredential"
+          }
+        }
+      },
+      "PasskeyAddStartResponse": {
+        "type": "object",
+        "required": [
+          "requestId",
+          "challenge",
+          "rpId",
+          "rpName",
+          "user",
+          "pubKeyCredParams",
+          "residentKey",
+          "requireResidentKey",
+          "userVerification"
+        ],
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "challenge": {
+            "type": "string",
+            "description": "base64url-encoded challenge bytes issued by the server."
+          },
+          "rpId": {
+            "type": "string"
+          },
+          "rpName": {
+            "type": "string",
+            "description": "Relying Party display name."
+          },
+          "user": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WebAuthnUserEntity"
+              }
+            ],
+            "description": "User entity (id is base64url-encoded bytes)."
+          },
+          "pubKeyCredParams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebAuthnCredentialParameter"
+            },
+            "description": "Supported public key credential algorithms."
+          },
+          "timeout": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Timeout in milliseconds suggested by the server."
+          },
+          "excludeCredentials": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebAuthnCredentialDescriptor"
+            }
+          },
+          "residentKey": {
+            "type": "string",
+            "enum": ["required"],
+            "description": "作成する credential が usernameless login で使える discoverable credential であることを要求する。"
+          },
+          "requireResidentKey": {
+            "type": "boolean",
+            "enum": [true],
+            "description": "residentKey required と同じ要求を boolean でも伝える WebAuthn 標準 field。"
+          },
+          "userVerification": {
+            "type": "string",
+            "enum": ["required"]
+          },
+          "attestation": {
+            "type": "string"
+          }
+        },
+        "description": "WebAuthn PublicKeyCredentialCreationOptions returned by the server after BeginRegistration."
+      },
+      "PasskeyFinishRequest": {
+        "type": "object",
+        "required": ["credentialMode", "credential"],
+        "properties": {
+          "credentialMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CredentialMode"
+              }
+            ],
+            "description": "session credential の発行方式。browser は cookie、external client は bearer を指定する。"
+          },
+          "credential": {
+            "$ref": "#/components/schemas/WebAuthnAssertionCredential"
+          }
+        }
+      },
+      "PasskeyItem": {
+        "type": "object",
+        "required": ["id", "identifier", "createdAt"],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PasskeyListResponse": {
+        "type": "object",
+        "required": ["requestId", "passkeys"],
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "passkeys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PasskeyItem"
+            }
+          }
+        }
+      },
+      "PasskeyRegisterRequest": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/RecoveryPasskeyFinishRequest"
+          },
+          {
+            "$ref": "#/components/schemas/InvitationPasskeyFinishRequest"
+          }
+        ],
+        "description": "Finish request for passkey register — exactly one selector must be present."
+      },
+      "PasskeyRegisterStartRequest": {
+        "type": "object",
+        "required": ["recovery_session"],
+        "properties": {
+          "recovery_session": {
+            "$ref": "#/components/schemas/UlidId"
+          }
+        },
+        "description": "Start request for passkey registration via recovery session."
+      },
+      "PasskeyStartRequest": {
+        "type": "object",
+        "required": ["identifier"],
+        "properties": {
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "PasskeyStartResponse": {
+        "type": "object",
+        "required": ["requestId", "challenge", "rpId", "userVerification"],
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "challenge": {
+            "type": "string",
+            "description": "base64url-encoded challenge bytes issued by the server."
+          },
+          "rpId": {
+            "type": "string"
+          },
+          "timeout": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Timeout in milliseconds suggested by the server."
+          },
+          "allowCredentials": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebAuthnCredentialDescriptor"
+            },
+            "description": "Allowed credential descriptors (empty for usernameless flows)."
+          },
+          "userVerification": {
+            "type": "string",
+            "enum": ["required"]
+          }
+        },
+        "description": "WebAuthn PublicKeyCredentialRequestOptions returned by the server after BeginLogin."
+      },
+      "ProductAccountSubject": {
+        "type": "object",
+        "required": ["accountId"],
+        "properties": {
+          "accountId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "対象 Product account の canonical ULID。"
+          },
+          "passkeyCredentialId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "認証に使われた passkey credential の canonical ULID。"
+          }
+        },
+        "description": "Product auth response の account subject payload。service artifact が Product 文脈を決めるため principal discriminator は持たない。"
+      },
+      "ProductAuthSessionResponse": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProductCookieAuthSessionResponse"
+          },
+          {
+            "$ref": "#/components/schemas/ProductBearerAuthSessionResponse"
+          }
+        ],
+        "description": "Product login / register が返す credential mode 別 session response。Cookie mode と Bearer mode の body shape を分離する。"
+      },
+      "ProductBearerAuthSessionResponse": {
+        "type": "object",
+        "required": [
+          "requestId",
+          "credentialMode",
+          "authContextId",
+          "sessionId",
+          "accessToken",
+          "refreshToken",
+          "expiresAt",
+          "account"
+        ],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "認証 request に対応する canonical ULID の追跡 ID。"
+          },
+          "credentialMode": {
+            "type": "string",
+            "enum": ["bearer"],
+            "description": "external bearer mode で発行されたことを示す discriminator。"
+          },
+          "authContextId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "refreshToken と session metadata を束縛する auth context。"
+          },
+          "sessionId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "対象 session の canonical ULID。"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "protected API に Authorization Bearer として送信する短命 accessToken。"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "external client が body で保持し、context refresh で rotation する opaque refreshToken。"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "accessToken の失効日時。"
+          },
+          "account": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductAccountSubject"
+              }
+            ],
+            "description": "認証された Product account の subject payload。"
+          },
+          "accountSetting": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountSettingSnapshot"
+              }
+            ],
+            "description": "login / refresh 後に external client が必要に応じて参照できる Product 設定 snapshot。"
+          }
+        },
+        "description": "Product external bearer mode の session response。Cookie command や browser context index hint を含めず、body で refreshToken を返す。"
+      },
+      "ProductBearerContextRefreshResponse": {
+        "type": "object",
+        "required": [
+          "requestId",
+          "credentialMode",
+          "authContextId",
+          "sessionId",
+          "accessToken",
+          "refreshToken",
+          "expiresAt",
+          "account"
+        ],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "認証 request に対応する canonical ULID の追跡 ID。"
+          },
+          "credentialMode": {
+            "type": "string",
+            "enum": ["bearer"],
+            "description": "external bearer mode で発行されたことを示す discriminator。"
+          },
+          "authContextId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "refreshToken と session metadata を束縛する auth context。"
+          },
+          "sessionId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "対象 session の canonical ULID。"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "protected API に Authorization Bearer として送信する短命 accessToken。"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "external client が body で保持し、context refresh で rotation する opaque refreshToken。"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "accessToken の失効日時。"
+          },
+          "account": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductAccountSubject"
+              }
+            ],
+            "description": "認証された Product account の subject payload。"
+          },
+          "accountSetting": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountSettingSnapshot"
+              }
+            ],
+            "description": "refresh token rotation 成功時点で Product Account から読み込んだ AccountSetting snapshot。"
+          }
+        },
+        "description": "Product Bearer mode context refresh 成功時の response。Cookie command や browser context index hint を含めない。"
+      },
+      "ProductCookieAuthSessionResponse": {
+        "type": "object",
+        "required": [
+          "requestId",
+          "credentialMode",
+          "authContextId",
+          "sessionId",
+          "accessToken",
+          "expiresAt",
+          "contextIndexUpdateHints",
+          "clearCookieCommands",
+          "account"
+        ],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "認証 request に対応する canonical ULID の追跡 ID。"
+          },
+          "credentialMode": {
+            "type": "string",
+            "enum": ["cookie"],
+            "description": "browser cookie mode で発行されたことを示す discriminator。"
+          },
+          "authContextId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "refresh path と session metadata を束縛する auth context。"
+          },
+          "sessionId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "対象 session の canonical ULID。"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "protected API に Authorization Bearer として送信する短命 accessToken。"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "accessToken の失効日時。"
+          },
+          "contextIndexUpdateHints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextIndexUpdateHint"
+            },
+            "description": "browser の origin-local context index を更新する非 secret hint。"
+          },
+          "clearCookieCommands": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CookieClearCommand"
+            },
+            "description": "logout / revoke / suspend などで削除すべき旧 refresh Cookie がある場合の command。通常 login では空配列。"
+          },
+          "account": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductAccountSubject"
+              }
+            ],
+            "description": "認証された Product account の subject payload。"
+          },
+          "accountSetting": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountSettingSnapshot"
+              }
+            ],
+            "description": "login / refresh 後に Product UI が account 設定を同期するための snapshot。"
+          }
+        },
+        "description": "Product browser cookie mode の session response。refreshToken は HttpOnly Cookie だけで扱い、body には含めない。"
+      },
+      "ProductCookieContextRefreshResponse": {
+        "type": "object",
+        "required": [
+          "requestId",
+          "credentialMode",
+          "authContextId",
+          "sessionId",
+          "accessToken",
+          "expiresAt",
+          "contextIndexUpdateHints",
+          "clearCookieCommands",
+          "account"
+        ],
+        "properties": {
+          "requestId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "認証 request に対応する canonical ULID の追跡 ID。"
+          },
+          "credentialMode": {
+            "type": "string",
+            "enum": ["cookie"],
+            "description": "browser cookie mode で発行されたことを示す discriminator。"
+          },
+          "authContextId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "refresh path と session metadata を束縛する auth context。"
+          },
+          "sessionId": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "対象 session の canonical ULID。"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "protected API に Authorization Bearer として送信する短命 accessToken。"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "accessToken の失効日時。"
+          },
+          "contextIndexUpdateHints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextIndexUpdateHint"
+            },
+            "description": "browser の origin-local context index を更新する非 secret hint。"
+          },
+          "clearCookieCommands": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CookieClearCommand"
+            },
+            "description": "logout / revoke / suspend などで削除すべき旧 refresh Cookie がある場合の command。通常 login では空配列。"
+          },
+          "account": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductAccountSubject"
+              }
+            ],
+            "description": "認証された Product account の subject payload。"
+          },
+          "accountSetting": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountSettingSnapshot"
+              }
+            ],
+            "description": "refresh token rotation 成功時点で Product Account から読み込んだ AccountSetting snapshot。"
+          }
+        },
+        "description": "Product Cookie mode context refresh 成功時の response。refreshToken 平文を body に含めず、path-scoped Cookie rotation を transport header に委ねる。"
+      },
+      "ReauthenticationFinishRequest": {
+        "type": "object",
+        "required": ["requestId", "kind", "credential"],
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ReauthenticationSessionKind"
+          },
+          "credential": {
+            "$ref": "#/components/schemas/WebAuthnAssertionCredential"
+          }
+        },
+        "description": "Reauthentication finish request that completes the WebAuthn ceremony and binds to the operation kind."
+      },
+      "ReauthenticationSessionKind": {
+        "type": "string",
+        "enum": ["device-link", "passkey-delete"],
+        "description": "Reauthentication session kind bound to a high-risk operation."
+      },
+      "ReauthenticationSessionResponse": {
+        "type": "object",
+        "required": ["requestId", "reauthSessionId", "kind", "expiresAt"],
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "reauthSessionId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ReauthenticationSessionKind"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "description": "Reauthentication session response issued after a fresh WebAuthn reauthentication."
+      },
+      "ReauthenticationStartRequest": {
+        "type": "object",
+        "required": ["kind"],
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/ReauthenticationSessionKind"
+          }
+        },
+        "description": "Reauthentication start request that binds the ceremony to a high-risk operation kind."
+      },
+      "RecoveryAcceptedResponse": {
+        "type": "object",
+        "required": ["requestId", "accepted"],
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "accepted": {
+            "type": "boolean",
+            "enum": [true]
+          }
+        }
+      },
+      "RecoveryConsumeRequest": {
+        "type": "object",
+        "required": ["token"],
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "RecoveryConsumeResponse": {
+        "type": "object",
+        "required": [
+          "requestId",
+          "recoveryTokenId",
+          "recoverySessionId",
+          "recovery_session",
+          "expiresAt",
+          "kind"
+        ],
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "recoveryTokenId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "recoverySessionId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "recovery_session": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UlidId"
+              }
+            ],
+            "description": "Alias of recoverySessionId for client convenience."
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/TokenKind"
+          }
+        }
+      },
+      "RecoveryPasskeyFinishRequest": {
+        "type": "object",
+        "required": ["recovery_session", "credentialMode", "credential"],
+        "properties": {
+          "recovery_session": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "credentialMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CredentialMode"
+              }
+            ],
+            "description": "session credential の発行方式。browser は cookie、external client は bearer を指定する。"
+          },
+          "credential": {
+            "$ref": "#/components/schemas/WebAuthnAttestationCredential"
+          }
+        },
+        "description": "Finish passkey registration ceremony using a recovery session."
+      },
+      "RecoveryPasskeyStartRequest": {
+        "type": "object",
+        "required": ["recovery_session"],
+        "properties": {
+          "recovery_session": {
+            "$ref": "#/components/schemas/UlidId"
+          }
+        },
+        "description": "Start passkey registration ceremony using a recovery session."
+      },
+      "RecoveryRequest": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "RefreshTokenResponse": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProductCookieContextRefreshResponse"
+          },
+          {
+            "$ref": "#/components/schemas/ProductBearerContextRefreshResponse"
+          }
+        ],
+        "description": "Product context refresh の credential mode 別 success response。Cookie mode は Cookie command を表現でき、Bearer mode は refreshToken body を返す。"
+      },
+      "SessionItem": {
+        "type": "object",
+        "required": [
+          "sessionId",
+          "deviceName",
+          "loginAt",
+          "lastActiveAt",
+          "ipHash",
+          "isCurrentSession"
+        ],
+        "properties": {
+          "sessionId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "deviceName": {
+            "type": "string"
+          },
+          "loginAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastActiveAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ipHash": {
+            "type": "string"
+          },
+          "isCurrentSession": {
+            "type": "boolean"
+          }
+        },
+        "description": "ログイン中のセッション（デバイス）を表すアイテム。各セッションは一意の sessionId を持つ。"
+      },
+      "SessionListResponse": {
+        "type": "object",
+        "required": ["requestId", "sessions"],
+        "properties": {
+          "requestId": {
+            "$ref": "#/components/schemas/UlidId"
+          },
+          "sessions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SessionItem"
+            }
+          }
+        },
+        "description": "ログイン中のセッション一覧レスポンス。認証済みアカウントが所有する全セッションを含む。"
+      },
+      "StatusResponse": {
+        "type": "object",
+        "required": ["message", "timestamp"],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TokenKind": {
+        "type": "string",
+        "enum": ["recovery", "device-link"],
+        "description": "パスキー追加トークンの発行種別。recovery は紛失時復旧、device-link は認証済み端末からの新端末追加。"
+      },
+      "UlidId": {
+        "type": "string",
+        "description": "Canonical ULID string used for auth-owned resource and correlation identifiers."
+      },
+      "UpdateAccountSettingRequest": {
+        "type": "object",
+        "required": ["locale"],
+        "properties": {
+          "locale": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountLocale"
+              }
+            ],
+            "description": "保存したい Product AccountSetting.locale。対応値以外は API 実装で拒否し、永続値を変更しない。"
+          }
+        },
+        "description": "現在の Product Account の AccountSetting.locale を更新するリクエスト。Account ID は bearer session から確定するため body には含めない。"
+      },
+      "WebAuthnAssertionCredential": {
+        "type": "object",
+        "required": ["id", "rawId", "type", "response"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "rawId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/WebAuthnAssertionResponse"
+          },
+          "authenticatorAttachment": {
+            "type": "string"
+          }
+        },
+        "description": "WebAuthn PublicKeyCredential for login (navigator.credentials.get result)."
+      },
+      "WebAuthnAssertionResponse": {
+        "type": "object",
+        "required": ["clientDataJSON", "authenticatorData", "signature"],
+        "properties": {
+          "clientDataJSON": {
+            "type": "string",
+            "description": "base64url-encoded clientDataJSON."
+          },
+          "authenticatorData": {
+            "type": "string",
+            "description": "base64url-encoded authenticatorData."
+          },
+          "signature": {
+            "type": "string",
+            "description": "base64url-encoded signature."
+          },
+          "userHandle": {
+            "type": "string",
+            "description": "base64url-encoded userHandle (optional)."
+          }
+        },
+        "description": "WebAuthn AuthenticatorAssertionResponse (login)."
+      },
+      "WebAuthnAttestationCredential": {
+        "type": "object",
+        "required": ["id", "rawId", "type", "response"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "rawId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "response": {
+            "$ref": "#/components/schemas/WebAuthnAttestationResponse"
+          },
+          "authenticatorAttachment": {
+            "type": "string"
+          }
+        },
+        "description": "WebAuthn PublicKeyCredential for registration (navigator.credentials.create result)."
+      },
+      "WebAuthnAttestationResponse": {
+        "type": "object",
+        "required": ["clientDataJSON", "attestationObject"],
+        "properties": {
+          "clientDataJSON": {
+            "type": "string",
+            "description": "base64url-encoded clientDataJSON."
+          },
+          "attestationObject": {
+            "type": "string",
+            "description": "base64url-encoded attestationObject."
+          },
+          "transports": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "description": "WebAuthn AuthenticatorAttestationResponse (registration)."
+      },
+      "WebAuthnAuthenticatorResponse": {
+        "type": "object",
+        "required": ["clientDataJSON"],
+        "properties": {
+          "clientDataJSON": {
+            "type": "string",
+            "description": "base64url-encoded clientDataJSON."
+          }
+        },
+        "description": "WebAuthn AuthenticatorResponse inner object."
+      },
+      "WebAuthnCredentialDescriptor": {
+        "type": "object",
+        "required": ["type", "id"],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "base64url-encoded credential ID."
+          },
+          "transports": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "description": "Credential descriptor used in allowCredentials and excludeCredentials lists."
+      },
+      "WebAuthnCredentialParameter": {
+        "type": "object",
+        "required": ["type", "alg"],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "alg": {
+            "type": "integer",
+            "format": "int32",
+            "description": "COSE algorithm identifier."
+          }
+        },
+        "description": "WebAuthn public key credential parameter (algorithm descriptor)."
+      },
+      "WebAuthnUserEntity": {
+        "type": "object",
+        "required": ["id", "name", "displayName"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "base64url-encoded user ID bytes."
+          },
+          "name": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        },
+        "description": "WebAuthn user entity (id is base64url-encoded bytes)."
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "JWT 形式のアクセストークンを使用した Bearer 認証。Authorization ヘッダーに `Bearer <JWT>` を付与すること。トークンは短命の JWT であり、subject・sessionID・iat・exp を含む。"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://product.www-template.example",
+      "description": "Product API server",
+      "variables": {}
+    }
+  ]
+}

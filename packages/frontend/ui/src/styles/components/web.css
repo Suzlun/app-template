@@ -1,0 +1,222 @@
+@layer components {
+  /* ========================================
+     Web Layout
+     ======================================== */
+
+  /**
+   * 公開面の最上位コンテナ。背景は単色ベースで、上部の PageHeader とは
+   * 境界線ではなく余白で距離を置く。ノイズテクスチャは .ww-bg-noise を併用する。
+   */
+  .web-layout {
+    min-height: 100vh;
+    background: var(--color-background);
+    color: var(--color-text);
+  }
+
+  /**
+   * 公開面 topbar の nav slot。pill 形状で水平方向に並べ、active / hover を
+   * background と color の 2 軸で表現する。
+   */
+  .web-layout__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  /**
+   * nav リンク。pill 形状・neutral を基本とし、hover 時に brand color へ。
+   */
+  .web-layout__nav-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    background: transparent;
+    transition:
+      color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .web-layout__nav-link:hover {
+    color: var(--color-text);
+    background: var(--color-surface-hover);
+  }
+
+  .web-layout__nav-link[data-active='true'] {
+    color: var(--color-text);
+    background: var(--color-surface-hover);
+  }
+
+  /**
+   * main content area。generous な vertical rhythm を持たせる。
+   */
+  .web-layout__content {
+    width: min(1120px, calc(100vw - 2rem));
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) 0 5rem;
+  }
+
+  /* ========================================
+     Hero Section
+     ======================================== */
+
+  /**
+   * 編集志向の hero レイアウト。grid + 2 column 構造で、左に type hierarchy、
+   * 右に monospace metadata block を配置する。surface は単色 + 細枠で揃え、
+   * brand accent は 1px のストリップで挿入する。
+   */
+  .hero-section {
+    position: relative;
+    display: grid;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 2.75rem);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-2xl, calc(var(--radius) * 1.8));
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+
+  /**
+   * hero 上端の brand accent strip。左から右へ brand 500 → 透明。
+   */
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--brand-500) 0%, transparent 75%);
+    opacity: 0.85;
+  }
+
+  .hero-section__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  @media (width >= 768px) {
+    .hero-section__grid {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      align-items: end;
+    }
+  }
+
+  .hero-section__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /**
+   * 編集志向の大見出し。M PLUS 1 で大きな letter-spacing を抑え、tight line-height。
+   */
+  .hero-section__title {
+    margin: 0;
+    font-family: var(--font-family-display);
+    font-weight: 800;
+    font-size: clamp(2.25rem, 6vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  /**
+   * hero サブコピー。muted foreground で本文との階層を作る。
+   */
+  .hero-section__lead {
+    margin: 0;
+    max-width: 56ch;
+    font-size: clamp(1rem, 1.4vw, 1.0625rem);
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  .hero-section__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  /**
+   * hero 右側の metadata block。monospace で行を並べ、editorial column 風の見せ方。
+   */
+  .hero-section__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    border-left: 1px solid var(--color-border-subtle);
+  }
+
+  @media (width >= 768px) {
+    .hero-section__meta {
+      border-left: 1px solid var(--color-border-subtle);
+    }
+  }
+
+  .hero-section__meta-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .hero-section__meta-value {
+    font-family: var(--font-family-mono);
+    font-size: 0.85rem;
+    color: var(--color-text);
+  }
+
+  /**
+   * CTA。brand gradient 背景 + neutral 文字。
+   */
+  .hero-section__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.25rem;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--brand-500), var(--brand-600));
+    color: var(--color-text-on-brand);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition:
+      transform var(--transition-fast),
+      filter var(--transition-fast);
+  }
+
+  .hero-section__cta:hover {
+    transform: scale(1.02);
+    filter: brightness(1.05);
+  }
+
+  /**
+   * セカンダリ link。underline slide-in。
+   */
+  .hero-section__secondary-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0;
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .hero-section__secondary-link:hover {
+    color: var(--color-text);
+    border-bottom-color: var(--color-primary);
+  }
+}

@@ -1,0 +1,13 @@
+@layer components {
+  /* ========================================
+     App Shell (reserved for shared layout primitives)
+     ======================================== */
+
+  /**
+   * 認証済み SPA の app shell レイアウト。
+   * SidebarProvider + SidebarInset の構成で、
+   * サイドバーとメインコンテンツを管理する。
+   * 実際のレイアウトは SidebarProvider と SidebarInset の
+   * UI primitive が担当するため、追加の CSS クラスは不要。
+   */
+}

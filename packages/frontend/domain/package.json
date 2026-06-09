@@ -1,0 +1,41 @@
+{
+  "name": "@www-template/domain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "check": "tsc --noEmit -p ./tsconfig.json"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./account": "./src/account/index.ts",
+    "./auth": "./src/auth/index.ts",
+    "./auth/session": "./src/auth/session/index.ts",
+    "./auth/passkey": "./src/auth/passkey/index.ts",
+    "./auth/passkey/management": "./src/auth/passkey/management/index.ts",
+    "./auth/recovery": "./src/auth/recovery/index.ts",
+    "./auth/guard": "./src/auth/guard/index.ts",
+    "./status": "./src/status/index.ts",
+    "./observability": "./src/observability/index.ts"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.1",
+    "@opentelemetry/core": "^2.7.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.215.0",
+    "@opentelemetry/instrumentation": "^0.215.0",
+    "@opentelemetry/instrumentation-fetch": "^0.215.0",
+    "@opentelemetry/resources": "^2.7.0",
+    "@opentelemetry/sdk-trace-base": "^2.7.0",
+    "@opentelemetry/sdk-trace-web": "^2.7.0",
+    "@opentelemetry/semantic-conventions": "^1.40.0",
+    "@www-template/api": "workspace:*"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  },
+  "devDependencies": {
+    "svelte": "^5.53.9",
+    "typescript": "^5.9.3"
+  }
+}

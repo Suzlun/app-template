@@ -1,0 +1,8 @@
+{
+  "login": "Login",
+  "passkeyPrompt": "Sign in with your passkey.",
+  "signInButton": "Sign in with passkey",
+  "signingIn": "Signing in…",
+  "lostPasskey": "Lost your passkey?",
+  "backToPublic": "Back to public site"
+}
