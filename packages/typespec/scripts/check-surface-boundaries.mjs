@@ -112,7 +112,7 @@ function detectOpenAPISurfaceBoundaryViolations() {
     ...detectCookieClearCommandShape(
       adminOpenAPIArtifactPath,
       adminContract,
-      'WWWTemplate.CookieClearCommand'
+      'AppTemplate.CookieClearCommand'
     ),
     AppTemplate,
   ];
