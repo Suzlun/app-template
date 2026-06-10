@@ -475,20 +475,20 @@ func assertNoAdminPrismaMigrationSystem(t *testing.T) {
 
 	// Admin package 群は schema.prisma をまだ持ち得るが、DB 変更の実行境界は backend migration system に限定する。
 	for _, packagePath := range []string{
-		filepath.Join("packages", "admin", "api", "package.json"),
-		filepath.Join("packages", "admin", "app", "package.json"),
-		filepath.Join("packages", "admin", "domain", "package.json"),
+		filepath.Join("packages", "web", "admin", "api", "package.json"),
+		filepath.Join("packages", "web", "admin", "app", "package.json"),
+		filepath.Join("packages", "web", "admin", "domain", "package.json"),
 	} {
 		adminPackageJSON := readRepositoryFile(t, packagePath)
 		assertNotContainsAny(t, adminPackageJSON, "prisma migrate", "migrate:deploy", "migrate:dev")
 	}
 
 	// package-local ORM migration の出力 directory が残ると Admin schema 管理経路が二重化するため、固定 path を直接検査する。
-	adminPrismaMigrationsDir := repositoryPath("packages", "admin", "prisma", "migrations")
+	adminPrismaMigrationsDir := repositoryPath("packages", "web", "admin", "prisma", "migrations")
 	if _, err := os.Stat(adminPrismaMigrationsDir); err == nil {
-		t.Fatalf("packages/admin/prisma/migrations must not exist for Admin schema migrations")
+		t.Fatalf("packages/web/admin/prisma/migrations must not exist for Admin schema migrations")
 	} else if !os.IsNotExist(err) {
-		t.Fatalf("stat packages/admin/prisma/migrations: %v", err)
+		t.Fatalf("stat packages/web/admin/prisma/migrations: %v", err)
 	}
 }
 

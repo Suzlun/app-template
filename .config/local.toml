@@ -6,12 +6,11 @@ bearer_token = "dev-app-auth"
 port = 8080
 allowed_origins = [
   "http://www.localhost:5173",
-  "http://app.localhost:5174",
 ]
 
 [auth]
-webauthn_rp_id = "app.localhost"
-account_recovery_url_base = "http://app.localhost:5174/login/recovery/consume"
+webauthn_rp_id = "www.localhost"
+account_recovery_url_base = "http://www.localhost:5173/login/recovery/consume"
 challenge_ttl = "5m"
 recovery_token_ttl = "30m"
 recovery_session_ttl = "15m"

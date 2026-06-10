@@ -22,6 +22,9 @@
     "**/node_modules",
     "**/dist",
     "**/.svelte-kit",
+    "**/.cache",
+    "**/.devenv",
+    "**/.direnv",
     "**/playwright-report",
     "**/test-results",
     "**/coverage"
@@ -104,8 +107,8 @@
     "JavaScript": {
       "formatter": {
         "external": {
-          "command": "pnpm",
-          "arguments": ["prettier", "--stdin-filepath", "{buffer_path}"]
+          "command": "devenv",
+          "arguments": ["shell", "--", "pnpm", "prettier", "--stdin-filepath", "{buffer_path}"]
         }
       },
       "format_on_save": "on",
@@ -117,8 +120,8 @@
     "JSX": {
       "formatter": {
         "external": {
-          "command": "pnpm",
-          "arguments": ["prettier", "--stdin-filepath", "{buffer_path}"]
+          "command": "devenv",
+          "arguments": ["shell", "--", "pnpm", "prettier", "--stdin-filepath", "{buffer_path}"]
         }
       },
       "format_on_save": "on",
@@ -130,8 +133,8 @@
     "TypeScript": {
       "formatter": {
         "external": {
-          "command": "pnpm",
-          "arguments": ["prettier", "--stdin-filepath", "{buffer_path}"]
+          "command": "devenv",
+          "arguments": ["shell", "--", "pnpm", "prettier", "--stdin-filepath", "{buffer_path}"]
         }
       },
       "format_on_save": "on",
@@ -143,8 +146,8 @@
     "TSX": {
       "formatter": {
         "external": {
-          "command": "pnpm",
-          "arguments": ["prettier", "--stdin-filepath", "{buffer_path}"]
+          "command": "devenv",
+          "arguments": ["shell", "--", "pnpm", "prettier", "--stdin-filepath", "{buffer_path}"]
         }
       },
       "format_on_save": "on",
@@ -164,8 +167,8 @@
     "CSS": {
       "formatter": {
         "external": {
-          "command": "pnpm",
-          "arguments": ["prettier", "--stdin-filepath", "{buffer_path}"]
+          "command": "devenv",
+          "arguments": ["shell", "--", "pnpm", "prettier", "--stdin-filepath", "{buffer_path}"]
         }
       },
       "format_on_save": "on"
@@ -173,8 +176,8 @@
     "JSON": {
       "formatter": {
         "external": {
-          "command": "pnpm",
-          "arguments": ["prettier", "--stdin-filepath", "{buffer_path}"]
+          "command": "devenv",
+          "arguments": ["shell", "--", "pnpm", "prettier", "--stdin-filepath", "{buffer_path}"]
         }
       },
       "format_on_save": "on"
@@ -182,8 +185,8 @@
     "Markdown": {
       "formatter": {
         "external": {
-          "command": "pnpm",
-          "arguments": ["prettier", "--stdin-filepath", "{buffer_path}"]
+          "command": "devenv",
+          "arguments": ["shell", "--", "pnpm", "prettier", "--stdin-filepath", "{buffer_path}"]
         }
       },
       "format_on_save": "on",
@@ -192,8 +195,8 @@
     "YAML": {
       "formatter": {
         "external": {
-          "command": "pnpm",
-          "arguments": ["prettier", "--stdin-filepath", "{buffer_path}"]
+          "command": "devenv",
+          "arguments": ["shell", "--", "pnpm", "prettier", "--stdin-filepath", "{buffer_path}"]
         }
       },
       "format_on_save": "on"

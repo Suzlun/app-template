@@ -489,7 +489,7 @@ func (s strictServer) LogoutAdminOperator(ctx context.Context, _ adminopenapi.Lo
 	}
 
 	// Step 4: refresh Cookie 削除指示を header に出したうえで、body には revoke 成否と requestId だけを返す。
-	return adminopenapi.LogoutAdminOperator200JSONResponse{Body: adminopenapi.AppTemplate{RequestId: requestID, Revoked: true}, Headers: adminopenapi.LogoutAdminOperator200ResponseHeaders{CacheControl: noStoreValue}}, nil
+	return adminopenapi.LogoutAdminOperator200JSONResponse{Body: adminopenapi.LogoutResponse{RequestId: requestID, Revoked: adminopenapi.LogoutResponseRevokedTrue, ClearCookieCommands: []adminopenapi.CookieClearCommand{}, ContextIndexUpdateHints: []adminopenapi.ContextIndexUpdateHint{}}, Headers: adminopenapi.LogoutAdminOperator200ResponseHeaders{CacheControl: noStoreValue}}, nil
 }
 
 func (s strictServer) ListAdminOperatorPasskeys(ctx context.Context, _ adminopenapi.ListAdminOperatorPasskeysRequestObject) (adminopenapi.ListAdminOperatorPasskeysResponseObject, error) {
@@ -649,7 +649,7 @@ func (s strictServer) StartAdminPasskeyAuthentication(ctx context.Context, reque
 		return startAdminPasskeyAuthenticationFailure(requestID, err), nil
 	}
 	// Step 5: requestId は追跡 ID のまま返し、WebAuthn session selector は browser が返す clientDataJSON.challenge から verifier が復元する。
-	body := adminopenapi.AppTemplate{RequestId: requestID, Challenge: challenge.Challenge, RpId: challenge.WebAuthnRPID, UserVerification: "required"}
+	body := adminopenapi.PasskeyStartResponse{RequestId: requestID, Challenge: challenge.Challenge, RpId: challenge.WebAuthnRPID, UserVerification: adminopenapi.Required}
 	applyAdminWebAuthnLoginOptions(&body, challenge.WebAuthnOptions)
 	if body.RequestId == "" || body.Challenge == "" || body.RpId == "" {
 		return adminopenapi.StartAdminPasskeyAuthentication503JSONResponse{Body: authFailureResponseWithRequestID(adminopenapi.InternalError, requestID), Headers: adminopenapi.StartAdminPasskeyAuthentication503ResponseHeaders{CacheControl: noStoreValue}}, nil
@@ -701,15 +701,15 @@ type adminWebAuthnRegistrationOptionsJSON struct {
 	} `json:"publicKey"`
 }
 
-func adminPasskeyAddStartResponse(challenge operatorsapplication.SetupChallengeResult) (adminopenapi.AppTemplate, error) {
+func adminPasskeyAddStartResponse(challenge operatorsapplication.SetupChallengeResult) (adminopenapi.PasskeyAddStartResponse, error) {
 	// Step 1: WebAuthn provider が生成した JSON options を response DTO へ fail-closed に写像する。
-	body := adminopenapi.AppTemplate{RequestId: challenge.RequestID, Challenge: challenge.Challenge}
+	body := adminopenapi.PasskeyAddStartResponse{RequestId: challenge.RequestID, Challenge: challenge.Challenge}
 	options, err := adminRegistrationOptionsFromChallenge(challenge.OptionsJSON)
 	if err != nil {
-		return adminopenapi.AppTemplate{}, err
+		return adminopenapi.PasskeyAddStartResponse{}, err
 	}
 	if err := applyAdminRegistrationRequiredOptions(&body, options); err != nil {
-		return adminopenapi.AppTemplate{}, err
+		return adminopenapi.PasskeyAddStartResponse{}, err
 	}
 	applyAdminRegistrationExcludedCredentials(&body, options)
 	applyAdminRegistrationOptionalOptions(&body, options)
@@ -725,7 +725,7 @@ func adminRegistrationOptionsFromChallenge(optionsJSON []byte) (adminWebAuthnReg
 	return options, nil
 }
 
-func applyAdminRegistrationRequiredOptions(body *adminopenapi.AppTemplate, options adminWebAuthnRegistrationOptionsJSON) error {
+func applyAdminRegistrationRequiredOptions(body *adminopenapi.PasskeyAddStartResponse, options adminWebAuthnRegistrationOptionsJSON) error {
 	// Step 1: registration に必須の RP/User/credential parameter が欠けている場合は、部分的な challenge を browser へ返さず fail-close にする。
 	pk := options.PublicKey
 	if pk.RP.ID == "" || pk.RP.Name == "" || pk.User.Name == "" || pk.User.DisplayName == "" || len(pk.PubKeyCredParams) == 0 {
@@ -737,10 +737,10 @@ func applyAdminRegistrationRequiredOptions(body *adminopenapi.AppTemplate, optio
 	}
 	body.RpId = pk.RP.ID
 	body.RpName = pk.RP.Name
-	body.User = adminopenapi.AppTemplate{Id: userID, Name: pk.User.Name, DisplayName: pk.User.DisplayName}
-	body.PubKeyCredParams = make([]adminopenapi.AppTemplate, 0, len(pk.PubKeyCredParams))
+	body.User = adminopenapi.WebAuthnUserEntity{Id: userID, Name: pk.User.Name, DisplayName: pk.User.DisplayName}
+	body.PubKeyCredParams = make([]adminopenapi.WebAuthnCredentialParameter, 0, len(pk.PubKeyCredParams))
 	for _, param := range pk.PubKeyCredParams {
-		body.PubKeyCredParams = append(body.PubKeyCredParams, adminopenapi.AppTemplate{Type: param.Type, Alg: param.Alg})
+		body.PubKeyCredParams = append(body.PubKeyCredParams, adminopenapi.WebAuthnCredentialParameter{Type: param.Type, Alg: param.Alg})
 	}
 
 	// Step 2: Admin operator login も discoverable credential 前提のため、registration options が resident key を必須化していなければ fail-close にする。
@@ -757,17 +757,17 @@ func applyAdminRegistrationRequiredOptions(body *adminopenapi.AppTemplate, optio
 	// Step 3: Browser API が同じ authenticatorSelection を復元できるよう、contract の literal fields として response body に固定値を設定する。
 	body.RequireResidentKey = true
 	body.ResidentKey = "required"
-	body.UserVerification = adminopenapi.AppTemplate
+	body.UserVerification = adminopenapi.PasskeyAddStartResponseUserVerificationRequired
 	return nil
 }
 
-func applyAdminRegistrationExcludedCredentials(body *adminopenapi.AppTemplate, options adminWebAuthnRegistrationOptionsJSON) {
+func applyAdminRegistrationExcludedCredentials(body *adminopenapi.PasskeyAddStartResponse, options adminWebAuthnRegistrationOptionsJSON) {
 	// Step 1: provider が既存 credential を除外対象として返した場合だけ、transport DTO に詰め替えて browser の重複登録防止へ渡す。
 	pk := options.PublicKey
 	if len(pk.ExcludeCredentials) > 0 {
-		descriptors := make([]adminopenapi.AppTemplate, 0, len(pk.ExcludeCredentials))
+		descriptors := make([]adminopenapi.WebAuthnCredentialDescriptor, 0, len(pk.ExcludeCredentials))
 		for _, credential := range pk.ExcludeCredentials {
-			descriptor := adminopenapi.AppTemplate{Id: credential.ID, Type: credential.Type}
+			descriptor := adminopenapi.WebAuthnCredentialDescriptor{Id: credential.ID, Type: credential.Type}
 			if len(credential.Transports) > 0 {
 				transports := credential.Transports
 				descriptor.Transports = &transports
@@ -778,7 +778,7 @@ func applyAdminRegistrationExcludedCredentials(body *adminopenapi.AppTemplate, o
 	}
 }
 
-func applyAdminRegistrationOptionalOptions(body *adminopenapi.AppTemplate, options adminWebAuthnRegistrationOptionsJSON) {
+func applyAdminRegistrationOptionalOptions(body *adminopenapi.PasskeyAddStartResponse, options adminWebAuthnRegistrationOptionsJSON) {
 	// Step 1: attestation と timeout は browser hint であり、provider から明示された場合だけ response DTO に反映する。
 	pk := options.PublicKey
 	if pk.Attestation != "" {
@@ -789,7 +789,7 @@ func applyAdminRegistrationOptionalOptions(body *adminopenapi.AppTemplate, optio
 	}
 }
 
-func applyAdminWebAuthnLoginOptions(resp *adminopenapi.AppTemplate, optionsJSON []byte) {
+func applyAdminWebAuthnLoginOptions(resp *adminopenapi.PasskeyStartResponse, optionsJSON []byte) {
 	// Step 1: provider 由来の optional WebAuthn JSON が無い場合は、必須 field だけの response として返す。
 	if len(optionsJSON) == 0 {
 		return
@@ -801,9 +801,9 @@ func applyAdminWebAuthnLoginOptions(resp *adminopenapi.AppTemplate, optionsJSON 
 
 	// Step 2: allowCredentials は transport DTO の配列へ詰め替え、credential ID の意味や検証は WebAuthn provider 側に残す。
 	if len(options.PublicKey.AllowCredentials) > 0 {
-		descriptors := make([]adminopenapi.AppTemplate, 0, len(options.PublicKey.AllowCredentials))
+		descriptors := make([]adminopenapi.WebAuthnCredentialDescriptor, 0, len(options.PublicKey.AllowCredentials))
 		for _, credential := range options.PublicKey.AllowCredentials {
-			descriptor := adminopenapi.AppTemplate{Id: credential.ID, Type: credential.Type}
+			descriptor := adminopenapi.WebAuthnCredentialDescriptor{Id: credential.ID, Type: credential.Type}
 			if len(credential.Transports) > 0 {
 				transports := credential.Transports
 				descriptor.Transports = &transports
@@ -818,11 +818,11 @@ func applyAdminWebAuthnLoginOptions(resp *adminopenapi.AppTemplate, optionsJSON 
 		resp.Timeout = options.PublicKey.Timeout
 	}
 	if options.PublicKey.UserVerification != "" {
-		resp.UserVerification = "required"
+		resp.UserVerification = adminopenapi.Required
 	}
 }
 
-func adminAssertionCredentialDTO(credential adminopenapi.AppTemplate) adminauth.WebAuthnAssertionCredentialDTO {
+func adminAssertionCredentialDTO(credential adminopenapi.WebAuthnAssertionCredential) adminauth.WebAuthnAssertionCredentialDTO {
 	// Step 1: optional userHandle / authenticatorAttachment を pointer から primitive string へ安全に写像し、nil を空値として扱う。
 	userHandle := ""
 	if credential.Response.UserHandle != nil {
@@ -848,7 +848,7 @@ func adminAssertionCredentialDTO(credential adminopenapi.AppTemplate) adminauth.
 	}
 }
 
-func adminAttestationCredentialDTO(credential adminopenapi.AppTemplate) adminauth.OperatorWebAuthnAttestationCredential {
+func adminAttestationCredentialDTO(credential adminopenapi.WebAuthnAttestationCredential) adminauth.OperatorWebAuthnAttestationCredential {
 	// Step 1: optional transports / authenticatorAttachment を nil 安全に primitive DTO へ写像する。
 	transports := []string(nil)
 	if credential.Response.Transports != nil {
@@ -863,17 +863,17 @@ func adminAttestationCredentialDTO(credential adminopenapi.AppTemplate) adminaut
 	return adminauth.OperatorWebAuthnAttestationCredential{ID: credential.Id, RawID: credential.RawId, Type: credential.Type, AuthenticatorAttachment: authenticatorAttachment, Response: adminauth.OperatorWebAuthnAttestationResponse{ClientDataJSON: credential.Response.ClientDataJSON, AttestationObject: credential.Response.AttestationObject, Transports: transports}}
 }
 
-func authFailureResponseWithRequestID(classification adminopenapi.AppTemplate, requestID string) adminopenapi.AppTemplate {
+func authFailureResponseWithRequestID(classification adminopenapi.AuthFailureClassification, requestID string) adminopenapi.AuthFailureResponse {
 	// Step 1: request ごとの correlation ID と stable classification だけを返し、内部 error や権限判定理由を公開しない。
-	return adminopenapi.AppTemplate{Error: classification, RequestId: requestID}
+	return adminopenapi.AuthFailureResponse{Error: classification, RequestId: requestID}
 }
 
-func authOperationError(requestID string, message string) adminopenapi.AppTemplate {
+func authOperationError(requestID string, message string) adminopenapi.AuthOperationErrorResponse {
 	// Step 1: operation error は UI が分岐できる安定 message と request ID だけに限定し、入力値や内部例外を含めない。
-	return adminopenapi.AppTemplate{RequestId: requestID, Error: message}
+	return adminopenapi.AuthOperationErrorResponse{RequestId: requestID, Error: message}
 }
 
-func accountCreationInput(ctx context.Context, body adminopenapi.AppTemplate, requestID string) (accountsapplication.CreateAccountInput, bool) {
+func accountCreationInput(ctx context.Context, body adminopenapi.CreateAccountRequest, requestID string) (accountsapplication.CreateAccountInput, bool) {
 	// Step 1: middleware が request.Context に保存した primitive 値だけを読み、handler 内に RBAC role map を置かない。
 	operatorID, ok := contextString(ctx, adminContextKeyOperatorID)
 	if !ok {
@@ -1001,12 +1001,12 @@ const (
 	adminCredentialModeBearer adminCredentialMode = "bearer"
 )
 
-func adminSessionCredentialMode(mode adminopenapi.AppTemplate) (adminCredentialMode, bool) {
+func adminSessionCredentialMode(mode adminopenapi.CredentialMode) (adminCredentialMode, bool) {
 	// Step 1: generated enum の cookie / bearer だけを許可し、空値や未知値では session credential の露出先を決めない。
 	switch mode {
-	case adminopenapi.AppTemplate:
+	case adminopenapi.CredentialModeCookie:
 		return adminCredentialModeCookie, true
-	case adminopenapi.AppTemplate:
+	case adminopenapi.CredentialModeBearer:
 		return adminCredentialModeBearer, true
 	default:
 		return "", false
@@ -1021,7 +1021,7 @@ func adminRefreshCredential(ctx context.Context, body *adminopenapi.RefreshAdmin
 	bodyValue := ""
 	if body != nil {
 		bodyValue = strings.TrimSpace(body.RefreshToken)
-		if bodyValue != "" && body.CredentialMode != adminopenapi.AppTemplate {
+		if bodyValue != "" && body.CredentialMode != adminopenapi.BearerContextRefreshRequestCredentialModeBearer {
 			return "", "", false
 		}
 	}
@@ -1175,8 +1175,8 @@ func adminAuthSessionResponse(result adminauth.OperatorSessionResult, requestID 
 		ExpiresAt:               result.ExpiresAt,
 		Operator:                operatorProfile,
 		CredentialMode:          adminopenapi.AdminOperatorSessionResponseCredentialModeCookie,
-		ClearCookieCommands:     []adminopenapi.AppTemplate{},
-		ContextIndexUpdateHints: []adminopenapi.AppTemplate{},
+		ClearCookieCommands:     []adminopenapi.CookieClearCommand{},
+		ContextIndexUpdateHints: []adminopenapi.ContextIndexUpdateHint{},
 	}, nil
 }
 
@@ -1196,8 +1196,8 @@ func adminContextRefreshResponse(result adminauth.OperatorSessionResult, request
 		ExpiresAt:               result.ExpiresAt,
 		Operator:                operatorProfile,
 		CredentialMode:          adminopenapi.AdminContextRefreshResponseCredentialModeCookie,
-		ClearCookieCommands:     []adminopenapi.AppTemplate{},
-		ContextIndexUpdateHints: []adminopenapi.AppTemplate{},
+		ClearCookieCommands:     []adminopenapi.CookieClearCommand{},
+		ContextIndexUpdateHints: []adminopenapi.ContextIndexUpdateHint{},
 	}, nil
 }
 
@@ -1246,7 +1246,7 @@ func adminOperatorPasskeyItem(passkey adminauth.OperatorPasskeyCredential) admin
 	}
 
 	// Step 2: 管理に必要な credential ID と時刻だけを generated DTO へ詰め替える。
-	return adminopenapi.AdminOperatorPasskeyItem{Id: adminopenapi.AppTemplate(passkey.ID), CreatedAt: passkey.CreatedAt, LastUsedAt: lastUsedAt}
+	return adminopenapi.AdminOperatorPasskeyItem{Id: adminopenapi.UlidId(passkey.ID), CreatedAt: passkey.CreatedAt, LastUsedAt: lastUsedAt}
 }
 
 func adminOperatorProfile(operator adminauth.OperatorDTO) adminopenapi.AdminOperatorProfile {
@@ -1455,15 +1455,15 @@ func getAdminAccountFailure(requestID string, err error) adminopenapi.GetAdminAc
 	return adminopenapi.GetAdminAccount503JSONResponse{Body: authFailureResponseWithRequestID(adminopenapi.InternalError, requestID), Headers: adminopenapi.GetAdminAccount503ResponseHeaders{CacheControl: noStoreValue}}
 }
 
-func adminCreateAccountResponse(created accountsapplication.CreatedAccount) adminopenapi.AppTemplate {
+func adminCreateAccountResponse(created accountsapplication.CreatedAccount) adminopenapi.CreateAccountResponse {
 	// Step 1: application が返した primitive snapshot だけを OpenAPI DTO に詰め替え、status などの業務値はここで再判定しない。
-	return adminopenapi.AppTemplate{
+	return adminopenapi.CreateAccountResponse{
 		RequestId:    created.RequestID,
 		AuditEventId: created.AuditID,
-		Account: adminopenapi.AppTemplate{
+		Account: adminopenapi.AccountSummary{
 			AccountId:    created.AccountID,
 			Email:        created.Email,
-			Status:       adminopenapi.AppTemplate(created.Status),
+			Status:       adminopenapi.AccountStatus(created.Status),
 			CreatedAt:    created.CreatedAt,
 			PasskeyCount: created.PasskeyCount,
 		},
@@ -1475,14 +1475,14 @@ func adminCreateOperatorResponse(created operatorsapplication.CreatedOperator) a
 	return adminopenapi.AdminCreateOperatorResponse{RequestId: created.RequestID, AuditEventId: created.AuditID, DeliveryStatus: adminopenapi.AdminSetupTokenDeliveryStatus(created.DeliveryStatus), Operator: adminOperatorProfile(created.Operator)}
 }
 
-func adminAccountListResponse(result accountsapplication.AccountSearchResult) adminopenapi.AppTemplate {
+func adminAccountListResponse(result accountsapplication.AccountSearchResult) adminopenapi.AccountListResponse {
 	// Step 1: application DTO の件数に合わせて response slice を確保し、値コピーだけで OpenAPI DTO へ変換する。
-	accounts := make([]adminopenapi.AppTemplate, 0, len(result.Accounts))
+	accounts := make([]adminopenapi.AccountSummary, 0, len(result.Accounts))
 	for _, account := range result.Accounts {
-		accounts = append(accounts, adminopenapi.AppTemplate{
+		accounts = append(accounts, adminopenapi.AccountSummary{
 			AccountId:    account.AccountID,
 			Email:        account.Email,
-			Status:       adminopenapi.AppTemplate(account.Status),
+			Status:       adminopenapi.AccountStatus(account.Status),
 			PasskeyCount: account.PasskeyCount,
 			CreatedAt:    account.CreatedAt,
 		})
@@ -1495,12 +1495,12 @@ func adminAccountListResponse(result accountsapplication.AccountSearchResult) ad
 	}
 
 	// Step 3: requestId と read model だけを返し、検索条件や内部 query を response body に含めない。
-	return adminopenapi.AppTemplate{Accounts: accounts, NextCursor: nextCursor, RequestId: result.RequestID}
+	return adminopenapi.AccountListResponse{Accounts: accounts, NextCursor: nextCursor, RequestId: result.RequestID}
 }
 
-func adminAccountDetailResponse(result accountsapplication.AccountDetailResult) adminopenapi.AppTemplate {
+func adminAccountDetailResponse(result accountsapplication.AccountDetailResult) adminopenapi.AccountDetailResponse {
 	// Step 1: detail でも一覧と同じ account summary DTO を使い、画面間で表示値の意味を揃える。
-	return adminopenapi.AppTemplate{RequestId: result.RequestID, Account: adminopenapi.AppTemplate{AccountId: result.Account.AccountID, Email: result.Account.Email, Status: adminopenapi.AppTemplate(result.Account.Status), PasskeyCount: result.Account.PasskeyCount, CreatedAt: result.Account.CreatedAt}}
+	return adminopenapi.AccountDetailResponse{RequestId: result.RequestID, Account: adminopenapi.AccountSummary{AccountId: result.Account.AccountID, Email: result.Account.Email, Status: adminopenapi.AccountStatus(result.Account.Status), PasskeyCount: result.Account.PasskeyCount, CreatedAt: result.Account.CreatedAt}}
 }
 
 func nextAdminRequestID() string {

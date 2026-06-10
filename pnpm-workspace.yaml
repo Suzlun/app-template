@@ -1,8 +1,9 @@
 packages:
   - 'packages/typespec'
-  - 'packages/frontend/*'
-  - 'packages/web'
-  - 'packages/admin/*'
+  - 'packages/web/lp'
+  - 'packages/web/ui'
+  - 'packages/web/i18n'
+  - 'packages/web/admin/*'
 
 # npmjs.org 以外へ意図せず解決されないように、既定 registry を明示する。
 registries:
@@ -44,7 +45,7 @@ verifyDepsBeforeRun: error
 # audit の既定しきい値を high にし、実害の大きい脆弱性を CI で扱いやすくする。
 auditLevel: high
 
-# devcontainer 初期化と開発ツール実行に必要な依存パッケージの install script だけを明示承認する。
+# Nix/devenv 初期化と開発ツール実行に必要な依存パッケージの install script だけを明示承認する。
 allowBuilds:
   '@parcel/watcher': true
   '@prisma/client': true

@@ -109,12 +109,7 @@ function detectOpenAPISurfaceBoundaryViolations() {
       productContract,
       'CookieClearCommand'
     ),
-    ...detectCookieClearCommandShape(
-      adminOpenAPIArtifactPath,
-      adminContract,
-      'AppTemplate.CookieClearCommand'
-    ),
-    AppTemplate,
+    ...detectCookieClearCommandShape(adminOpenAPIArtifactPath, adminContract, 'CookieClearCommand'),
   ];
 }
 

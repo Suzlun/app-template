@@ -34,48 +34,48 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 11.5.1
-          run_install: false
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Use devenv cache
+        uses: cachix/cachix-action@v16
         with:
-          node-version: 24
-          cache: pnpm
+          name: devenv
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.26.4'
-          cache-dependency-path: packages/backend/go.sum
+      - name: Install devenv
+        run: nix profile add nixpkgs#devenv
+
+      - name: Check Nix shell tools
+        run: |
+          devenv shell -- node --version
+          devenv shell -- pnpm --version
+          devenv shell -- go version
+          devenv shell -- openspec --version
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: devenv shell -- pnpm install --frozen-lockfile
 
       - name: Check formatting
-        run: pnpm format:check
+        run: devenv shell -- pnpm format:check
 
       - name: Generate code
-        run: pnpm gen
+        run: devenv shell -- pnpm gen
 
       - name: Lint
-        run: pnpm lint
+        run: devenv shell -- pnpm lint
 
       - name: Type check
-        run: pnpm check
+        run: devenv shell -- pnpm check
 
       - name: Unit tests (frontend + Go)
-        run: pnpm test:run
+        run: devenv shell -- pnpm test:run
         env:
           BACKEND_POSTGRES_TEST_OWNER_URL: postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable
 
       - name: Codegen drift check
-        run: pnpm check:codegen
+        run: devenv shell -- pnpm check:codegen
 
       - name: Build
-        run: pnpm build
+        run: devenv shell -- pnpm build

@@ -42,7 +42,10 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
-devcontainer-lock.json
+.cache/
+.devenv/
+.direnv/
+devenv.local.nix
 
 # Testing
 coverage/

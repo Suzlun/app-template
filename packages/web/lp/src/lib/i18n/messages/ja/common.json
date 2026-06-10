@@ -1,0 +1,16 @@
+{
+  "navAriaLabel": "メインナビゲーション",
+  "heroTitle": "Flutter アプリ構築のための基盤を、Web と API から整える。",
+  "heroLead": "公開 LP、共有 UI、共有 i18n、Admin Console、TypeSpec、Go backend を分離し、後続の Flutter アプリ追加に不要な Product Svelte app 前提を持ち込みません。",
+  "heroCtaPrimary": "テンプレートを見る",
+  "heroCtaSecondary": "GitHub で確認",
+  "heroMetaAriaLabel": "アーキテクチャメタ情報",
+  "metaStackLabel": "STACK",
+  "metaStackValue": "SvelteKit / Svelte 5 / TypeSpec / Go",
+  "metaRuntimeLabel": "RUNTIME",
+  "metaRuntimeValue": "Web LP / Admin / Backend",
+  "metaArchitectureLabel": "ARCHITECTURE",
+  "metaArchitectureValue": "web-lp → web-ui / admin-app → admin-domain → admin-api",
+  "languageSwitchAriaLabel": "言語切り替え",
+  "home": "Home"
+}

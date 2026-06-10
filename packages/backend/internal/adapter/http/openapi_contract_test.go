@@ -70,12 +70,12 @@ func TestAppOpenAPIDeclaresBearerSecurity(t *testing.T) {
 
 // TestAPIContractBES001ProductArtifactsExcludeAdminOperations は、Product 用に公開される生成物へ Admin operation が混入していないことを検証する。
 //
-// このテストは [API-CONTRACT-BE-S001] の受け皿であり、Product OpenAPI、Product SDK、Product Go bindings を同じ Admin operation 一覧で検査する。
+// このテストは [API-CONTRACT-BE-S001] の受け皿であり、Product OpenAPI と Product Go bindings を同じ Admin operation 一覧で検査する。
 // 引数は testing.T だけで、戻り値はない。違反がある場合は該当 artifact と token を含む failure として報告する。
 func TestAPIContractBES001ProductArtifactsExcludeAdminOperations(t *testing.T) {
 	t.Parallel()
 
-	// Step 1: Admin surface に属する operation 名を Product artifact 禁止語彙として固定し、OpenAPI / SDK / Go bindings の検査意味をそろえる。
+	// Step 1: Admin surface に属する operation 名を Product artifact 禁止語彙として固定し、OpenAPI / Go bindings の検査意味をそろえる。
 	adminOperations := []adminOperationName{
 		{lowerCamel: "listAdminAccounts", pascal: "ListAdminAccounts"},
 		{lowerCamel: "createAdminAccount", pascal: "CreateAdminAccount"},
@@ -95,10 +95,7 @@ func TestAPIContractBES001ProductArtifactsExcludeAdminOperations(t *testing.T) {
 	// Step 2: Product OpenAPI は operationId と tag を JSON 構造として検査し、Admin route が path 名を変えて混入しても検知できるようにする。
 	assertProductOpenAPIExcludesAdminOperations(t, adminOperations)
 
-	// Step 3: Product SDK は Orval が operationId から生成する関数名・URL helper・response type 名を検査し、frontend Product SDK への Admin operation 露出を拒否する。
-	assertProductSDKExcludesAdminOperations(t, adminOperations)
-
-	// Step 4: Product Go bindings は oapi-codegen が operation 名から生成する interface / wrapper / request object 名を検査し、Product binary 側の Admin handler 到達口を拒否する。
+	// Step 3: Product Go bindings は oapi-codegen が operation 名から生成する interface / wrapper / request object 名を検査し、Product binary 側の Admin handler 到達口を拒否する。
 	assertProductGoBindingsExcludeAdminOperations(t, adminOperations)
 }
 
@@ -370,23 +367,6 @@ func assertOperationTagsAreNotAdmin(t *testing.T, artifactPath string, path stri
 	}
 }
 
-func assertProductSDKExcludesAdminOperations(t *testing.T, adminOperations []adminOperationName) {
-	t.Helper()
-
-	// Step 1: Product SDK の生成済み TypeScript を読み、Admin operationId 由来の export がないことだけを検査する。
-	content := string(readProductSDKArtifact(t))
-
-	// Step 2: Orval の関数 export / URL helper / response type export の命名を検査し、Product SDK から Admin operation を呼べないことを保証する。
-	for _, adminOperation := range adminOperations {
-		forbiddenTokens := []string{
-			"export const " + adminOperation.lowerCamel,
-			"export const get" + adminOperation.pascal + "Url",
-			"export type " + adminOperation.lowerCamel,
-		}
-		assertArtifactExcludesTokens(t, productSDKArtifactPath, content, forbiddenTokens)
-	}
-}
-
 func assertProductGoBindingsExcludeAdminOperations(t *testing.T, adminOperations []adminOperationName) {
 	t.Helper()
 
@@ -548,10 +528,9 @@ func readOpenAPIServerDomain(t *testing.T, artifactPath string, content []byte) 
 
 const (
 	productOpenAPIArtifactPath    = "../../../../typespec/openapi/openapi.json"
-	productSDKArtifactPath        = "../../../../frontend/api/src/generated/client.ts"
 	productGoBindingsArtifactPath = "../../generated/openapi/openapi.gen.go"
 	adminOpenAPIArtifactPath      = "../../../../typespec/openapi/admin.openapi.json"
-	adminSDKArtifactPath          = "../../../../admin/api/src/generated/client.ts"
+	adminSDKArtifactPath          = "../../../../web/admin/api/src/generated/client.ts"
 	adminGoBindingsArtifactPath   = "../../generated/adminopenapi/openapi.gen.go"
 )
 
@@ -565,19 +544,6 @@ func readProductOpenAPIArtifact(t *testing.T) []byte {
 	}
 
 	// Step 2: 呼び出し側が JSON decode を行えるように、生 bytes のまま返す。
-	return content
-}
-
-func readProductSDKArtifact(t *testing.T) []byte {
-	t.Helper()
-
-	// Step 1: Product SDK の固定生成先だけを読み、Admin SDK や任意 file を誤って検査対象にしない。
-	content, err := os.ReadFile(productSDKArtifactPath)
-	if err != nil {
-		t.Fatalf("read Product artifact %s: %v", productSDKArtifactPath, err)
-	}
-
-	// Step 2: 呼び出し側が TypeScript export token を検査できるように、生 bytes のまま返す。
 	return content
 }
 

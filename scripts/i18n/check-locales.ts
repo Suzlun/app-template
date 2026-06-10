@@ -7,12 +7,12 @@ import {
   loadJsonCatalog,
   type CatalogTree,
   type Locale,
-} from '../../packages/frontend/i18n/src/index';
+} from '../../packages/web/i18n/src/index';
 
 /**
  * locale 検証で扱う surface 名です。
  */
-export type LocaleSurface = 'web' | 'app' | 'admin' | 'ui';
+export type LocaleSurface = 'web' | 'admin' | 'ui';
 
 /**
  * 辞書 coverage の 1 件を表します。
@@ -64,20 +64,19 @@ export interface LocaleCheckReport {
   readonly issues: readonly LocaleCoverageIssue[];
 
   /**
-   * `packages/frontend/i18n` 配下で見つかった禁止 JSON file です。
+   * `packages/web/i18n` 配下で見つかった禁止 JSON file です。
    */
   readonly forbiddenFiles: readonly ForbiddenLocaleJsonIssue[];
 }
 
 const SUPPORTED_LOCALES: readonly Locale[] = ['ja', 'en'];
 const SURFACES: readonly { readonly surface: LocaleSurface; readonly root: string }[] = [
-  { surface: 'web', root: 'packages/web/src' },
-  { surface: 'app', root: 'packages/frontend/app/src' },
-  { surface: 'admin', root: 'packages/admin/app/src' },
-  { surface: 'ui', root: 'packages/frontend/ui/src' },
+  { surface: 'web', root: 'packages/web/lp/src' },
+  { surface: 'admin', root: 'packages/web/admin/app/src' },
+  { surface: 'ui', root: 'packages/web/ui/src' },
 ];
 
-const SHARED_I18N_ROOT = 'packages/frontend/i18n/src';
+const SHARED_I18N_ROOT = 'packages/web/i18n/src';
 const LOCALE_SEGMENTS = new Set<string>(SUPPORTED_LOCALES);
 
 const toPosix = (value: string): string => value.split(path.sep).join('/');
@@ -194,7 +193,7 @@ export async function findForbiddenLocaleJsonFiles(
 /**
  * surface ごとの locale JSON key coverage を検証します。
  *
- * `packages/web`、`packages/frontend/app`、`packages/admin`、`packages/frontend/ui` の
+ * `packages/web/lp`、`packages/web/admin/app`、`packages/web/ui` の
  * `ja` / `en` 辞書差分を集約し、欠落 key を一覧化します。
  */
 export async function checkLocaleCatalogs(repoRoot: string): Promise<LocaleCheckReport> {
@@ -239,7 +238,7 @@ export function formatLocaleCheckReport(report: LocaleCheckReport): string {
 
   if (report.forbiddenFiles.length > 0) {
     lines.push(
-      'ARCH-I18N-FORBIDDEN-JSON: packages/frontend/i18n 配下に locale JSON file が存在します。'
+      'ARCH-I18N-FORBIDDEN-JSON: packages/web/i18n 配下に locale JSON file が存在します。'
     );
     for (const issue of report.forbiddenFiles) {
       lines.push(`- ${issue.filePath}`);

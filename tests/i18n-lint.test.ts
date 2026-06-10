@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process';
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,7 +19,7 @@ interface LintMessage {
 
 describe('i18n lint contracts', () => {
   it('[LOCALIZATION-FE-S011] ARCH-I18N-LITERAL-GUARD は UI の直書き文言を拒否する', async () => {
-    const filePath = 'packages/frontend/app/src/routes/lint-i18n/+page.svelte';
+    const filePath = 'packages/web/lp/src/routes/lint-i18n/+page.svelte';
     const fullPath = path.join(repoRoot, filePath);
 
     await mkdir(path.dirname(fullPath), { recursive: true });
@@ -41,14 +41,14 @@ describe('i18n lint contracts', () => {
     const tempRoot = await mkdtemp(path.join(os.tmpdir(), 'i18n-check-'));
 
     try {
-      await writeFixture(tempRoot, 'packages/web/src/lib/i18n/messages/ja/common.json', {
+      await writeFixture(tempRoot, 'packages/web/lp/src/lib/i18n/messages/ja/common.json', {
         greeting: 'こんにちは',
         farewell: 'さようなら',
       });
-      await writeFixture(tempRoot, 'packages/web/src/lib/i18n/messages/en/common.json', {
+      await writeFixture(tempRoot, 'packages/web/lp/src/lib/i18n/messages/en/common.json', {
         greeting: 'Hello',
       });
-      await writeFixture(tempRoot, 'packages/frontend/i18n/src/lib/i18n/messages/ja/common.json', {
+      await writeFixture(tempRoot, 'packages/web/i18n/src/lib/i18n/messages/ja/common.json', {
         forbidden: true,
       });
 
@@ -65,13 +65,27 @@ describe('i18n lint contracts', () => {
       ]);
       expect(report.forbiddenFiles).toEqual([
         {
-          filePath: 'packages/frontend/i18n/src/lib/i18n/messages/ja/common.json',
+          filePath: 'packages/web/i18n/src/lib/i18n/messages/ja/common.json',
         },
       ]);
     } finally {
       await rm(tempRoot, { recursive: true, force: true });
     }
   }, 20000);
+
+  it('[LOCALIZATION-FE-S013] Localized concrete components stay in surfaces', async () => {
+    const sharedUiManifest = await readRepoFile('packages/web/ui/package.json');
+    const lpRoute = await readRepoFile('packages/web/lp/src/routes/[locale]/+page.svelte');
+    const adminPasskeyList = await readRepoFile(
+      'packages/web/admin/app/src/lib/components/accounts/PasskeyList.svelte'
+    );
+
+    expect(sharedUiManifest).not.toContain('@app-template/web-i18n');
+    expect(lpRoute).toContain("import { useI18n, type Locale } from '$lib/i18n'");
+    expect(lpRoute).toContain("from '@app-template/web-ui'");
+    expect(adminPasskeyList).toContain("import { createCurrentAdminI18n } from '$lib/i18n'");
+    expect(adminPasskeyList).toContain("from '@app-template/web-ui/components'");
+  });
 });
 
 async function lintFile(fullPath: string): Promise<LintMessage[]> {
@@ -107,4 +121,8 @@ async function writeFixture(
   const fullPath = path.join(rootDir, relativePath);
   await mkdir(path.dirname(fullPath), { recursive: true });
   await writeFile(fullPath, `${JSON.stringify(content, null, 2)}\n`);
+}
+
+async function readRepoFile(relativePath: string): Promise<string> {
+  return readFile(path.join(repoRoot, relativePath), 'utf8');
 }

@@ -1,0 +1,16 @@
+{
+  "navAriaLabel": "Main navigation",
+  "heroTitle": "A foundation for Flutter app work, anchored by Web and API surfaces.",
+  "heroLead": "The public LP, shared UI, shared i18n, Admin Console, TypeSpec, and Go backend stay separated so future Flutter app work does not inherit Product Svelte app assumptions.",
+  "heroCtaPrimary": "View template",
+  "heroCtaSecondary": "View on GitHub",
+  "heroMetaAriaLabel": "Architecture metadata",
+  "metaStackLabel": "STACK",
+  "metaStackValue": "SvelteKit / Svelte 5 / TypeSpec / Go",
+  "metaRuntimeLabel": "RUNTIME",
+  "metaRuntimeValue": "Web LP / Admin / Backend",
+  "metaArchitectureLabel": "ARCHITECTURE",
+  "metaArchitectureValue": "web-lp → web-ui / admin-app → admin-domain → admin-api",
+  "languageSwitchAriaLabel": "Language switch",
+  "home": "Home"
+}

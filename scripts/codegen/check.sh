@@ -2,12 +2,11 @@
 
 set -euo pipefail
 
-# Product/Admin の生成物をすべて同じ drift snapshot に含め、片方だけ再生成漏れになる状態を検出する。
+# Product OpenAPI/Go、Admin OpenAPI/TS SDK/Go を同じ drift snapshot に含め、再生成漏れを検出する。
 generated_files=(
   "packages/typespec/openapi/openapi.json"
   "packages/typespec/openapi/admin.openapi.json"
-  "packages/frontend/api/src/generated/client.ts"
-  "packages/admin/api/src/generated/client.ts"
+  "packages/web/admin/api/src/generated/client.ts"
   "packages/backend/internal/generated/openapi/openapi.gen.go"
   "packages/backend/internal/generated/adminopenapi/openapi.gen.go"
 )
@@ -45,7 +44,7 @@ for file_path in "${generated_files[@]}"; do
   fi
 done
 
-# repository 既定の生成入口を使い、OpenAPI、TypeScript SDK、Go bindings、Prisma 生成物を一括で再生成する。
+# repository 既定の生成入口を使い、OpenAPI、Admin TypeScript SDK、Go bindings を一括で再生成する。
 pnpm gen
 
 # 生成後の各成果物を snapshot と比較し、未生成・差分ありのどちらも drift として扱う。
@@ -64,10 +63,9 @@ fi
 
 # Product artifacts に Admin operation/tag/export が混入していないことを検査する。
 check_no_contamination "packages/typespec/openapi/openapi.json" "$admin_openapi_contamination" "Admin operation or tag in Product OpenAPI"
-check_no_contamination "packages/frontend/api/src/generated/client.ts" "$admin_typescript_export_contamination" "Admin export in Product SDK"
 check_no_contamination "packages/backend/internal/generated/openapi/openapi.gen.go" "$admin_go_export_contamination" "Admin export in Product Go bindings"
 
 # Admin artifacts に Product operation/tag/export が混入していないことを検査する。
 check_no_contamination "packages/typespec/openapi/admin.openapi.json" "$product_openapi_contamination" "Product operation or tag in Admin OpenAPI"
-check_no_contamination "packages/admin/api/src/generated/client.ts" "$product_typescript_export_contamination" "Product export in Admin SDK"
+check_no_contamination "packages/web/admin/api/src/generated/client.ts" "$product_typescript_export_contamination" "Product export in Admin SDK"
 check_no_contamination "packages/backend/internal/generated/adminopenapi/openapi.gen.go" "$product_go_export_contamination" "Product export in Admin Go bindings"

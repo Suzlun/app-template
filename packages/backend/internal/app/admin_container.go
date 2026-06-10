@@ -203,7 +203,7 @@ func BuildAdminContainer(ctx context.Context, cfg config.Config) (*AdminContaine
 		return nil, err
 	}
 
-	// Step 8: Admin audit projection は Go backend 側 projector と warning observer を注入し、packages/admin の OpenSearch client を不要にする。
+	// Step 8: Admin audit projection は Go backend 側 projector と warning observer を注入し、packages/web/admin の OpenSearch client を不要にする。
 	projector, err := NewOperatorAuditOpenSearchProjector(cfg.Infra.OpenSearch)
 	if err != nil {
 		return nil, err

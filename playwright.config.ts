@@ -1,5 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const chromiumExecutablePath =
+  process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ?? process.env.AGENT_BROWSER_EXECUTABLE_PATH;
+const videoMode = process.env.PLAYWRIGHT_DISABLE_VIDEO === '1' ? 'off' : 'retain-on-failure';
+
 /**
  * Playwright E2E テスト設定
  * @see https://playwright.dev/docs/test-configuration
@@ -29,7 +33,7 @@ export default defineConfig({
     /* 失敗時のスクリーンショット */
     screenshot: 'only-on-failure',
     /* 失敗時のビデオ */
-    video: 'retain-on-failure',
+    video: videoMode,
     /* トレース設定 */
     trace: 'on-first-retry',
   },
@@ -37,16 +41,8 @@ export default defineConfig({
   /* テスト前にサーバーを起動 */
   webServer: [
     {
-      command: 'pnpm --filter @app-template/web dev',
+      command: 'pnpm --filter @app-template/web-lp dev',
       url: 'http://localhost:5173',
-      reuseExistingServer: process.env.CI === undefined,
-      timeout: 120 * 1000,
-    },
-    {
-      command: 'pnpm --filter @app-template/app dev',
-      /* app は canonical host redirect で app.localhost へ寄せるため、Node 側の readiness GET が
-       * app.localhost の名前解決に依存しないように TCP port の起動確認だけを行う。 */
-      port: 5174,
       reuseExistingServer: process.env.CI === undefined,
       timeout: 120 * 1000,
     },
@@ -62,7 +58,12 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        ...(chromiumExecutablePath !== undefined && chromiumExecutablePath !== ''
+          ? { launchOptions: { executablePath: chromiumExecutablePath } }
+          : {}),
+      },
     },
 
     {

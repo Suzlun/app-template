@@ -54,7 +54,7 @@ migration_files=()
 auto_exclude() {
   local p="$1"
   # Generated API client code is never hand-edited.
-  [[ "$p" == packages/frontend/api/src/generated/* ]] && return 0
+  [[ "$p" == packages/web/admin/api/src/generated/* ]] && return 0
   [[ "$p" == packages/typespec/openapi/* ]] && return 0
   [[ "$p" == packages/backend/internal/generated/* ]] && return 0
   return 1

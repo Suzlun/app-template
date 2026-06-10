@@ -78,8 +78,8 @@ This agent does not do hands-on work. Delegate file edits, generation, lint/test
 
 ## Delegation map
 
-- Frontend implementation (`packages/frontend`, `packages/web`): `.opencode/agents/unit/frontend/engineer.md` (`unit/frontend/engineer`)
-- Backend implementation (`packages/backend`, `packages/admin`, `packages/typespec`): `.opencode/agents/unit/backend/engineer.md` (`unit/backend/engineer`)
+- Frontend implementation (`packages/web`): `.opencode/agents/unit/frontend/engineer.md` (`unit/frontend/engineer`)
+- Backend implementation (`packages/backend`, `packages/typespec`): `.opencode/agents/unit/backend/engineer.md` (`unit/backend/engineer`)
 - Frontend review: `.opencode/agents/unit/frontend/reviewer.md`
 - Backend review: `.opencode/agents/unit/backend/reviewer.md`
 - General execution: `.opencode/agents/unit/build/builder.md`
@@ -103,18 +103,18 @@ If required inputs are missing, stop and list the missing items.
    - If the state is still `blocked` after one proposer round, return `BLOCKED`; do not loop indefinitely.
 2. If the state is `all_done`, skip implementation and request final review from `@unit/build/reviewer`.
 3. If the state is `ready`, split `tasks` into minimal units, compute the dependency-safe ready set, and delegate every ready unit:
-   - Frontend work under `packages/frontend` or `packages/web` -> `.opencode/agents/unit/frontend/engineer.md` (`@unit/frontend/engineer`)
-   - Backend work under `packages/backend`, `packages/admin`, or `packages/typespec` -> `.opencode/agents/unit/backend/engineer.md` (`@unit/backend/engineer`)
+   - Frontend work under `packages/web` -> `.opencode/agents/unit/frontend/engineer.md` (`@unit/frontend/engineer`)
+   - Backend work under `packages/backend` or `packages/typespec` -> `.opencode/agents/unit/backend/engineer.md` (`@unit/backend/engineer`)
    - Other execution -> `@unit/build/builder`
    - Use one work order per task by default; use a small dependency-safe batch only when tasks must stay together
    - When two or more ready units are independent, launch them in parallel in the same turn
    - Do not serialize independent frontend/backend work, page/component work, or other disjoint tasks without a concrete dependency reason
-4. After any execution affecting `packages/frontend` or `packages/web`, request frontend review from `@unit/frontend/reviewer` before accepting that unit.
-5. After any execution affecting `packages/backend`, `packages/admin`, or `packages/typespec`, request backend review from `@unit/backend/reviewer` before accepting that unit.
+4. After any execution affecting `packages/web`, request frontend review from `@unit/frontend/reviewer` before accepting that unit.
+5. After any execution affecting `packages/backend` or `packages/typespec`, request backend review from `@unit/backend/reviewer` before accepting that unit.
 6. If frontend and backend reviews are both ready and independent, request them in parallel.
 7. Re-run `openspec instructions apply ... --json` after each completed batch and repeat steps 3 to 6 until the state is `all_done`.
 8. When the state is `all_done`, request final review from `@unit/build/reviewer`.
-9. If `@unit/build/reviewer` blocks, send the feedback to the responsible implementer, rerun `@unit/frontend/reviewer` for changes under `packages/frontend` or `packages/web`, rerun `@unit/backend/reviewer` for changes under `packages/backend`, `packages/admin`, or `packages/typespec`, and iterate.
+9. If `@unit/build/reviewer` blocks, send the feedback to the responsible implementer, rerun `@unit/frontend/reviewer` for changes under `packages/web`, rerun `@unit/backend/reviewer` for changes under `packages/backend` or `packages/typespec`, and iterate.
 10. If `@unit/build/reviewer` approves, report archive-ready evidence to the caller: command summaries, referenced paths, and diff highlights.
 
 # Completion predicate (strict)

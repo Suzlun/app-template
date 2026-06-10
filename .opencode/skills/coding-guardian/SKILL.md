@@ -34,29 +34,27 @@ description: Enforce this repository's actual coding rules and verification flow
 
 ### 2) Classify the change before editing
 
-- Contract / codegen: `packages/typespec/**`, `packages/frontend/api/src/generated/**`, `packages/backend/internal/generated/**`
-- Frontend: `packages/web/**`, `packages/frontend/app/**`, `packages/frontend/domain/**`, `packages/frontend/ui/**`
+- Contract / codegen: `packages/typespec/**`, `packages/web/admin/api/src/generated/**`, `packages/backend/internal/generated/**`
+- Frontend: `packages/web/**`
 - Backend: `packages/backend/**`
 - Tooling / workflow: root config, scripts, hooks, CI, `.opencode/**`
 
 固定の依存方向:
 
-- Client: `packages/web -> packages/frontend/ui` and `packages/frontend/app -> packages/frontend/domain -> packages/frontend/api`
+- Client: `packages/web/lp -> packages/web/ui + packages/web/i18n`, `packages/web/admin/app -> packages/web/admin/domain + packages/web/ui + packages/web/i18n`, and `packages/web/admin/domain -> packages/web/admin/api`
 - Server: `packages/backend/cmd/api -> packages/backend/internal/app -> (packages/backend/internal/adapter/http | packages/backend/internal/adapter/postgres | packages/backend/internal/adapter/valkey | packages/backend/internal/adapter/webauthn | packages/backend/internal/adapter/mailer | packages/backend/internal/application | packages/backend/internal/platform/*) -> packages/backend/internal/domain`
 - `packages/backend/internal/generated/openapi` を非 generated code から import できるのは `packages/backend/internal/adapter/http` だけ
 
 ### 3) Implement without breaking enforced rules
 
 - Contract を変えるときは `packages/typespec/main.tsp` を直し、`pnpm gen` と `pnpm check:codegen` で整合を取る
-- `packages/typespec/openapi/openapi.json`、`packages/frontend/api/src/generated/client.ts`、`packages/backend/internal/generated/openapi/openapi.gen.go` は手で直さない
-- Frontend app / domain で `fetch`, `globalThis.fetch`, `axios`, `cross-fetch` を直接使わない
-- Frontend web は native `fetch` を使ってよいが、`axios` / `cross-fetch` は使わない
-- Frontend web / app から `@app-template/api` を直 import しない
-- Frontend web から `@app-template/domain` を import しない
+- `packages/typespec/openapi/openapi.json`、`packages/web/admin/api/src/generated/client.ts`、`packages/backend/internal/generated/openapi/openapi.gen.go` は手で直さない
+- Admin app から `@app-template/web-admin-api` を直接 import しない
+- `packages/web` で `axios` / `cross-fetch` を使わない
 - Active frontend source に React / TSX を持ち込まない
 - Domain hooks は `use*` export、`{ data, actions }` 戻り値、stateful 実装は `.svelte.ts`
-- Frontend app は SvelteKit SPA（SSR 無効）として保ち、server route / server hook / server-only lib を持ち込まない
-- `packages/web` の SvelteKit route/server 制約と、独立オリジンで動く frontend app の分離を維持する
+- Admin app は SvelteKit SPA（SSR 無効）として保ち、server route / server hook / server-only lib を持ち込まない
+- `packages/web/lp` の SvelteKit route/server 制約と、独立オリジンで動く Admin app の分離を維持する
 - Go file は `packages/backend/cmd/api`, `packages/backend/internal/*`, `packages/backend/tools/analyzers` の許可 layer にだけ置く
 - GORM は `packages/backend/internal/adapter/postgres/**` だけ、`AutoMigrate` は禁止、migration は `packages/backend/db/migrations/*.sql`
 - Non-generated Gin route は `/health` または `/api/v1/*` の string literal だけにする
@@ -87,12 +85,10 @@ Changed-file 向けの軽量チェック:
 ## Common violations to prevent
 
 - generated file の手編集
-- `packages/web` または `packages/frontend/app` から `@app-template/api` の直 import
-- `packages/web` から `@app-template/domain` の直 import
-- frontend app / domain での `fetch` / `axios` / `cross-fetch`
+- Admin app から `@app-template/web-admin-api` の直 import
 - `packages/web` での `axios` / `cross-fetch`
 - active frontend source での React / TSX
-- `packages/frontend/app` への SvelteKit route / server hook / form action の持ち込み
+- `packages/web/admin/app` への SvelteKit server route / server hook / server-only lib の持ち込み
 - GORM の layer 逸脱、`AutoMigrate`、migration pair 破れ
 - `packages/backend/internal/adapter/http` から `packages/backend/internal/adapter/postgres` / `packages/backend/internal/adapter/valkey` の直 import
 - backend code での `fmt.Print*` や host-derived URL composition

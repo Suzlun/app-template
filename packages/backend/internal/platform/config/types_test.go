@@ -99,7 +99,7 @@ func TestConfigValidateAdminRuntimeRejectsDomainCollision(t *testing.T) {
 
 	// Step 1: Admin と Product の hostname が同じで port だけ違う設定を作り、domain 分離の失敗を validation で検出する。
 	cfg := fullyConfiguredAdminValidationBase()
-	cfg.Admin.ProductDomain = "http://admin.localhost:5174"
+	cfg.Admin.ProductDomain = "http://admin.localhost:5176"
 	err := cfg.ValidateAdminRuntime()
 	if err == nil {
 		t.Fatal("expected error for Admin/Product domain collision")
@@ -199,7 +199,7 @@ environment = "development"
 
 [server]
 origin = "http://admin.localhost:5176"
-product_origin = "http://app.localhost:5174"
+product_origin = "http://www.localhost:5173"
 
 [cookie]
 name = "www_template_admin_refresh"
@@ -240,7 +240,7 @@ otel_service_name = "app-template-admin-api"
 	if cfg.Admin.Domain != "http://admin.localhost:5176" {
 		t.Fatalf("expected Admin domain mapping, got %q", cfg.Admin.Domain)
 	}
-	if cfg.Admin.ProductDomain != "http://app.localhost:5174" {
+	if cfg.Admin.ProductDomain != "http://www.localhost:5173" {
 		t.Fatalf("expected Product domain mapping, got %q", cfg.Admin.ProductDomain)
 	}
 	if cfg.Admin.Cookie.Name != "www_template_admin_refresh" || cfg.Admin.Cookie.Domain != "admin.localhost" {
@@ -277,7 +277,7 @@ func fullyConfiguredAdminValidationBase() Config {
 		Environment: "development",
 		Admin: AdminRuntimeConfig{
 			Domain:        "http://admin.localhost:5176",
-			ProductDomain: "http://app.localhost:5174",
+			ProductDomain: "http://www.localhost:5173",
 			Cookie: AdminCookieConfig{
 				Name:     "www_template_admin_refresh",
 				Domain:   "admin.localhost",

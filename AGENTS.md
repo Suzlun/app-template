@@ -35,14 +35,13 @@ Before beginning any work, you MUST summarize your understanding of the Credo be
 - Dev (admin server): `pnpm dev:admin-server` (Admin Go API on `http://localhost:8081`)
 - Dev (client entry): `pnpm dev:client` (alias of `pnpm dev:web`, Vite on `http://www.localhost:5173`)
 - Dev (web): `pnpm dev:web` (SvelteKit public site on `http://www.localhost:5173`)
-- Dev (app): `pnpm dev:app` (SvelteKit SPA app on `http://app.localhost:5174`)
 - Dev (admin): `pnpm dev:admin` (Admin Console on `http://admin.localhost:5176`)
 
 ## Command Policy
 
 - For both backend and frontend work, lint, typecheck, build, and test MUST be invoked through `pnpm` scripts.
-- When running verification from Codex Desktop or any host-side shell, invoke the required `pnpm` script through `scripts/devcontainer/run.sh` so the command uses the DevContainer toolchain instead of host Node.js, Go, bash, or pnpm. Example: `scripts/devcontainer/run.sh pnpm check`.
-- When already inside the DevContainer, run the same `pnpm` scripts directly or through `scripts/devcontainer/run.sh`; the wrapper detects the container and executes the command in place.
+- When running verification from Codex Desktop or any host-side shell, invoke the required `pnpm` script from the Nix/devenv shell so the command uses the pinned toolchain instead of host Node.js, Go, bash, or pnpm. Example: `devenv shell pnpm check` or `nix develop --command pnpm check`.
+- When already inside the Nix/devenv shell, run the same `pnpm` scripts directly.
 - Use `pnpm lint` for lint, `pnpm check` for typecheck, `pnpm build` or package-specific `pnpm build:*` scripts for build, and `pnpm test:*` scripts for tests.
 - Do not call direct verification tools such as `go test`, `go vet`, `go build`, `tsc`, `vitest`, `svelte-check`, `vite build`, `eslint`, or `stylelint`; route them through the existing `pnpm` scripts instead.
 - Do not call `pnpm exec` or `pnpm --filter ... exec` directly. If an existing package script uses `exec` internally, run only the parent `pnpm` script.
@@ -52,6 +51,7 @@ Before beginning any work, you MUST summarize your understanding of the Credo be
 - Source of truth: `packages/typespec/main.tsp`
 - Generated Product OpenAPI: `packages/typespec/openapi/openapi.json`
 - Generated Admin OpenAPI: `packages/typespec/openapi/admin.openapi.json`
+- Generated Admin SDK: `packages/web/admin/api/src/generated/client.ts`
 - Generated Product Go server bindings: `packages/backend/internal/generated/openapi/openapi.gen.go`
 - Generated Admin Go server bindings: `packages/backend/internal/generated/adminopenapi/openapi.gen.go`
 - Regenerate OpenAPI + SDK + Go bindings: `pnpm gen`
@@ -66,23 +66,22 @@ Before beginning any work, you MUST summarize your understanding of the Credo be
 
 ## Architecture Notes
 
-- Client dependency direction: `web -> frontend/ui` (web is a public LP; it MUST NOT depend on domain or api), `frontend/app -> frontend/domain -> frontend/api` (also `frontend/app -> frontend/ui`)
+- Client dependency direction: `web/lp -> web/ui + web/i18n` (LP MUST NOT depend on Admin domain or API), `web/admin/app -> web/admin/domain + web/ui + web/i18n`, and `web/admin/domain -> web/admin/api`.
 - Server dependency direction: `backend/cmd -> backend/internal/app -> (backend/internal/adapter/http|backend/internal/adapter/postgres|backend/internal/adapter/valkey|backend/internal/adapter/webauthn|backend/internal/adapter/mailer|backend/internal/application|backend/internal/platform/*) -> backend/internal/domain`
 - API contract direction: implementation must follow TypeSpec; do not generate OpenAPI from server routes for SDK input.
 
 ## Package Responsibility
 
-- Backend-owned agent scope: `packages/backend`, `packages/typespec`, and `packages/admin`.
+- Backend-owned agent scope: `packages/backend` and `packages/typespec`.
 - `packages/backend`: Go product API, migrations, generated Go bindings consumption, backend observability, and backend security boundaries.
 - `packages/typespec`: API contract source of truth and generated OpenAPI input; edit source contracts only and regenerate via `pnpm gen`.
-- `packages/admin`: Admin Console static frontend/domain/API SDK package. Admin frontend calls the same-origin Admin Go backend under `/api/v1/*`; it MUST NOT own `/api/admin/**` BFF routes, Prisma-backed server/runtime logic, or generated Product SDK exposure.
-- Frontend-owned agent scope: `packages/web` and `packages/frontend/**`.
-- `packages/web`: public landing/public site surface; it may depend on `packages/frontend/ui` only.
-- `packages/frontend/i18n`: shared frontend i18n runtime (locale definitions, loader/config, typed translator, formatter, coverage utility). It may be imported by `packages/web`, `packages/frontend/app`, and `packages/admin`, but not by `packages/frontend/ui` or `packages/frontend/domain`.
-- `packages/frontend/app`: authenticated `/app` CSR surface; compose domain hooks and UI components without direct API-client or raw network access.
-- `packages/frontend/domain`: frontend domain hooks, state, and API orchestration; it is the only handwritten frontend layer that depends on `packages/frontend/api`.
-- `packages/frontend/ui`: reusable UI components, styling primitives, assets, and presentation utilities.
-- `packages/frontend/api`: generated API SDK/types package; do not hand-edit generated artifacts, and route contract changes through `packages/typespec` plus `pnpm gen`.
+- Frontend-owned agent scope: `packages/web/**`.
+- `packages/web/lp`: public landing/public site surface; it may depend on `packages/web/ui` and `packages/web/i18n` only.
+- `packages/web/i18n`: shared frontend i18n runtime (locale definitions, loader/config, typed translator, formatter, coverage utility). It may be imported by `packages/web/lp` and `packages/web/admin/app`, but not by `packages/web/ui` or `packages/web/admin/domain`.
+- `packages/web/ui`: reusable UI components, styling primitives, assets, and presentation utilities.
+- `packages/web/admin/app`: Admin Console static SPA. It calls Admin domain hooks and UI components without direct API-client or raw network access.
+- `packages/web/admin/domain`: Admin frontend domain hooks, state, and API orchestration; it is the only handwritten Admin layer that depends on `packages/web/admin/api`.
+- `packages/web/admin/api`: Admin SDK/types package and hand-written Admin API wrappers; do not hand-edit generated artifacts, and route contract changes through `packages/typespec` plus `pnpm gen`.
 
 ## Backend Guardrails
 
@@ -97,8 +96,9 @@ Before beginning any work, you MUST summarize your understanding of the Credo be
 - SigNoz OTLP endpoint: `http://localhost:4317` (gRPC), `http://localhost:4318` (HTTP)
 - Go backend exports traces and metrics to SigNoz via OTLP gRPC
 - Frontend browsers send traces to SigNoz via `PUBLIC_OTEL_COLLECTOR_URL`
+- Docker Compose runtime wiring MUST keep SigNoz services integrated with the infra profile.
 
 ## OpenSpec
 
-- `openspec/**` is archived and is not part of the default tooling loop
-- Do not update OpenSpec artifacts for backend migration work unless explicitly requested
+- `openspec/**` is not part of the default lint/CI loop.
+- When an OpenSpec change is explicitly requested, use the OpenSpec artifacts for that named change only and keep unrelated OpenSpec content untouched.

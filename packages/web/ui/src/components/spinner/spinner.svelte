@@ -1,0 +1,17 @@
+<script lang="ts">
+	import { cn } from "@app-template/web-ui/lib/utils";
+	import Loader2Icon from '@lucide/svelte/icons/loader-2';
+	import type { SVGAttributes } from "svelte/elements";
+
+	let {
+		class: className,
+		// we add name, color, and stroke for compatibility with different icon libraries props
+		name,
+		color,
+		stroke,
+		"aria-hidden": ariaHidden = "true",
+		...restProps
+	}: SVGAttributes<SVGSVGElement> = $props();
+</script>
+
+<Loader2Icon name={name === null ? undefined : name} color={color === null ? undefined : color} stroke={stroke === null ? undefined : stroke} aria-hidden={ariaHidden} class={cn("size-4 animate-spin text-brand-500", className)} {...restProps} />
