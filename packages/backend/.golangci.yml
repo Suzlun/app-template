@@ -31,30 +31,30 @@ linters-settings:
           - cmd/admin-api/*.go
         allow:
           - $gostd
-          - www-template/packages/backend/internal/app
+          - app-template/packages/backend/internal/app
       domain:
         files:
           - internal/domain/*.go
         allow:
           - $gostd
-          - www-template/packages/backend/internal/domain
-          - www-template/packages/backend/internal/types
+          - app-template/packages/backend/internal/domain
+          - app-template/packages/backend/internal/types
       types:
         files:
           - internal/types/*.go
         allow:
           - $gostd
           - github.com/oklog/ulid/v2
-          - www-template/packages/backend/internal/types
+          - app-template/packages/backend/internal/types
       application:
         files:
           - internal/application/*.go
           - internal/application/**/*.go
         allow:
           - $gostd
-          - www-template/packages/backend/internal/domain
-          - www-template/packages/backend/internal/application
-          - www-template/packages/backend/internal/platform
+          - app-template/packages/backend/internal/domain
+          - app-template/packages/backend/internal/application
+          - app-template/packages/backend/internal/platform
       adapter-http:
         files:
           - internal/adapter/http/*.go
@@ -64,12 +64,12 @@ linters-settings:
           - github.com/gin-contrib/cors
           - github.com/gin-gonic/gin
           - github.com/oapi-codegen/runtime/types
-          - www-template/packages/backend/internal/domain
-          - www-template/packages/backend/internal/application
-          - www-template/packages/backend/internal/generated/openapi
-          - www-template/packages/backend/internal/generated/adminopenapi
-          - www-template/packages/backend/internal/platform
-          - www-template/packages/backend/internal/adapter/http
+          - app-template/packages/backend/internal/domain
+          - app-template/packages/backend/internal/application
+          - app-template/packages/backend/internal/generated/openapi
+          - app-template/packages/backend/internal/generated/adminopenapi
+          - app-template/packages/backend/internal/platform
+          - app-template/packages/backend/internal/adapter/http
       adapter-postgres:
         files:
           - internal/adapter/postgres/*.go
@@ -78,10 +78,10 @@ linters-settings:
           - $gostd
           - gorm.io/driver/postgres
           - gorm.io/gorm
-          - www-template/packages/backend/internal/domain
-          - www-template/packages/backend/internal/application
-          - www-template/packages/backend/internal/platform
-          - www-template/packages/backend/internal/adapter/postgres
+          - app-template/packages/backend/internal/domain
+          - app-template/packages/backend/internal/application
+          - app-template/packages/backend/internal/platform
+          - app-template/packages/backend/internal/adapter/postgres
       adapter-valkey:
         files:
           - internal/adapter/valkey/*.go
@@ -89,10 +89,10 @@ linters-settings:
         allow:
           - $gostd
           - github.com/redis/go-redis/v9
-          - www-template/packages/backend/internal/domain
-          - www-template/packages/backend/internal/application
-          - www-template/packages/backend/internal/platform
-          - www-template/packages/backend/internal/adapter/valkey
+          - app-template/packages/backend/internal/domain
+          - app-template/packages/backend/internal/application
+          - app-template/packages/backend/internal/platform
+          - app-template/packages/backend/internal/adapter/valkey
       adapter-webauthn:
         files:
           - internal/adapter/webauthn/*.go
@@ -101,20 +101,20 @@ linters-settings:
           - $gostd
           - github.com/go-webauthn/webauthn
           - github.com/go-webauthn/webauthn/protocol
-          - www-template/packages/backend/internal/domain
-          - www-template/packages/backend/internal/application
-          - www-template/packages/backend/internal/platform
-          - www-template/packages/backend/internal/adapter/webauthn
+          - app-template/packages/backend/internal/domain
+          - app-template/packages/backend/internal/application
+          - app-template/packages/backend/internal/platform
+          - app-template/packages/backend/internal/adapter/webauthn
       adapter-mailer:
         files:
           - internal/adapter/mailer/*.go
           - internal/adapter/mailer/**/*.go
         allow:
           - $gostd
-          - www-template/packages/backend/internal/domain
-          - www-template/packages/backend/internal/application
-          - www-template/packages/backend/internal/platform
-          - www-template/packages/backend/internal/adapter/mailer
+          - app-template/packages/backend/internal/domain
+          - app-template/packages/backend/internal/application
+          - app-template/packages/backend/internal/platform
+          - app-template/packages/backend/internal/adapter/mailer
       app:
         files:
           - internal/app/*.go
@@ -123,20 +123,20 @@ linters-settings:
           - github.com/go-webauthn/webauthn
           - github.com/go-webauthn/webauthn/protocol
           - github.com/oklog/ulid/v2
-          - www-template/packages/backend/internal/app
-          - www-template/packages/backend/internal/adapter/http
-          - www-template/packages/backend/internal/adapter/mailer
-          - www-template/packages/backend/internal/adapter/postgres
-          - www-template/packages/backend/internal/adapter/valkey
-          - www-template/packages/backend/internal/adapter/webauthn
-          - www-template/packages/backend/internal/application
-          - www-template/packages/backend/internal/domain
-          - www-template/packages/backend/internal/platform
+          - app-template/packages/backend/internal/app
+          - app-template/packages/backend/internal/adapter/http
+          - app-template/packages/backend/internal/adapter/mailer
+          - app-template/packages/backend/internal/adapter/postgres
+          - app-template/packages/backend/internal/adapter/valkey
+          - app-template/packages/backend/internal/adapter/webauthn
+          - app-template/packages/backend/internal/application
+          - app-template/packages/backend/internal/domain
+          - app-template/packages/backend/internal/platform
   funlen:
     lines: 100
     statements: 60
   goimports:
-    local-prefixes: www-template
+    local-prefixes: app-template
   nolintlint:
     require-explanation: true
     require-specific: true

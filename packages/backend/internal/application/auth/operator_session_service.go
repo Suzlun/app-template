@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // OperatorSessionService は Operator auth の application boundary である。

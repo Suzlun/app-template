@@ -7,7 +7,7 @@ import {
   clearRecoveryState,
   createGenericRecoverySentView,
   createRecoveryFlowInitialState,
-} from '@www-template/domain/auth/recovery';
+} from '@app-template/domain/auth/recovery';
 import {
   applyExpiredSession,
   applyAccountSuspended,
@@ -17,7 +17,7 @@ import {
   hasUlidAuthSessionShape,
   isNoStoreCacheControl,
   isUlid,
-} from '@www-template/domain/auth/session';
+} from '@app-template/domain/auth/session';
 
 import { removeQueryParamFromUrl } from '../../lib/auth/url';
 import { TEST_ULID } from '../../tests/mocks/handlers';
@@ -437,8 +437,8 @@ describe('[AUTH-FE-S020] auth routes は security headers と no-store semantics
     expect(state.session).toBeNull();
     expect(state.phase).toBe('anonymous');
 
-    // sessionStorage に 'www-template:auth-session' キーが存在しないことを確認
+    // sessionStorage に 'app-template:auth-session' キーが存在しないことを確認
     // （以前の実装ではこのキーを使用していたが、セキュリティ監査で除去済み）
-    expect(sessionStorage.getItem('www-template:auth-session')).toBeNull();
+    expect(sessionStorage.getItem('app-template:auth-session')).toBeNull();
   });
 });

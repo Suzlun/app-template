@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { AdminOperatorSessionResponse } from '@www-template/admin-api';
+import type { AdminOperatorSessionResponse } from '@app-template/admin-api';
 
 import { createCustomerAccount, searchAdminAccounts } from './accounts';
 import { clearAdminSession, finishAdminLogin } from './auth';
@@ -11,7 +11,7 @@ const apiMocks = vi.hoisted(() => ({
   requestFinishAdminLogin: vi.fn(),
 }));
 
-vi.mock('@www-template/admin-api', () => ({
+vi.mock('@app-template/admin-api', () => ({
   requestAdminAccounts: apiMocks.requestAdminAccounts,
   requestCreateAdminAccount: apiMocks.requestCreateAdminAccount,
   requestFinishAdminLogin: apiMocks.requestFinishAdminLogin,

@@ -4,7 +4,7 @@
  */
 
 /* UI パッケージが提供するベース・トークン・テーマ層をインポート */
-@import '@www-template/ui/styles.css';
+@import '@app-template/ui/styles.css';
 
 /* Tailwind v4: admin パッケージ内のソースコードをスキャンしてユーティリティを生成 */
 @import 'tailwindcss' source(none);

@@ -46,7 +46,7 @@ Product authentication と Admin authentication は別ドメインである。Pr
 ## Directory Tree
 
 ```text
-www-template
+app-template
 ├─ AGENTS.md
 ├─ CODING_STANDARDS.md
 ├─ CONTRIBUTING.md
@@ -498,7 +498,7 @@ erDiagram
 | `packages/frontend/domain`                                    | Product account sessions の browser state と refresh orchestration を担う。                              | `useAccountSessions`                           | `packages/frontend/api`                                           |
 | `packages/admin/api`                                          | Admin package-local SDK と same-origin wrapper を提供する。                                              | `createAdminApiClient`、generated Admin SDK    | Admin OpenAPI generated client                                    |
 | `packages/admin/domain`                                       | Admin auth/accounts/operators state orchestration を担う。                                               | `auth.ts`、`accounts.ts`、`operators.ts`       | `packages/admin/api`                                              |
-| `packages/admin/app`                                          | 静的 Admin UI routes/components を提供する。                                                             | `/login`、`/operator-setup`、`/accounts`       | `packages/admin/domain`、`@www-template/ui`、`@www-template/i18n` |
+| `packages/admin/app`                                          | 静的 Admin UI routes/components を提供する。                                                             | `/login`、`/operator-setup`、`/accounts`       | `packages/admin/domain`、`@app-template/ui`、`@app-template/i18n` |
 | `packages/backend/internal/domain`                            | Account、Operator、Audit、Product AccountAuth、Admin OperatorAuth、中立 primitive の不変条件を所有する。 | constructors、methods、domain errors           | stdlib と同 package 型                                            |
 | `packages/backend/internal/application/product/auth`          | Product account login/refresh/revoke/session validation を組み立てる。                                   | application DTO/use cases                      | `internal/domain`、shared tokenprimitive                          |
 | `packages/backend/internal/application/admin/auth`            | Admin operator login/refresh/current/logout/CSRF を組み立てる。                                          | application DTO/use cases                      | `internal/domain`、shared tokenprimitive                          |
@@ -635,7 +635,7 @@ erDiagram
 - Public API: `/login`、`/operator-setup`、`/accounts`、`/accounts/[id]` routes。
 - Key Data Structures: Svelte component props/state、form input、display model。
 - Key Flows: route load -> current operator verification -> protected content display -> account create/detail flow。
-- Dependencies: `packages/admin/domain`、`@www-template/ui`、`@www-template/i18n`。generated SDK、server-only、DB packages を直接使わない。
+- Dependencies: `packages/admin/domain`、`@app-template/ui`、`@app-template/i18n`。generated SDK、server-only、DB packages を直接使わない。
 - Error Handling: form validation、generic setup token error、duplicate email display、session expiry redirect。
 - Testing Strategy: `ADMIN-CONSOLE-FE-S038`〜`S046`、`ADMIN-AUTH-FE-S027`〜`S035` を Svelte/Vitest/Playwright tests で検証する。
 - Non-Functional: Admin HTML は no-store、hashed assets は長期 cache 可能。

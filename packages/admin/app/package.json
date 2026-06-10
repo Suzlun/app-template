@@ -1,5 +1,5 @@
 {
-  "name": "@www-template/admin-app",
+  "name": "@app-template/admin-app",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -15,9 +15,9 @@
   "dependencies": {
     "@lucide/svelte": "^0.577.0",
     "@simplewebauthn/browser": "^11.0.0",
-    "@www-template/admin-domain": "workspace:*",
-    "@www-template/i18n": "workspace:*",
-    "@www-template/ui": "workspace:*"
+    "@app-template/admin-domain": "workspace:*",
+    "@app-template/i18n": "workspace:*",
+    "@app-template/ui": "workspace:*"
   },
   "devDependencies": {
     "@tailwindcss/vite": "latest",

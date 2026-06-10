@@ -1,6 +1,6 @@
 package auth
 
-import domain "www-template/packages/backend/internal/domain"
+import domain "app-template/packages/backend/internal/domain"
 
 // RefreshCredentialHash は canonical auth lifecycle が store 境界へ渡す refresh credential hash DTO である。
 //

@@ -3,7 +3,7 @@ package accounts
 import (
 	"context"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // AccountSettingSnapshotService は refresh response に合成する AccountSetting snapshot を読み込む use case である。

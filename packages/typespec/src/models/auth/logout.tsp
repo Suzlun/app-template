@@ -5,7 +5,7 @@ import "@typespec/openapi3";
 using Http;
 using TypeSpec.OpenAPI;
 
-namespace WWWTemplate;
+namespace AppTemplate;
 
 @doc("logout / revoke 処理の共通 response。accessToken claims で確定した context の Cookie clear と context index cleanup だけを返す。")
 model LogoutResponse {

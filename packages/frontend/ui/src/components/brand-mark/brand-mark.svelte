@@ -3,7 +3,7 @@
   ブランドガイド 02 に従い Noto Sans JP Bold を wordmark 書体として使用し、
   ライト背景では N-900、ダーク背景では surface 色で表示する。
   decorative な記号を排除し、リンクと wordmark の 2 要素のみで構成される。
-  表示文字は docs/brand/brand_guidelines.md 01 に従い www-template を用いる。
+  表示文字は docs/brand/brand_guidelines.md 01 に従い app-template を用いる。
 -->
 <script lang="ts" module>
   /** 視覚サイズの段階。 */
@@ -18,7 +18,7 @@
 </script>
 
 <script lang="ts">
-  import { cn } from '@www-template/ui/lib/utils';
+  import { cn } from '@app-template/ui/lib/utils';
 
   let { size = 'md', class: className }: BrandMarkProps = $props();
 
@@ -29,7 +29,7 @@
 
 <a
   href="/"
-  aria-label="www-template"
+  aria-label="app-template"
   class={cn(
     'font-sans font-bold text-foreground no-underline select-none',
     'tracking-normal transition-colors duration-150 hover:text-primary',
@@ -37,5 +37,5 @@
     className
   )}
 >
-  www-template
+  app-template
 </a>

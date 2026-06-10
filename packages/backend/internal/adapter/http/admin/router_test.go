@@ -11,11 +11,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	accountsapplication "www-template/packages/backend/internal/application/accounts"
-	adminauth "www-template/packages/backend/internal/application/auth"
-	operatorsapplication "www-template/packages/backend/internal/application/operators"
-	domain "www-template/packages/backend/internal/domain"
-	"www-template/packages/backend/internal/platform/config"
+	accountsapplication "app-template/packages/backend/internal/application/accounts"
+	adminauth "app-template/packages/backend/internal/application/auth"
+	operatorsapplication "app-template/packages/backend/internal/application/operators"
+	domain "app-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 // OpenSpec 追跡: ADMIN-AUTH-BE-S057 / task 4.40 は TestAdminOperatorContextIsBoundAfterSessionValidation で、operator accessToken 検証後の operator/session context binding を固定する。

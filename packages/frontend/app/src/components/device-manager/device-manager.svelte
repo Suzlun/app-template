@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { Alert, AlertDescription } from "@www-template/ui/components/alert";
-  import { Badge } from "@www-template/ui/components/badge";
-  import { Button } from "@www-template/ui/components/button";
+  import { Alert, AlertDescription } from "@app-template/ui/components/alert";
+  import { Badge } from "@app-template/ui/components/badge";
+  import { Button } from "@app-template/ui/components/button";
   import {
     Item,
     ItemActions,
@@ -10,9 +10,9 @@
     ItemGroup,
     ItemHeader,
     ItemTitle,
-  } from "@www-template/ui/components/item";
-  import { Separator } from "@www-template/ui/components/separator";
-  import { Spinner } from "@www-template/ui/components/spinner";
+  } from "@app-template/ui/components/item";
+  import { Separator } from "@app-template/ui/components/separator";
+  import { Spinner } from "@app-template/ui/components/spinner";
 
   /** ドメイン層で使用するデバイスセッション表示モデル。 */
   export interface DeviceSession {

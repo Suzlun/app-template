@@ -28,12 +28,12 @@ describe('[LOCALIZATION-FE-S003] web route の root redirect / supported locale 
   it('root `/` は request header の Accept-Language から対応 locale へ redirect する', () => {
     try {
       rootLoad({
-        request: new Request('https://www-template.test/?from=home', {
+        request: new Request('https://app-template.test/?from=home', {
           headers: {
             'accept-language': 'en-US,en;q=0.9,ja;q=0.8',
           },
         }),
-        url: new URL('https://www-template.test/?from=home'),
+        url: new URL('https://app-template.test/?from=home'),
       });
       throw new Error('redirect が throw される想定でした。');
     } catch (error) {
@@ -44,12 +44,12 @@ describe('[LOCALIZATION-FE-S003] web route の root redirect / supported locale 
   it('root `/` は未対応の Accept-Language でも既定 locale へ redirect する', () => {
     try {
       rootLoad({
-        request: new Request('https://www-template.test/?from=home', {
+        request: new Request('https://app-template.test/?from=home', {
           headers: {
             'accept-language': 'fr-FR,fr;q=0.9',
           },
         }),
-        url: new URL('https://www-template.test/?from=home'),
+        url: new URL('https://app-template.test/?from=home'),
       });
       throw new Error('redirect が throw される想定でした。');
     } catch (error) {
@@ -76,7 +76,7 @@ describe('[LOCALIZATION-FE-S003] web route の root redirect / supported locale 
 
   it('unsupported locale path は 404 を返す', () => {
     try {
-      localeLoad({ url: new URL('https://www-template.test/fr') });
+      localeLoad({ url: new URL('https://app-template.test/fr') });
       throw new Error('404 が throw される想定でした。');
     } catch (error) {
       expect(error).toMatchObject({ status: 404 });

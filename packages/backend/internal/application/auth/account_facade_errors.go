@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 var (

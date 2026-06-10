@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import LanguagePage from '../../routes/(protected)/settings/general/language/+page.svelte';
 
 // domain hooks のモック
-vi.mock('@www-template/domain', () => ({
+vi.mock('@app-template/domain', () => ({
   useAccount: () => ({
     data: { state: { account: null, loading: false, error: null } },
     actions: {
@@ -13,7 +13,7 @@ vi.mock('@www-template/domain', () => ({
   }),
 }));
 
-vi.mock('@www-template/domain/auth/session', () => ({
+vi.mock('@app-template/domain/auth/session', () => ({
   useAuthSession: () => ({
     actions: {
       createAuthorizationHeaders: () => ({ Authorization: 'Bearer test' }),
@@ -23,7 +23,7 @@ vi.mock('@www-template/domain/auth/session', () => ({
 
 describe('[LOCALIZATION-FE-S005] 設定画面の表示言語ページ', () => {
   beforeEach(() => {
-    localStorage.setItem('www-template:locale', 'ja');
+    localStorage.setItem('app-template:locale', 'ja');
   });
 
   afterEach(() => {

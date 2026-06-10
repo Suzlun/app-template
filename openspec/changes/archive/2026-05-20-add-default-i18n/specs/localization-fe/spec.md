@@ -116,7 +116,7 @@
 
 ### Requirement: Frontend i18n 境界は辞書網羅性と表示面所有を SHALL 強制する
 
-システムは、`packages/web`、`packages/frontend/app`、`packages/admin` が所有する locale JSON files について、対応ロケール `ja` と `en` の辞書 key 差分を SHALL 検出する。システムは、`packages/frontend/i18n` に app/web/admin 固有の locale JSON files が存在しないことを SHALL 検証する。システムは、ユーザー向け UI 文言が各表示面の locale JSON files と共有 i18n 実装を経由することを SHALL 強制し、未翻訳の直書き UI literal を SHALL 拒否する。`packages/frontend/ui` と `packages/frontend/domain` は、`@www-template/i18n` または app/web/admin の i18n module を import してはならない（MUST NOT）。`packages/web`、`packages/frontend/app`、`packages/admin` は互いの locale JSON files を import してはならない（MUST NOT）。再利用 UI package は表示言語、固定 locale formatter、app 固有の認証文言、または `DeviceManager` のように具体的な locale JSON files を必要とする component を所有してはならない（MUST NOT）。
+システムは、`packages/web`、`packages/frontend/app`、`packages/admin` が所有する locale JSON files について、対応ロケール `ja` と `en` の辞書 key 差分を SHALL 検出する。システムは、`packages/frontend/i18n` に app/web/admin 固有の locale JSON files が存在しないことを SHALL 検証する。システムは、ユーザー向け UI 文言が各表示面の locale JSON files と共有 i18n 実装を経由することを SHALL 強制し、未翻訳の直書き UI literal を SHALL 拒否する。`packages/frontend/ui` と `packages/frontend/domain` は、`@app-template/i18n` または app/web/admin の i18n module を import してはならない（MUST NOT）。`packages/web`、`packages/frontend/app`、`packages/admin` は互いの locale JSON files を import してはならない（MUST NOT）。再利用 UI package は表示言語、固定 locale formatter、app 固有の認証文言、または `DeviceManager` のように具体的な locale JSON files を必要とする component を所有してはならない（MUST NOT）。
 
 **Customer Context**
 
@@ -127,7 +127,7 @@
 - システムは、app/web/admin が所有する locale JSON files について、対応ロケール `ja` と `en` の辞書 key 差分を SHALL 検出する。
 - システムは、`packages/frontend/i18n` に app/web/admin 固有の locale JSON files が存在しないことを SHALL 検証する。
 - システムは、ユーザー向け UI 文言が各表示面の locale JSON files と共有 i18n 実装を経由することを SHALL 強制し、未翻訳の直書き UI literal を SHALL 拒否する。
-- `packages/frontend/ui` と `packages/frontend/domain` は、`@www-template/i18n` または app/web/admin の i18n module を import してはならない（MUST NOT）。
+- `packages/frontend/ui` と `packages/frontend/domain` は、`@app-template/i18n` または app/web/admin の i18n module を import してはならない（MUST NOT）。
 - `packages/web`、`packages/frontend/app`、`packages/admin` は互いの locale JSON files を import してはならない（MUST NOT）。
 - 再利用 UI package は表示言語、固定 locale formatter、app 固有の認証文言、または具体的な locale JSON files を必要とする component を所有してはならない（MUST NOT）。
 
@@ -139,7 +139,7 @@
 
 #### Scenario: 未翻訳 UI literal と i18n import 境界違反は標準 lint で失敗する (LOCALIZATION-FE-S011)
 
-- **前提** 対象 UI ソースに未翻訳のユーザー向け直書き文言、または UI/domain からの `@www-template/i18n` import が存在する
+- **前提** 対象 UI ソースに未翻訳のユーザー向け直書き文言、または UI/domain からの `@app-template/i18n` import が存在する
 - **操作** 標準 lint を実行する
 - **結果** 違反した file と rule が報告され、検証は失敗する
 

@@ -8,7 +8,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"www-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 // Store は Product 認証永続化だけが利用する Valkey 接続 adapter である。

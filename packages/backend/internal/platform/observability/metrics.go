@@ -19,7 +19,7 @@ func InitMeter(ctx context.Context, endpoint, serviceName string) (func(context.
 	}
 
 	if serviceName == "" {
-		serviceName = "www-template-api"
+		serviceName = "app-template-api"
 	}
 
 	exporter, err := otlpmetricgrpc.New(ctx,

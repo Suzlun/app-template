@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"www-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 func TestValkeyStoreGetDelReturnsValueAndDeletesKey(t *testing.T) {

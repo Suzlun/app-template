@@ -6,8 +6,8 @@ import (
 	"errors"
 	"time"
 
-	productauth "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
+	productauth "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // AccountRefreshSessionStore は Product Account refreshToken の server-side state を Valkey に保存する adapter である。

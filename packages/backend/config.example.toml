@@ -74,7 +74,7 @@ url = "postgres://user:password@host:5432/dbname?sslmode=require"
 [valkey]
 # Valkey (Redis-compatible) connection string.
 url = "redis://host:6379/0"
-key_prefix = "www-template"
+key_prefix = "app-template"
 
 [opensearch]
 # OpenSearch endpoint.
@@ -108,5 +108,5 @@ otel_exporter_otlp_traces_endpoint = "signoz-otel-collector:4317"
 otel_exporter_otlp_logs_endpoint = "signoz-otel-collector:4317"
 
 # OTel service identification.
-otel_service_name = "www-template-api"
-otel_resource_attributes = "service.namespace=www-template,deployment.environment=production"
+otel_service_name = "app-template-api"
+otel_resource_attributes = "service.namespace=app-template,deployment.environment=production"

@@ -10,8 +10,8 @@
 - アカウント検索（部分一致・ページネーション・status フィルター）・閲覧・停止・復旧。停止は database status を更新し、顧客向け `auth-be` の新規 access token / refresh token pair 発行・refresh rotation・既存 bearer access token 認可を拒否する
 - 監査ログの自動記録（Service 層で保証）と閲覧（フィルター・ソート・details 展開）
 - Settings 配下のオペレーター管理（一覧・追加・ロール変更・無効化、setup token 発行・再発行、admin ロールのみ）
-- Admin-owned schema（`www-template`）: `admin.operators`, `admin.operator_passkeys`, `admin.audit_events`。migration metadata は SQL migrations が管理する
-- database（`www-template`）拡張: `accounts.status`, `accounts.session_revoked_after`, `admin_view.*`, `admin_op.*`
+- Admin-owned schema（`app-template`）: `admin.operators`, `admin.operator_passkeys`, `admin.audit_events`。migration metadata は SQL migrations が管理する
+- database（`app-template`）拡張: `accounts.status`, `accounts.session_revoked_after`, `admin_view.*`, `admin_op.*`
 - 監査ログの OpenSearch インデックス — 監査イベントを OpenSearch に非同期でインデックスし、全文検索・集計を可能にする
 - ESLint による MVCS 層間依存強制、顧客向けパッケージ import 禁止、セキュリティ制約
 - Docker コンテナ + adapter-node でのデプロイ。DB（ADMIN_DB / PRODUCT_DB の 2 系統）へ直接接続
@@ -20,7 +20,7 @@
 
 ### Out of Scope
 
-- 顧客向けアプリとのコード共有（`@www-template/ui` の純粋 UI コンポーネントを除く）
+- 顧客向けアプリとのコード共有（`@app-template/ui` の純粋 UI コンポーネントを除く）
 - WAF / ネットワークアクセス制限（インフラ層で設定。初回 bootstrap の enable flag / secret / expiry は Admin コードで強制するため in scope）
 - Admin BFF route の TypeSpec contract 定義（`packages/admin/src/routes/api/admin/**` のみ対象外。Admin BFF は顧客向け SDK / OpenAPI / Go backend route ではなく、`/api/v1/*` path policy の例外範囲はこの package-local route に限定する）
 - E2E テスト（Playwright）（初期実装では Unit / Integration に集中）
@@ -28,8 +28,8 @@
 
 ## Assumptions / Dependencies
 
-- PostgreSQL インスタンス上に `www-template` データベースが作成済みであること
-- Docker コンテナから環境変数で `DATABASE_URL`（→ `www-template`）と `DATABASE_URL`（→ `www-template`）が注入され、Prisma Client がそれぞれの DB へ接続すること
+- PostgreSQL インスタンス上に `app-template` データベースが作成済みであること
+- Docker コンテナから環境変数で `DATABASE_URL`（→ `app-template`）と `DATABASE_URL`（→ `app-template`）が注入され、Prisma Client がそれぞれの DB へ接続すること
 - Product auth と Admin が同じ Valkey infrastructure を共有し、Product は `VALKEY_URL`（例: DB 0）、Admin は `ADMIN_VALKEY_URL`（例: DB 1）で logical DB 番号を分離すること。Admin runtime は `admin:*` key prefix のみを読み書きし、Product auth の `auth:*` / `session:*` / `recovery:*` key は読み書きしてはならない
 - OpenSearch cluster が `OPENSEARCH_URL` 環境変数で利用可能であること。物理 cluster / 接続情報は単一でもよいが、Admin audit namespace と Production domain namespace は index prefix で分離し、raw index name と cross namespace query を禁止すること
 - Admin 公開 Origin が `ADMIN_ORIGIN`、Admin OpenSearch audit replica 数が `ADMIN_OPENSEARCH_AUDIT_REPLICAS`、Admin audit index prefix が `ADMIN_OPENSEARCH_AUDIT_INDEX_PREFIX`、Production domain index prefix が `PRODUCT_OPENSEARCH_INDEX_PREFIX` で設定されていること
@@ -44,7 +44,7 @@
 - `@simplewebauthn/browser` を WebAuthn client-side 操作に使用
 - `bcryptjs` を setup token ハッシュに使用
 - `zod` を入力バリデーションに使用
-- `@www-template/ui` から Table / Button / Dialog / Form / Badge / Input 等の純粋 UI コンポーネントを共有
+- `@app-template/ui` から Table / Button / Dialog / Form / Badge / Input 等の純粋 UI コンポーネントを共有
 
 ## Impacted Areas
 
@@ -55,7 +55,7 @@
 | `packages/admin/prisma/product/`                          | database 用 Prisma schema。migration は生成せず既存 golang-migrate の DB 構造を参照する                                               |
 | `packages/backend/db/migrations/`                         | database 拡張 migration を追加（000004 status/session_revoked_after, 000005 views, 000006 functions）。既存 golang-migrate 管理と統合 |
 | `pnpm-workspace.yaml`                                     | `packages/admin` 追加                                                                                                                 |
-| `tsconfig.base.json`                                      | `@www-template/admin` パスエイリアス追加                                                                                              |
+| `tsconfig.base.json`                                      | `@app-template/admin` パスエイリアス追加                                                                                              |
 | `eslint.config.js`                                        | Admin boundaries / MVCS / import 制限 / セキュリティルール追加                                                                        |
 | `AGENTS.md`                                               | API path policy に package-local Admin BFF 例外を明記                                                                                 |
 | `package.json` (root)                                     | dev:admin, build:admin, test:admin, Prisma generate / migrate deploy, db:migrate:product スクリプト追加                               |
@@ -63,9 +63,9 @@
 | `packages/typespec/main.tsp`                              | 既存 auth response error classification に `account-suspended` を追加し、`pnpm gen` で生成物を更新                                    |
 | `packages/backend/internal/auth/**`                       | login finish / refresh / bearer 認可で account status と `session_revoked_after` を検証                                               |
 | `packages/frontend/domain/**`, `packages/frontend/app/**` | `account-suspended` を session state に接続し、案内 UI を表示                                                                         |
-| `.devcontainer/compose.yaml`                              | `www-template` DB 作成用 init SQL 追加                                                                                                |
-| `www-template` DB                                         | 新規テーブル: operators, operator_passkeys, audit_events。migration metadata は SQL migrations が管理                                 |
-| `www-template` DB                                         | accounts.status / session_revoked_after カラム、admin_view / admin_op スキーマ、admin_console_read / admin_console_write role grant   |
+| `.devcontainer/compose.yaml`                              | `app-template` DB 作成用 init SQL 追加                                                                                                |
+| `app-template` DB                                         | 新規テーブル: operators, operator_passkeys, audit_events。migration metadata は SQL migrations が管理                                 |
+| `app-template` DB                                         | accounts.status / session_revoked_after カラム、admin_view / admin_op スキーマ、admin_console_read / admin_console_write role grant   |
 
 ## Directory Tree
 
@@ -224,11 +224,11 @@ packages/admin/
 | Add    | `packages/backend/db/migrations/000005_*.sql`             | database 拡張 (admin_view)                                                                                                  |
 | Add    | `packages/backend/db/migrations/000006_*.sql`             | database 拡張 (admin_op functions, SECURITY DEFINER + search_path 固定)                                                     |
 | Update | `pnpm-workspace.yaml`                                     | `packages/admin` 追加                                                                                                       |
-| Update | `tsconfig.base.json`                                      | `@www-template/admin` パスエイリアス追加                                                                                    |
+| Update | `tsconfig.base.json`                                      | `@app-template/admin` パスエイリアス追加                                                                                    |
 | Update | `eslint.config.js`                                        | Admin boundaries / MVCS / import 制限 / セキュリティルール追加                                                              |
 | Update | `package.json` (root)                                     | dev/build/test/db スクリプトに Admin を追加                                                                                 |
 | Update | `vitest.config.ts` (root)                                 | `frontend-admin` project 追加                                                                                               |
-| Update | `.devcontainer/compose.yaml`                              | `www-template` DB 作成用 init SQL                                                                                           |
+| Update | `.devcontainer/compose.yaml`                              | `app-template` DB 作成用 init SQL                                                                                           |
 
 ## System Diagram
 
@@ -236,14 +236,14 @@ packages/admin/
 flowchart LR
     Operator[Operator Browser] -->|HTTPS| Nginx[Reverse Proxy / TLS Term]
     Nginx -->|HTTP :3000| Container[Docker Container: admin-node]
-    Container -->|Prisma Client / SQL| AdminDB[("www-template")]
-    Container -->|Prisma Client / SQL| ProductDB[("www-template")]
+    Container -->|Prisma Client / SQL| AdminDB[("app-template")]
+    Container -->|Prisma Client / SQL| ProductDB[("app-template")]
     Container -->|Redis ADMIN_VALKEY_URL db 1| SharedValkey[("Shared Valkey")]
     ProductBackend[Product Backend] -->|Redis VALKEY_URL db 0| SharedValkey
     Container -->|REST OPENSEARCH_URL| OpenSearch[("Shared OpenSearch cluster")]
     OpenSearch --> AdminAuditIndex[("admin audit namespace")]
     OpenSearch --> ProductDomainIndex[("production domain namespace")]
-    Container -->|import| UI["@www-template/ui"]
+    Container -->|import| UI["@app-template/ui"]
 ```
 
 ## Package Diagram
@@ -258,7 +258,7 @@ flowchart TB
         Infra["lib/server/infrastructure/"]
     end
 
-    UI["@www-template/ui"]
+    UI["@app-template/ui"]
 
     Controller --> Service
     Controller --> Model
@@ -319,7 +319,7 @@ sequenceDiagram
 - Admin BFF route は `packages/admin` package の内部 route として lint/test 対象に含めるが、`packages/frontend/api` の generated client から呼び出してはならない。
 - `packages/admin` 以外に `/api/admin/*` route を追加してはならない。Go backend に Admin API を追加する場合は `/api/v1/*` と TypeSpec contract を必須にする。
 - この package-local 例外は AGENTS.md の API path policy に明記し、例外範囲を `packages/admin/src/routes/api/admin/**` に限定する。
-- `openspec validate` に加え、Admin 実装時は ESLint の no-restricted-imports で `@www-template/api` / `@www-template/domain` 依存禁止と Admin BFF の package-local 境界を検証する。
+- `openspec validate` に加え、Admin 実装時は ESLint の no-restricted-imports で `@app-template/api` / `@app-template/domain` 依存禁止と Admin BFF の package-local 境界を検証する。
 
 ## Runtime Data Store Isolation
 
@@ -424,8 +424,8 @@ erDiagram
 | `packages/admin` (lib/server/services)       | Business logic, audit recording                                               | searchAccounts, suspendAccount, restoreAccount, listAudit, manageOperator                                                                                                            | models, infrastructure                                                                |
 | `packages/admin` (lib/server/models)         | Prisma 経由の DB queries, Zod schemas, types                                  | findOperatorByEmail, insertAuditEvent, searchAccounts, suspendAccountProduct                                                                                                         | infrastructure                                                                        |
 | `packages/admin` (lib/server/infrastructure) | Prisma Client lifecycle, WebAuthn, JWT, CSRF, RBAC, audit, OpenSearch, config | getAdminPrisma, getProductPrisma, validateProductDbRuntimeRole, generateChallenge, verifyAssertion, signOperatorJwt, validateCsrf, hasPermission, indexAuditEvent, searchAuditEvents | @prisma/client, jose, @simplewebauthn/server, ioredis, @opensearch-project/opensearch |
-| `packages/admin` (lib/components)            | View components                                                               | Svelte components                                                                                                                                                                    | @www-template/ui                                                                      |
-| `@www-template/ui` (shared)                  | Pure UI primitives                                                            | Table, Button, Dialog, Form, Badge                                                                                                                                                   | svelte, bits-ui                                                                       |
+| `packages/admin` (lib/components)            | View components                                                               | Svelte components                                                                                                                                                                    | @app-template/ui                                                                      |
+| `@app-template/ui` (shared)                  | Pure UI primitives                                                            | Table, Button, Dialog, Form, Badge                                                                                                                                                   | svelte, bits-ui                                                                       |
 
 ### Prisma Design
 
@@ -646,7 +646,7 @@ flowchart TD
 | UT-ADMIN-CONSOLE-BE-SEC-041  | [ADMIN-CONSOLE-BE-S032] SQL template literal lint error      | eslint                    | SEC      | SQL テンプレートリテラル禁止                  | model with `` `SELECT ${x}` ``                          | ESLint error reported                     |
 | UT-ADMIN-CONSOLE-BE-SEC-042  | [ADMIN-CONSOLE-BE-S027] Model→services import lint err       | eslint                    | SEC      | Model→services 禁止                           | model imports $lib/server/services/                     | ESLint error reported                     |
 | UT-ADMIN-CONSOLE-BE-SEC-043  | [ADMIN-CONSOLE-BE-S028] Service→components import lint err   | eslint                    | SEC      | Service→components 禁止                       | service imports $lib/components/                        | ESLint error reported                     |
-| UT-ADMIN-CONSOLE-BE-SEC-044  | [ADMIN-CONSOLE-BE-S029] admin→api import lint err            | eslint                    | SEC      | @www-template/api 禁止                        | admin file imports @www-template/api                    | ESLint error reported                     |
+| UT-ADMIN-CONSOLE-BE-SEC-044  | [ADMIN-CONSOLE-BE-S029] admin→api import lint err            | eslint                    | SEC      | @app-template/api 禁止                        | admin file imports @app-template/api                    | ESLint error reported                     |
 | UT-ADMIN-CONSOLE-FE-SMK-045  | [ADMIN-CONSOLE-FE-S001] search filters by email              | routes/accounts           | SMK      | メール部分一致検索表示                        | load with query='example'                               | alice@example.com displayed               |
 | UT-ADMIN-CONSOLE-FE-SMK-046  | [ADMIN-CONSOLE-FE-S002] empty search shows empty state       | components/shared         | SMK      | 空結果で空状態表示                            | render EmptyState with 0 results                        | '該当なし' displayed                      |
 | UT-ADMIN-CONSOLE-FE-SMK-047  | [ADMIN-CONSOLE-FE-S004] pagination shows pages               | routes/accounts           | SMK      | ページネーション表示                          | load with 25 items, pageSize=20                         | page 1: 20, page 2: 5, nav shown          |
@@ -672,7 +672,7 @@ flowchart TD
 | UT-ADMIN-CONSOLE-FE-SMK-067  | [ADMIN-CONSOLE-FE-S032] dashboard shows KPIs                 | routes/+page              | SMK      | Dashboard KPI 表示                            | load with 12 total, 2 suspended                         | 12 / 10 / 2 displayed                     |
 | UT-ADMIN-CONSOLE-FE-SMK-068  | [ADMIN-CONSOLE-FE-S033] dashboard shows recent audit         | routes/+page              | SMK      | 最近の audit 表示                             | load with 15 events                                     | latest 10 displayed                       |
 | UT-ADMIN-CONSOLE-FE-SMK-069  | [ADMIN-CONSOLE-FE-S034] view→model import lint err           | eslint                    | SEC      | View→Model lint error                         | .svelte imports $lib/server/models/                     | ESLint error reported                     |
-| UT-ADMIN-CONSOLE-FE-SMK-070  | [ADMIN-CONSOLE-FE-S035] admin→@www-template/api lint err     | eslint                    | SEC      | admin→api lint error                          | admin file imports api                                  | ESLint error reported                     |
+| UT-ADMIN-CONSOLE-FE-SMK-070  | [ADMIN-CONSOLE-FE-S035] admin→@app-template/api lint err     | eslint                    | SEC      | admin→api lint error                          | admin file imports api                                  | ESLint error reported                     |
 
 ### Automated Test Coverage Notes
 
@@ -688,9 +688,9 @@ OpenSpec config requires every Scenario ID to be covered by an automated test ta
 
 1. database 拡張 migration を製品環境に適用: `DATABASE_URL="$DATABASE_URL" pnpm db:migrate:product`
 2. database の環境別 login role を作成し、`GRANT admin_console_write TO <product_admin_login_role>` を実行する。login role は superuser / table owner にしない
-3. Admin-owned schema migration を適用: `DATABASE_URL="$DATABASE_URL" pnpm --filter @www-template/admin prisma:migrate:deploy`
+3. Admin-owned schema migration を適用: `DATABASE_URL="$DATABASE_URL" pnpm --filter @app-template/admin prisma:migrate:deploy`
 4. Admin-owned schema の `admin.operators` が 0 件であることを確認し、短期 `ADMIN_BOOTSTRAP_ENABLED=true` / `ADMIN_BOOTSTRAP_SECRET_HASH` / `ADMIN_BOOTSTRAP_EXPIRES_AT` を設定して初回起動セットアップを有効化
-5. Admin イメージをビルド: `docker build -t www-template-admin:latest -f packages/admin/Dockerfile .`
+5. Admin イメージをビルド: `docker build -t app-template-admin:latest -f packages/admin/Dockerfile .`
 6. docker-compose でデプロイ: `docker compose up -d admin`（compose file は `admin` service、共有 `valkey` service、Admin-owned schema 接続、`VALKEY_URL`、`ADMIN_VALKEY_URL`、`OPENSEARCH_URL`、`PRODUCT_OPENSEARCH_INDEX_PREFIX`、`ADMIN_OPENSEARCH_AUDIT_INDEX_PREFIX` を含む）
 7. 起動時の `validateProductDbRuntimeRole()` が database login role の membership / non-superuser / non-owner を通過することを確認する
 8. `/setup` で bootstrap secret を提示し、最初の admin オペレーターを作成し passkey を登録
@@ -707,7 +707,7 @@ OpenSpec config requires every Scenario ID to be covered by an automated test ta
 - アカウント停止操作が audit_events に自動記録されること
 - Admin mutation route が Origin / CSRF token 不一致を 403 で拒否すること
 - `pnpm lint` が Admin 全ファイルを対象に含み、既存ルールに違反しないこと
-- Admin から `@www-template/api` を import すると ESLint エラーになること
+- Admin から `@app-template/api` を import すると ESLint エラーになること
 - `pnpm test:admin` が全テストをパスすること
 - Docker イメージがビルドでき、コンテナが正常起動すること
 - 監査イベントが OpenSearch にインデックスされ、検索可能であること

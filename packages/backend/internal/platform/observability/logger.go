@@ -77,7 +77,7 @@ func InitLogger(ctx context.Context, logsEndpoint string, serviceName string) (f
 	}
 
 	if serviceName == "" {
-		serviceName = "www-template-api"
+		serviceName = "app-template-api"
 	}
 
 	// OTLP logs exporter を gRPC で作成する。
@@ -112,7 +112,7 @@ func InitLogger(ctx context.Context, logsEndpoint string, serviceName string) (f
 	// slog の default ロガーを OTLP 対応に差し替える。
 	// stdout JSON 出力と OTLP 出力を dual-write する。
 	otelHandler := &otelSlogHandler{
-		logger: lp.Logger("www-template"),
+		logger: lp.Logger("app-template"),
 		stdout: slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 			Level: slog.LevelInfo,
 		}),

@@ -8,7 +8,7 @@ import {
   resolveLocale,
   SUPPORTED_LOCALES,
   type Locale,
-} from '@www-template/i18n';
+} from '@app-template/i18n';
 
 import commonEn from './messages/en/common.json';
 import commonJa from './messages/ja/common.json';

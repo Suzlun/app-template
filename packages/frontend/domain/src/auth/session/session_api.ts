@@ -1,7 +1,7 @@
 /**
  * セッション（デバイス）関連のAPIラッパーモジュール。
  *
- * このモジュールは、`@www-template/api` から生成されたセッション操作関数を
+ * このモジュールは、`@app-template/api` から生成されたセッション操作関数を
  * ドメイン層で使用しやすい形にラップし、エラーハンドリングと認証失敗分類を
  * 一元化する。エラー時は汎用的なメッセージを返し、機密情報を含まない。
  */
@@ -11,10 +11,9 @@ import {
   revokeOtherSessions,
   revokeSession,
   type listSessionsResponse,
-} from '@www-template/api';
+} from '@app-template/api';
 
-const SESSION_EXPIRED_ERROR = 'session-expired';
-const ACCOUNT_SUSPENDED_ERROR = 'account-suspended';
+import { ACCOUNT_SUSPENDED_ERROR, SESSION_EXPIRED_ERROR } from './constants';
 
 type SessionAuthFailure = 'session-expired' | 'unauthenticated' | 'account-suspended';
 

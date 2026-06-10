@@ -1,7 +1,7 @@
 import { finishOperatorSetup, startOperatorSetup } from '../auth';
 
 import type { AdminOperatorSetupStartResult } from '../auth';
-import type { WWWTemplateWebAuthnAttestationCredential } from '@www-template/admin-api';
+import type { AppTemplate } from '@app-template/admin-api';
 
 interface AdminOperatorSetupState {
   setupToken: string;
@@ -17,9 +17,7 @@ interface AdminOperatorSetupData {
 interface AdminOperatorSetupActions {
   consumeTokenFromUrl: (url: URL) => void;
   submit: (
-    register: (
-      options: AdminOperatorSetupStartResult['options']
-    ) => Promise<WWWTemplateWebAuthnAttestationCredential>,
+    register: (options: AdminOperatorSetupStartResult['options']) => Promise<AppTemplate>,
     navigateHome: () => void
   ) => Promise<void>;
 }

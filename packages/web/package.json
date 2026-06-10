@@ -1,5 +1,5 @@
 {
-  "name": "@www-template/web",
+  "name": "@app-template/web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -24,8 +24,8 @@
     "@opentelemetry/sdk-trace-web": "^2.7.0",
     "@opentelemetry/semantic-conventions": "^1.40.0",
     "@tanstack/svelte-query": "^6.1.18",
-    "@www-template/i18n": "workspace:*",
-    "@www-template/ui": "workspace:*"
+    "@app-template/i18n": "workspace:*",
+    "@app-template/ui": "workspace:*"
   },
   "devDependencies": {
     "@sveltejs/adapter-cloudflare": "^7.1.0",

@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
-	"www-template/packages/backend/internal/application/accounts"
-	"www-template/packages/backend/internal/application/audit"
-	authapplication "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/application/accounts"
+	"app-template/packages/backend/internal/application/audit"
+	authapplication "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // ─── Use case 定数 ──────────────────────────────────────────────────────────

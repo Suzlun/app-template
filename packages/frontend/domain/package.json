@@ -1,5 +1,5 @@
 {
-  "name": "@www-template/domain",
+  "name": "@app-template/domain",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -29,7 +29,7 @@
     "@opentelemetry/sdk-trace-base": "^2.7.0",
     "@opentelemetry/sdk-trace-web": "^2.7.0",
     "@opentelemetry/semantic-conventions": "^1.40.0",
-    "@www-template/api": "workspace:*"
+    "@app-template/api": "workspace:*"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"

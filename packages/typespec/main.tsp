@@ -31,16 +31,16 @@ import "./src/routes/v1/admin/auth.tsp";
 using Http;
 using TypeSpec.OpenAPI;
 
-@service(#{ title: "www-template Admin API" })
+@service(#{ title: "app-template Admin API" })
 @info(#{ version: "1.0.0" })
-@server("https://admin.www-template.example", "Admin API server")
+@server("https://admin.app-template.example", "Admin API server")
 namespace Admin {
 
 }
 
-@service(#{ title: "www-template API" })
+@service(#{ title: "app-template API" })
 @info(#{ version: "1.0.0" })
-@server("https://product.www-template.example", "Product API server")
-namespace WWWTemplate {
+@server("https://product.app-template.example", "Product API server")
+namespace AppTemplate {
 
 }

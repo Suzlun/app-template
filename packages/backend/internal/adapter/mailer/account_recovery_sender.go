@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strings"
 
-	productaccounts "www-template/packages/backend/internal/application/accounts"
-	application "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
-	"www-template/packages/backend/internal/platform/config"
+	productaccounts "app-template/packages/backend/internal/application/accounts"
+	application "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 // AccountRecoverySender は recovery / device-link / 完了通知メールを AccountSetting.locale に基づいた
@@ -29,7 +29,7 @@ func NewAccountRecoverySender(sender *SMTPSender, cfg config.InfraConfig, accoun
 	}
 	productName := strings.TrimSpace(cfg.Mail.ProductName)
 	if productName == "" {
-		productName = "www-template"
+		productName = "app-template"
 	}
 	return &AccountRecoverySender{
 		sender:          sender,

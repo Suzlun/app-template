@@ -7,7 +7,7 @@
  * 未知のコード・例外メッセージは汎用 safe 文言へ fail-close する。
  */
 
-import type { Locale } from '@www-template/i18n';
+import type { Locale } from '@app-template/i18n';
 
 import type { useI18n } from './index';
 

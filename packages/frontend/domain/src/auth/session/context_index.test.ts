@@ -37,7 +37,7 @@ describe('context_index', () => {
         },
       ],
     };
-    localStorage.setItem('www-template:product:context-index', JSON.stringify(index));
+    localStorage.setItem('app-template:product:context-index', JSON.stringify(index));
 
     const result = readContextIndex();
     expect(result).not.toBeNull();
@@ -47,7 +47,7 @@ describe('context_index', () => {
 
   it('[AUTH-FE-S056] tampered context index returns null and fails bootstrap', () => {
     localStorage.setItem(
-      'www-template:product:context-index',
+      'app-template:product:context-index',
       JSON.stringify({
         version: 999,
         surface: 'product',
@@ -73,7 +73,7 @@ describe('context_index', () => {
     upsertContextEntry(index, entry, true);
     writeContextIndex(index);
 
-    const raw = localStorage.getItem('www-template:product:context-index') ?? '';
+    const raw = localStorage.getItem('app-template:product:context-index') ?? '';
     expect(raw).not.toContain('accessToken');
     expect(raw).not.toContain('refreshToken');
     expect(raw).not.toContain('cookie');
@@ -94,7 +94,7 @@ describe('context_index', () => {
     writeContextIndex(index);
 
     const keys = Object.keys(localStorage);
-    expect(keys).toContain('www-template:product:context-index');
+    expect(keys).toContain('app-template:product:context-index');
   });
 
   it('[AUTH-FE-S059] removeContextEntry deletes only the target entry', () => {
@@ -143,8 +143,8 @@ describe('context_index', () => {
 
     // storage event を手動で発火させる
     const event = new StorageEvent('storage', {
-      key: 'www-template:product:context-index',
-      newValue: localStorage.getItem('www-template:product:context-index'),
+      key: 'app-template:product:context-index',
+      newValue: localStorage.getItem('app-template:product:context-index'),
     });
     window.dispatchEvent(event);
 

@@ -37,13 +37,13 @@ export default defineConfig({
   /* テスト前にサーバーを起動 */
   webServer: [
     {
-      command: 'pnpm --filter @www-template/web dev',
+      command: 'pnpm --filter @app-template/web dev',
       url: 'http://localhost:5173',
       reuseExistingServer: process.env.CI === undefined,
       timeout: 120 * 1000,
     },
     {
-      command: 'pnpm --filter @www-template/app dev',
+      command: 'pnpm --filter @app-template/app dev',
       /* app は canonical host redirect で app.localhost へ寄せるため、Node 側の readiness GET が
        * app.localhost の名前解決に依存しないように TCP port の起動確認だけを行う。 */
       port: 5174,

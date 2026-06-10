@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Badge, CardNS, Table } from '@www-template/ui/components';
+	import { Badge, CardNS, Table } from '@app-template/ui/components';
 
 	import { createCurrentAdminI18n } from '$lib/i18n';
 

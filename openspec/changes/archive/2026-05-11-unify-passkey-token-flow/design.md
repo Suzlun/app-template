@@ -32,7 +32,7 @@
    - OTP 側の `hashSecret` は削除に伴い消滅
 
 6. **メール文面の追加**
-   - `SendDeviceLink`: 新端末追加用 URL を含むメール（件名: "www-template device login link"）
+   - `SendDeviceLink`: 新端末追加用 URL を含むメール（件名: "app-template device login link"）
    - `SendRecoveryComplete`: 復旧完了通知
    - `SendDeviceLinkComplete`: 新端末追加完了通知
    - 既存 `SendAccountRecovery` は維持

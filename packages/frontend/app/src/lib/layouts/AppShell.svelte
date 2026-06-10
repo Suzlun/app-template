@@ -8,7 +8,7 @@
    * @param sidebar - サイドバー本体（AppSidebar）。
    * @param sidebarTriggerLabel - モバイル用サイドバー開閉ボタンの aria-label。
    */
-  import { Sidebar } from '@www-template/ui/components';
+  import { Sidebar } from '@app-template/ui/components';
 
   import type { Snippet } from 'svelte';
 

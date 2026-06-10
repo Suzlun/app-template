@@ -32,10 +32,13 @@ const productSurfaceForbiddenPatterns = [
 const explicitInputFiles = process.argv.slice(2);
 
 // Step 1: CLI 引数がある場合は test fixture などの明示 path だけを検査し、通常実行では Product route tree 全体を検査する。
-const inputFiles = explicitInputFiles.length > 0 ? explicitInputFiles : collectTypeSpecFiles(productRouteRoot);
+const inputFiles =
+  explicitInputFiles.length > 0 ? explicitInputFiles : collectTypeSpecFiles(productRouteRoot);
 
 // Step 2: 各 TypeSpec source を行単位で評価し、違反箇所を path:line 付きで蓄積する。
-const violations = inputFiles.flatMap((filePath) => detectProductSurfaceBoundaryViolations(filePath));
+const violations = inputFiles.flatMap((filePath) =>
+  detectProductSurfaceBoundaryViolations(filePath)
+);
 
 // Step 3: 通常実行では生成済み Product/Admin OpenAPI も検査し、service artifact 分離と context refresh path の両 surface 生成を固定する。
 if (explicitInputFiles.length === 0) {
@@ -64,19 +67,54 @@ function detectOpenAPISurfaceBoundaryViolations() {
 
   // Step 2: surface ごとの禁止 operation と必須 path を検査し、同じ relative refresh path を両 service に分離生成できているか確認する。
   return [
-    ...detectForbiddenOpenAPITokens(productOpenAPIArtifactPath, productContract, adminSurfaceTokens(), '[API-CONTRACT-BE-S001] Product artifact must not expose Admin operations'),
-    ...detectForbiddenOpenAPITokens(adminOpenAPIArtifactPath, adminContract, productSurfaceTokens(), '[API-CONTRACT-BE-S002] Admin artifact must not expose Product operations'),
+    ...detectForbiddenOpenAPITokens(
+      productOpenAPIArtifactPath,
+      productContract,
+      adminSurfaceTokens(),
+      '[API-CONTRACT-BE-S001] Product artifact must not expose Admin operations'
+    ),
+    ...detectForbiddenOpenAPITokens(
+      adminOpenAPIArtifactPath,
+      adminContract,
+      productSurfaceTokens(),
+      '[API-CONTRACT-BE-S002] Admin artifact must not expose Product operations'
+    ),
     ...detectContextRefreshPath(productOpenAPIArtifactPath, productContract, 'Product'),
     ...detectContextRefreshPath(adminOpenAPIArtifactPath, adminContract, 'Admin'),
     ...detectForbiddenAdminPath(productOpenAPIArtifactPath, productContract),
     ...detectForbiddenAdminPath(adminOpenAPIArtifactPath, adminContract),
     ...detectSeparatedServers(productContract, adminContract),
-    ...detectCredentialModeResponseShapes(productOpenAPIArtifactPath, productContract, productCredentialModeResponseContracts()),
-    ...detectCredentialModeResponseShapes(adminOpenAPIArtifactPath, adminContract, adminCredentialModeResponseContracts()),
-    ...detectSubjectFieldContracts(productOpenAPIArtifactPath, productContract, productSubjectResponseContracts()),
-    ...detectSubjectFieldContracts(adminOpenAPIArtifactPath, adminContract, adminSubjectResponseContracts()),
-    ...detectCookieClearCommandShape(productOpenAPIArtifactPath, productContract, 'CookieClearCommand'),
-    ...detectCookieClearCommandShape(adminOpenAPIArtifactPath, adminContract, 'WWWTemplate.CookieClearCommand'),
+    ...detectCredentialModeResponseShapes(
+      productOpenAPIArtifactPath,
+      productContract,
+      productCredentialModeResponseContracts()
+    ),
+    ...detectCredentialModeResponseShapes(
+      adminOpenAPIArtifactPath,
+      adminContract,
+      adminCredentialModeResponseContracts()
+    ),
+    ...detectSubjectFieldContracts(
+      productOpenAPIArtifactPath,
+      productContract,
+      productSubjectResponseContracts()
+    ),
+    ...detectSubjectFieldContracts(
+      adminOpenAPIArtifactPath,
+      adminContract,
+      adminSubjectResponseContracts()
+    ),
+    ...detectCookieClearCommandShape(
+      productOpenAPIArtifactPath,
+      productContract,
+      'CookieClearCommand'
+    ),
+    ...detectCookieClearCommandShape(
+      adminOpenAPIArtifactPath,
+      adminContract,
+      'WWWTemplate.CookieClearCommand'
+    ),
+    AppTemplate,
   ];
 }
 
@@ -105,7 +143,9 @@ function detectTypeSpecSourceStructureViolations() {
   ];
   for (const [scenarioId, importPath] of mainImportContracts) {
     if (!mainSource.includes(`import "${importPath}";`)) {
-      violations.push(`${relative(process.cwd(), mainSourcePath)}:1: ${scenarioId} main.tsp must import ${importPath}`);
+      violations.push(
+        `${relative(process.cwd(), mainSourcePath)}:1: ${scenarioId} main.tsp must import ${importPath}`
+      );
     }
   }
 
@@ -120,7 +160,9 @@ function detectTypeSpecSourceStructureViolations() {
     ['[API-CONTRACT-BE-S014]', join(packageRoot, 'src', 'routes', 'v1', 'auth.tsp')],
   ]) {
     if (existsSync(filePath)) {
-      violations.push(`${relative(process.cwd(), filePath)}:1: ${scenarioId} legacy catch-all or unsplit route source must not remain`);
+      violations.push(
+        `${relative(process.cwd(), filePath)}:1: ${scenarioId} legacy catch-all or unsplit route source must not remain`
+      );
     }
   }
 
@@ -130,7 +172,9 @@ function detectTypeSpecSourceStructureViolations() {
     ['[API-CONTRACT-BE-S014]', adminRouteRoot],
   ]) {
     if (!existsSync(directoryPath)) {
-      violations.push(`${relative(process.cwd(), directoryPath)}:1: ${scenarioId} route root must exist`);
+      violations.push(
+        `${relative(process.cwd(), directoryPath)}:1: ${scenarioId} route root must exist`
+      );
     }
   }
 
@@ -171,11 +215,16 @@ function detectConceptOwnerViolations(sourceFiles) {
   return ownerContracts.flatMap((contract) => {
     const matches = findConceptMatches(indexedSources, contract);
     if (matches.length === 0) {
-      return [`${relative(process.cwd(), contract.ownerPath)}:1: ${contract.scenarioId} missing canonical definition for ${contract.name}`];
+      return [
+        `${relative(process.cwd(), contract.ownerPath)}:1: ${contract.scenarioId} missing canonical definition for ${contract.name}`,
+      ];
     }
     return matches
       .filter((match) => match.filePath !== contract.ownerPath)
-      .map((match) => `${relative(process.cwd(), match.filePath)}:${match.lineNumber}: ${contract.scenarioId} ${contract.name} must be defined only in ${relative(process.cwd(), contract.ownerPath)}`);
+      .map(
+        (match) =>
+          `${relative(process.cwd(), match.filePath)}:${match.lineNumber}: ${contract.scenarioId} ${contract.name} must be defined only in ${relative(process.cwd(), contract.ownerPath)}`
+      );
   });
 }
 
@@ -225,10 +274,26 @@ function accountOwnerContracts() {
 function operatorOwnerContracts() {
   // Step 1: operator profile / setup / authorization の owner file を分け、Admin catch-all model への再統合を防ぐ。
   return [
-    typeOwner('AdminOperatorProfile', '[API-CONTRACT-BE-S017]', join(modelRoot, 'operators', 'profiles.tsp')),
-    typeOwner('AdminOperatorSessionResponse', '[API-CONTRACT-BE-S013]', join(modelRoot, 'operators', 'setup.tsp')),
-    typeOwner('AdminContextRefreshResponse', '[API-CONTRACT-BE-S013]', join(modelRoot, 'operators', 'setup.tsp')),
-    typeOwner('AdminAuthorizationBoundary', '[API-CONTRACT-BE-S017]', join(modelRoot, 'operators', 'authorization.tsp')),
+    typeOwner(
+      'AdminOperatorProfile',
+      '[API-CONTRACT-BE-S017]',
+      join(modelRoot, 'operators', 'profiles.tsp')
+    ),
+    typeOwner(
+      'AdminOperatorSessionResponse',
+      '[API-CONTRACT-BE-S013]',
+      join(modelRoot, 'operators', 'setup.tsp')
+    ),
+    typeOwner(
+      'AdminContextRefreshResponse',
+      '[API-CONTRACT-BE-S013]',
+      join(modelRoot, 'operators', 'setup.tsp')
+    ),
+    typeOwner(
+      'AdminAuthorizationBoundary',
+      '[API-CONTRACT-BE-S017]',
+      join(modelRoot, 'operators', 'authorization.tsp')
+    ),
   ];
 }
 
@@ -242,7 +307,12 @@ function operatorOwnerContracts() {
  */
 function typeOwner(typeName, scenarioId, ownerPath) {
   // Step 1: TypeSpec の top-level type declaration だけを検査し、参照箇所や description の語彙を owner と誤認しない。
-  return { name: typeName, scenarioId, ownerPath, pattern: new RegExp(`^\\s*(model|enum|union|scalar)\\s+${typeName}\\b`, 'u') };
+  return {
+    name: typeName,
+    scenarioId,
+    ownerPath,
+    pattern: new RegExp(`^\\s*(model|enum|union|scalar)\\s+${typeName}\\b`, 'u'),
+  };
 }
 
 /**
@@ -272,10 +342,20 @@ function findConceptMatches(indexedSources, contract) {
  */
 function detectLegacyRouteSourceViolations() {
   // Step 1: 空 directory は git 管理されないため許容し、`.tsp` source が残る場合だけ route split 違反として扱う。
-  const legacyRoots = [join(packageRoot, 'src', 'routes', 'admin-v1'), join(packageRoot, 'src', 'routes', 'v1')];
-  const legacyFiles = legacyRoots.flatMap((rootPath) => collectTypeSpecFilesIfExists(rootPath))
-    .filter((filePath) => !filePath.startsWith(`${productRouteRoot}/`) && !filePath.startsWith(`${adminRouteRoot}/`));
-  return legacyFiles.map((filePath) => `${relative(process.cwd(), filePath)}:1: [API-CONTRACT-BE-S014] route source must live under routes/v1/product or routes/v1/admin`);
+  const legacyRoots = [
+    join(packageRoot, 'src', 'routes', 'admin-v1'),
+    join(packageRoot, 'src', 'routes', 'v1'),
+  ];
+  const legacyFiles = legacyRoots
+    .flatMap((rootPath) => collectTypeSpecFilesIfExists(rootPath))
+    .filter(
+      (filePath) =>
+        !filePath.startsWith(`${productRouteRoot}/`) && !filePath.startsWith(`${adminRouteRoot}/`)
+    );
+  return legacyFiles.map(
+    (filePath) =>
+      `${relative(process.cwd(), filePath)}:1: [API-CONTRACT-BE-S014] route source must live under routes/v1/product or routes/v1/admin`
+  );
 }
 
 /**
@@ -303,18 +383,41 @@ function detectForbiddenSourceTokens(filePath) {
   const source = readFileSync(filePath, 'utf8');
   const lines = source.split(/\r?\n/u);
   const forbiddenTokenContracts = [
-    { pattern: /\bAuthContextIdentityKind\b/u, scenarioId: '[API-CONTRACT-BE-S016]', reason: 'AuthContextIdentityKind must not be a contract discriminator' },
-    { pattern: /\bidentityKind\b/u, scenarioId: '[API-CONTRACT-BE-S016]', reason: 'identityKind must not be a contract discriminator' },
-    { pattern: /\bprincipal\.kind\b/u, scenarioId: '[API-CONTRACT-BE-S016]', reason: 'principal.kind must not be required by auth context payloads' },
-    { pattern: /\boperatorAccessToken\b/u, scenarioId: '[API-CONTRACT-BE-S015]', reason: 'Admin token field must be accessToken' },
-    { pattern: /X-CSRF-Token/u, scenarioId: '[API-CONTRACT-BE-S019]', reason: 'protected routes use Authorization Bearer and must not require CSRF contract headers' },
+    {
+      pattern: /\bAuthContextIdentityKind\b/u,
+      scenarioId: '[API-CONTRACT-BE-S016]',
+      reason: 'AuthContextIdentityKind must not be a contract discriminator',
+    },
+    {
+      pattern: /\bidentityKind\b/u,
+      scenarioId: '[API-CONTRACT-BE-S016]',
+      reason: 'identityKind must not be a contract discriminator',
+    },
+    {
+      pattern: /\bprincipal\.kind\b/u,
+      scenarioId: '[API-CONTRACT-BE-S016]',
+      reason: 'principal.kind must not be required by auth context payloads',
+    },
+    {
+      pattern: /\boperatorAccessToken\b/u,
+      scenarioId: '[API-CONTRACT-BE-S015]',
+      reason: 'Admin token field must be accessToken',
+    },
+    {
+      pattern: /X-CSRF-Token/u,
+      scenarioId: '[API-CONTRACT-BE-S019]',
+      reason:
+        'protected routes use Authorization Bearer and must not require CSRF contract headers',
+    },
   ];
   const violations = [];
   for (const [index, line] of lines.entries()) {
     const executableLine = stripLineComment(line);
     for (const { pattern, scenarioId, reason } of forbiddenTokenContracts) {
       if (pattern.test(executableLine)) {
-        violations.push(`${relative(process.cwd(), filePath)}:${index + 1}: ${scenarioId} ${reason}`);
+        violations.push(
+          `${relative(process.cwd(), filePath)}:${index + 1}: ${scenarioId} ${reason}`
+        );
       }
     }
   }
@@ -356,11 +459,15 @@ function detectForbiddenOpenAPITokens(artifactPath, contract, forbiddenTokens, r
   for (const [pathKey, pathItem] of Object.entries(contract.paths ?? {})) {
     for (const [method, operation] of Object.entries(pathItem ?? {})) {
       if (forbiddenTokens.operationIds.has(operation?.operationId)) {
-        violations.push(`${relative(process.cwd(), artifactPath)}:1: ${reason}: ${method.toUpperCase()} ${pathKey} operationId ${operation.operationId}`);
+        violations.push(
+          `${relative(process.cwd(), artifactPath)}:1: ${reason}: ${method.toUpperCase()} ${pathKey} operationId ${operation.operationId}`
+        );
       }
       for (const tag of operation?.tags ?? []) {
         if (forbiddenTokens.tags.has(tag)) {
-          violations.push(`${relative(process.cwd(), artifactPath)}:1: ${reason}: ${method.toUpperCase()} ${pathKey} tag ${tag}`);
+          violations.push(
+            `${relative(process.cwd(), artifactPath)}:1: ${reason}: ${method.toUpperCase()} ${pathKey} tag ${tag}`
+          );
         }
       }
     }
@@ -385,7 +492,9 @@ function detectContextRefreshPath(artifactPath, contract, surfaceName) {
     return [];
   }
 
-  return [`${relative(process.cwd(), artifactPath)}:1: [API-CONTRACT-BE-S010] ${surfaceName} artifact must include POST ${contextRefreshPath}`];
+  return [
+    `${relative(process.cwd(), artifactPath)}:1: [API-CONTRACT-BE-S010] ${surfaceName} artifact must include POST ${contextRefreshPath}`,
+  ];
 }
 
 /**
@@ -399,7 +508,10 @@ function detectForbiddenAdminPath(artifactPath, contract) {
   // Step 1: 全 path key を確認し、Product/Admin とも Admin origin の `/api/v1/*` だけを使う方針を守る。
   return Object.keys(contract.paths ?? {})
     .filter((pathKey) => pathKey.startsWith('/api/admin/'))
-    .map((pathKey) => `${relative(process.cwd(), artifactPath)}:1: [API-CONTRACT-BE-S010] /api/admin/* path is forbidden: ${pathKey}`);
+    .map(
+      (pathKey) =>
+        `${relative(process.cwd(), artifactPath)}:1: [API-CONTRACT-BE-S010] /api/admin/* path is forbidden: ${pathKey}`
+    );
 }
 
 /**
@@ -417,7 +529,9 @@ function detectSeparatedServers(productContract, adminContract) {
     return [];
   }
 
-  return [`${relative(process.cwd(), productOpenAPIArtifactPath)}:1: [API-CONTRACT-BE-S003] Product and Admin OpenAPI servers must use distinct hosts`];
+  return [
+    `${relative(process.cwd(), productOpenAPIArtifactPath)}:1: [API-CONTRACT-BE-S003] Product and Admin OpenAPI servers must use distinct hosts`,
+  ];
 }
 
 /**
@@ -431,7 +545,7 @@ function detectSeparatedServers(productContract, adminContract) {
 function detectCredentialModeResponseShapes(artifactPath, contract, responseContracts) {
   // Step 1: Product/Admin ごとの schema 契約を順に検査し、Cookie mode と Bearer mode の body shape が混ざらないことを固定する。
   return responseContracts.flatMap((responseContract) =>
-    detectSchemaFieldContract(artifactPath, contract, responseContract),
+    detectSchemaFieldContract(artifactPath, contract, responseContract)
   );
 }
 
@@ -446,7 +560,7 @@ function detectCredentialModeResponseShapes(artifactPath, contract, responseCont
 function detectSubjectFieldContracts(artifactPath, contract, responseContracts) {
   // Step 1: Product は account、Admin は operator を必須 field として検査し、principal wrapper や legacy flat subject を拒否する。
   return responseContracts.flatMap((responseContract) =>
-    detectSchemaFieldContract(artifactPath, contract, responseContract),
+    detectSchemaFieldContract(artifactPath, contract, responseContract)
   );
 }
 
@@ -463,7 +577,9 @@ function detectSchemaFieldContract(artifactPath, contract, responseContract) {
   const schema = contract.components?.schemas?.[responseContract.schemaName];
   const displayPath = relative(process.cwd(), artifactPath);
   if (!schema) {
-    return [`${displayPath}:1: ${responseContract.scenarioId} missing schema ${responseContract.schemaName}: ${responseContract.reason}`];
+    return [
+      `${displayPath}:1: ${responseContract.scenarioId} missing schema ${responseContract.schemaName}: ${responseContract.reason}`,
+    ];
   }
 
   // Step 2: properties と required を両方検査し、field が optional 化された場合も browser / external client の契約破壊として検出する。
@@ -472,18 +588,24 @@ function detectSchemaFieldContract(artifactPath, contract, responseContract) {
   const violations = [];
   for (const fieldName of responseContract.requiredFields) {
     if (!Object.prototype.hasOwnProperty.call(properties, fieldName)) {
-      violations.push(`${displayPath}:1: ${responseContract.scenarioId} ${responseContract.schemaName} must expose ${fieldName}: ${responseContract.reason}`);
+      violations.push(
+        `${displayPath}:1: ${responseContract.scenarioId} ${responseContract.schemaName} must expose ${fieldName}: ${responseContract.reason}`
+      );
       continue;
     }
     if (!requiredFields.has(fieldName)) {
-      violations.push(`${displayPath}:1: ${responseContract.scenarioId} ${responseContract.schemaName}.${fieldName} must be required: ${responseContract.reason}`);
+      violations.push(
+        `${displayPath}:1: ${responseContract.scenarioId} ${responseContract.schemaName}.${fieldName} must be required: ${responseContract.reason}`
+      );
     }
   }
 
   // Step 3: 禁止 field は presence だけで fail にし、Cookie mode の refresh token leak と Bearer mode の browser command leak を防ぐ。
   for (const fieldName of responseContract.forbiddenFields) {
     if (Object.prototype.hasOwnProperty.call(properties, fieldName)) {
-      violations.push(`${displayPath}:1: ${responseContract.scenarioId} ${responseContract.schemaName} must not expose ${fieldName}: ${responseContract.reason}`);
+      violations.push(
+        `${displayPath}:1: ${responseContract.scenarioId} ${responseContract.schemaName} must not expose ${fieldName}: ${responseContract.reason}`
+      );
     }
   }
 
@@ -505,7 +627,8 @@ function detectCookieClearCommandShape(artifactPath, contract, schemaName) {
     schemaName,
     requiredFields: ['authContextId', 'path', 'maxAge', 'httpOnly', 'secure', 'sameSite'],
     forbiddenFields: ['refreshToken', 'operatorRefreshToken'],
-    reason: 'clear-cookie command must carry authContextId and exact refresh Cookie Path without plaintext refresh token',
+    reason:
+      'clear-cookie command must carry authContextId and exact refresh Cookie Path without plaintext refresh token',
   });
 }
 
@@ -547,10 +670,26 @@ function adminCredentialModeResponseContracts() {
 function productSubjectResponseContracts() {
   // Step 1: Product response は account field で subject payload を返し、principal wrapper や flat accountId を response root に戻さない。
   return [
-    ...subjectResponseContracts('ProductCookieAuthSessionResponse', 'account', ['principal', 'accountId', 'identityKind']),
-    ...subjectResponseContracts('ProductBearerAuthSessionResponse', 'account', ['principal', 'accountId', 'identityKind']),
-    ...subjectResponseContracts('ProductCookieContextRefreshResponse', 'account', ['principal', 'accountId', 'identityKind']),
-    ...subjectResponseContracts('ProductBearerContextRefreshResponse', 'account', ['principal', 'accountId', 'identityKind']),
+    ...subjectResponseContracts('ProductCookieAuthSessionResponse', 'account', [
+      'principal',
+      'accountId',
+      'identityKind',
+    ]),
+    ...subjectResponseContracts('ProductBearerAuthSessionResponse', 'account', [
+      'principal',
+      'accountId',
+      'identityKind',
+    ]),
+    ...subjectResponseContracts('ProductCookieContextRefreshResponse', 'account', [
+      'principal',
+      'accountId',
+      'identityKind',
+    ]),
+    ...subjectResponseContracts('ProductBearerContextRefreshResponse', 'account', [
+      'principal',
+      'accountId',
+      'identityKind',
+    ]),
   ];
 }
 
@@ -562,10 +701,30 @@ function productSubjectResponseContracts() {
 function adminSubjectResponseContracts() {
   // Step 1: Admin response は operator field と shared accessToken を返し、operatorAccessToken / principal wrapper を公開しない。
   return [
-    ...subjectResponseContracts('AdminOperatorSessionResponse', 'operator', ['principal', 'operatorId', 'operatorAccessToken', 'identityKind']),
-    ...subjectResponseContracts('AdminBearerOperatorSessionResponse', 'operator', ['principal', 'operatorId', 'operatorAccessToken', 'identityKind']),
-    ...subjectResponseContracts('AdminContextRefreshResponse', 'operator', ['principal', 'operatorId', 'operatorAccessToken', 'identityKind']),
-    ...subjectResponseContracts('AdminBearerContextRefreshResponse', 'operator', ['principal', 'operatorId', 'operatorAccessToken', 'identityKind']),
+    ...subjectResponseContracts('AdminOperatorSessionResponse', 'operator', [
+      'principal',
+      'operatorId',
+      'operatorAccessToken',
+      'identityKind',
+    ]),
+    ...subjectResponseContracts('AdminBearerOperatorSessionResponse', 'operator', [
+      'principal',
+      'operatorId',
+      'operatorAccessToken',
+      'identityKind',
+    ]),
+    ...subjectResponseContracts('AdminContextRefreshResponse', 'operator', [
+      'principal',
+      'operatorId',
+      'operatorAccessToken',
+      'identityKind',
+    ]),
+    ...subjectResponseContracts('AdminBearerContextRefreshResponse', 'operator', [
+      'principal',
+      'operatorId',
+      'operatorAccessToken',
+      'identityKind',
+    ]),
   ];
 }
 
@@ -585,7 +744,8 @@ function subjectResponseContracts(schemaName, subjectField, forbiddenFields) {
       schemaName,
       requiredFields: ['accessToken', 'authContextId', 'sessionId', subjectField],
       forbiddenFields,
-      reason: 'auth response must expose explicit account/operator subject field and shared token field names',
+      reason:
+        'auth response must expose explicit account/operator subject field and shared token field names',
     },
   ];
 }
@@ -602,9 +762,18 @@ function cookieModeResponseContracts(schemaName) {
     {
       scenarioId: '[API-CONTRACT-BE-S015]',
       schemaName,
-      requiredFields: ['credentialMode', 'authContextId', 'sessionId', 'accessToken', 'expiresAt', 'contextIndexUpdateHints', 'clearCookieCommands'],
+      requiredFields: [
+        'credentialMode',
+        'authContextId',
+        'sessionId',
+        'accessToken',
+        'expiresAt',
+        'contextIndexUpdateHints',
+        'clearCookieCommands',
+      ],
       forbiddenFields: ['refreshToken', 'operatorRefreshToken', 'operatorAccessToken'],
-      reason: 'cookie mode response must expose browser cleanup hints without plaintext refresh token',
+      reason:
+        'cookie mode response must expose browser cleanup hints without plaintext refresh token',
     },
   ];
 }
@@ -622,9 +791,22 @@ function bearerModeResponseContracts(schemaName, refreshTokenField) {
     {
       scenarioId: '[API-CONTRACT-BE-S012]',
       schemaName,
-      requiredFields: ['credentialMode', 'authContextId', 'sessionId', 'accessToken', 'expiresAt', refreshTokenField],
-      forbiddenFields: ['clearCookieCommands', 'contextIndexUpdateHints', 'operatorRefreshToken', 'operatorAccessToken'],
-      reason: 'bearer mode response must expose plaintext refresh token and exclude browser Cookie/index commands',
+      requiredFields: [
+        'credentialMode',
+        'authContextId',
+        'sessionId',
+        'accessToken',
+        'expiresAt',
+        refreshTokenField,
+      ],
+      forbiddenFields: [
+        'clearCookieCommands',
+        'contextIndexUpdateHints',
+        'operatorRefreshToken',
+        'operatorAccessToken',
+      ],
+      reason:
+        'bearer mode response must expose plaintext refresh token and exclude browser Cookie/index commands',
     },
   ];
 }

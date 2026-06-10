@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Label } from "@www-template/ui/components/label";
-	import { cn } from "@www-template/ui/lib/utils";
+	import { Label } from "@app-template/ui/components/label";
+	import { cn } from "@app-template/ui/lib/utils";
 	import type { ComponentProps } from "svelte";
 
 	let {

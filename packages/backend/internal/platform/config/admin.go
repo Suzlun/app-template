@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	secrethash "www-template/packages/backend/internal/platform/secret"
+	secrethash "app-template/packages/backend/internal/platform/secret"
 )
 
 // AdminCookieConfig は Admin refreshToken Cookie の runtime 設定を保持する。

@@ -8,8 +8,8 @@ import (
 
 	"gorm.io/gorm"
 
-	adminauth "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
+	adminauth "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // OperatorPasskeyRepository は Admin operator passkey credential を PostgreSQL から読み書きする adapter である。

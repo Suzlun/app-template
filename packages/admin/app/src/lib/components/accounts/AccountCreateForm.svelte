@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, CardNS, Field, Input, Label, Select, Spinner } from '@www-template/ui/components';
+	import { Button, CardNS, Field, Input, Label, Select, Spinner } from '@app-template/ui/components';
 
 	interface AccountCreateFormLabels {
 		title: string;

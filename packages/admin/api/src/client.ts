@@ -38,9 +38,9 @@ import type {
   AdminOperatorSetupStartRequest,
   AdminPasskeyFinishRequest,
   AdminPasskeyStartRequest,
+  BearerContextRefreshRequest,
+  CreateAccountRequest,
   ListAdminAccountsParams,
-  WWWTemplateBearerContextRefreshRequest,
-  WWWTemplateCreateAccountRequest,
 } from './generated/client';
 
 const adminApiPrefix = '/api/v1/';
@@ -160,7 +160,7 @@ export async function requestAdminAccounts(
  * @returns generated SDK の account create response。
  */
 export async function requestCreateAdminAccount(
-  body: WWWTemplateCreateAccountRequest,
+  body: CreateAccountRequest,
   session: AdminApiSessionHeaders
 ) {
   // account mutation は `/api/v1/accounts` に限定し、旧 BFF route を通らないことを確認する。
@@ -270,7 +270,7 @@ export async function requestRefreshAdminAutomationSession(input: AdminAutomatio
   assertAdminApiPath(getRefreshAdminOperatorSessionUrl(input.authContextId));
 
   // refreshToken は automation client の body credential としてだけ送信し、Authorization header には変換しない。
-  const body: WWWTemplateBearerContextRefreshRequest = {
+  const body: BearerContextRefreshRequest = {
     credentialMode: 'bearer',
     refreshToken: input.refreshToken,
   };

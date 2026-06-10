@@ -13,11 +13,11 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
-	sharedhttp "www-template/packages/backend/internal/adapter/http/shared"
-	productaccounts "www-template/packages/backend/internal/application/accounts"
-	application "www-template/packages/backend/internal/application/auth"
-	"www-template/packages/backend/internal/generated/openapi"
-	"www-template/packages/backend/internal/platform/config"
+	sharedhttp "app-template/packages/backend/internal/adapter/http/shared"
+	productaccounts "app-template/packages/backend/internal/application/accounts"
+	application "app-template/packages/backend/internal/application/auth"
+	"app-template/packages/backend/internal/generated/openapi"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 type Dependencies struct {

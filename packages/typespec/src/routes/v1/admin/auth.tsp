@@ -13,15 +13,15 @@ namespace Admin.ApiV1 {
   op startAdminPasskeyAuthentication(@body body: Admin.AdminPasskeyStartRequest): {
     @statusCode statusCode: 200;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.PasskeyStartResponse;
+    @body body: AppTemplate.PasskeyStartResponse;
   } | {
     @statusCode statusCode: 400;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.AuthOperationErrorResponse;
+    @body body: AppTemplate.AuthOperationErrorResponse;
   } | {
     @statusCode statusCode: 503;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.AuthFailureResponse;
+    @body body: AppTemplate.AuthFailureResponse;
   };
 
   @tag("admin-auth")
@@ -38,17 +38,17 @@ namespace Admin.ApiV1 {
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("admin-auth")
@@ -60,27 +60,27 @@ namespace Admin.ApiV1 {
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.PasskeyAddStartResponse;
+        @body body: AppTemplate.PasskeyAddStartResponse;
       }
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 409;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("admin-auth")
@@ -97,22 +97,22 @@ namespace Admin.ApiV1 {
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 409;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("admin-auth")
@@ -124,22 +124,22 @@ namespace Admin.ApiV1 {
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.PasskeyAddStartResponse;
+        @body body: AppTemplate.PasskeyAddStartResponse;
       }
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("admin-auth")
@@ -156,20 +156,20 @@ namespace Admin.ApiV1 {
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
-  @useAuth(WWWTemplate.BearerAuth)
+  @useAuth(AppTemplate.BearerAuth)
   @tag("admin-auth")
   @summary("Creates an Admin operator and delivers a one-time setup token")
   @operationId("createAdminOperator")
@@ -184,30 +184,30 @@ namespace Admin.ApiV1 {
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 409;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
-  @useAuth(WWWTemplate.BearerAuth)
+  @useAuth(AppTemplate.BearerAuth)
   @tag("admin-auth")
   @summary("Gets the current Admin operator")
   @operationId("getCurrentAdminOperator")
@@ -222,17 +222,17 @@ namespace Admin.ApiV1 {
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("admin-auth")
@@ -241,8 +241,8 @@ namespace Admin.ApiV1 {
   @post
   @route("/auth/contexts/{authContextId}/refresh")
   op refreshAdminOperatorSession(
-    @path authContextId: WWWTemplate.UlidId,
-    @body body?: WWWTemplate.BearerContextRefreshRequest,
+    @path authContextId: AppTemplate.UlidId,
+    @body body?: AppTemplate.BearerContextRefreshRequest,
   ):
     | {
         @statusCode statusCode: 200;
@@ -252,20 +252,20 @@ namespace Admin.ApiV1 {
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
-  @useAuth(WWWTemplate.BearerAuth)
+  @useAuth(AppTemplate.BearerAuth)
   @tag("admin-auth")
   @summary("Revokes the current Admin operator session")
   @operationId("logoutAdminOperator")
@@ -275,25 +275,25 @@ namespace Admin.ApiV1 {
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.LogoutResponse;
+        @body body: AppTemplate.LogoutResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
-  @useAuth(WWWTemplate.BearerAuth)
+  @useAuth(AppTemplate.BearerAuth)
   @tag("admin-auth")
   @summary("Lists registered passkeys for the current Admin operator")
   @operationId("listAdminOperatorPasskeys")
@@ -308,26 +308,26 @@ namespace Admin.ApiV1 {
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
-  @useAuth(WWWTemplate.BearerAuth)
+  @useAuth(AppTemplate.BearerAuth)
   @tag("admin-auth")
   @summary("Deletes a registered passkey for the current Admin operator")
   @operationId("deleteAdminOperatorPasskey")
   @delete
   @route("/auth/passkeys/{id}")
-  op deleteAdminOperatorPasskey(@path id: WWWTemplate.UlidId):
+  op deleteAdminOperatorPasskey(@path id: AppTemplate.UlidId):
     | {
         @statusCode statusCode: 204;
         @header("Cache-Control") cacheControl: "no-store";
@@ -335,26 +335,26 @@ namespace Admin.ApiV1 {
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 409;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 }

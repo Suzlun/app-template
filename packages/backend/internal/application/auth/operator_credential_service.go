@@ -3,7 +3,7 @@ package auth
 import (
 	"context"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // OperatorCredentialService は Operator passkey credential の一覧取得と削除を担当する application service である。

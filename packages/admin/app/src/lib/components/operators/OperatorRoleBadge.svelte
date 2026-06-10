@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Badge } from '@www-template/ui/components';
+	import { Badge } from '@app-template/ui/components';
 
 	const { role, label = role }: { role: string; label?: string } = $props();
 

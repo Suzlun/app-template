@@ -1,8 +1,8 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
 
-  import { useRecoveryFlow } from '@www-template/domain/auth/recovery';
-  import { AuthPanel, Button, Input, Label } from '@www-template/ui';
+  import { useRecoveryFlow } from '@app-template/domain/auth/recovery';
+  import { AuthPanel, Button, Input, Label } from '@app-template/ui';
 
   import AuthLayout from '$lib/layouts/AuthLayout.svelte';
   import { formatAuthError, resolveUnauthenticatedLocale, useI18n } from '$lib/i18n';

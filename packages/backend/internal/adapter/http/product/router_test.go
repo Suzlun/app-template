@@ -10,8 +10,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	application "www-template/packages/backend/internal/application/auth"
-	"www-template/packages/backend/internal/platform/config"
+	application "app-template/packages/backend/internal/application/auth"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 func TestHealthRoute(t *testing.T) {

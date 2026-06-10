@@ -347,7 +347,7 @@ Admin Console の入口として、オペレーターはシステム全体の状
 
 ### Requirement: MVCS 層間依存と import 制約
 
-Admin Console の frontend code は `packages/admin/app -> packages/admin/domain -> packages/admin/api` の依存方向を SHALL 保つ。`packages/admin/app` は `packages/admin/domain`、`@www-template/ui`、`@www-template/i18n` のみを直接利用し、Admin generated API client を直接 import してはならない（MUST NOT）。`packages/admin/domain` は `packages/admin/api` を通じて Admin backend API を呼び出し、Product API SDK、DB client、server-only module を import してはならない（MUST NOT）。`packages/admin/api` は Admin surface から生成された package-local SDK のみを使用し、Product surface SDK を使用してはならない（MUST NOT）。`packages/admin` は SvelteKit server route handlers、server load/actions、`$lib/server`、Prisma、Valkey、OpenSearch、WebAuthn server library を runtime dependency として使用してはならない（MUST NOT）。これらの制約は lint で強制されなければならない（SHALL）。
+Admin Console の frontend code は `packages/admin/app -> packages/admin/domain -> packages/admin/api` の依存方向を SHALL 保つ。`packages/admin/app` は `packages/admin/domain`、`@app-template/ui`、`@app-template/i18n` のみを直接利用し、Admin generated API client を直接 import してはならない（MUST NOT）。`packages/admin/domain` は `packages/admin/api` を通じて Admin backend API を呼び出し、Product API SDK、DB client、server-only module を import してはならない（MUST NOT）。`packages/admin/api` は Admin surface から生成された package-local SDK のみを使用し、Product surface SDK を使用してはならない（MUST NOT）。`packages/admin` は SvelteKit server route handlers、server load/actions、`$lib/server`、Prisma、Valkey、OpenSearch、WebAuthn server library を runtime dependency として使用してはならない（MUST NOT）。これらの制約は lint で強制されなければならない（SHALL）。
 
 **Customer Context**
 

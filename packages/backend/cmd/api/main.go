@@ -11,7 +11,7 @@ import (
 	"syscall"
 	"time"
 
-	"www-template/packages/backend/internal/app"
+	"app-template/packages/backend/internal/app"
 )
 
 func main() {
@@ -47,7 +47,7 @@ func run(logger *slog.Logger) error {
 		}
 	}()
 
-	logger.Info("www-template api listening", slog.String("addr", runtime.Config().Port))
+	logger.Info("app-template api listening", slog.String("addr", runtime.Config().Port))
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, stdhttp.ErrServerClosed) {
 		return fmt.Errorf("listen and serve: %w", err)
 	}

@@ -6,8 +6,8 @@ import (
 	"net/url"
 	"strings"
 
-	operatorsapplication "www-template/packages/backend/internal/application/operators"
-	"www-template/packages/backend/internal/platform/config"
+	operatorsapplication "app-template/packages/backend/internal/application/operators"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 // SetupTokenDeliveryPort は追加 operator の setup token を secure mail transport で配送する adapter である。
@@ -28,7 +28,7 @@ func NewSetupTokenDeliveryPort(sender *SMTPSender, cfg config.Config) *SetupToke
 	// Step 1: config に固定された Admin origin だけを URL 作成に使い、request Host header 由来の URL composition を避ける。
 	productName := strings.TrimSpace(cfg.Infra.Mail.ProductName)
 	if productName == "" {
-		productName = "www-template"
+		productName = "app-template"
 	}
 	return &SetupTokenDeliveryPort{sender: sender, fromAddress: strings.TrimSpace(cfg.Infra.Mail.FromAddress), productName: productName, adminDomain: strings.TrimSpace(cfg.Admin.Domain)}
 }

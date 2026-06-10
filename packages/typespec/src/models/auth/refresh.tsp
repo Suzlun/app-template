@@ -5,7 +5,7 @@ import "@typespec/openapi3";
 using Http;
 using TypeSpec.OpenAPI;
 
-namespace WWWTemplate;
+namespace AppTemplate;
 
 @doc("Bearer client が context refresh で送る request body。Cookie mode では body を送らず、path-scoped HttpOnly Cookie だけを提示する。")
 model BearerContextRefreshRequest {

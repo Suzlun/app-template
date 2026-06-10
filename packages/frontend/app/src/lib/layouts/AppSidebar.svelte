@@ -8,8 +8,8 @@
    * @param labels - i18n 経由の翻訳済みラベル群。
    * @param userMenu - ユーザーメニュー（AppUserMenu）を配置する snippet。
    */
-  import { BrandMark } from '@www-template/ui';
-  import { Sidebar } from '@www-template/ui/components';
+  import { BrandMark } from '@app-template/ui';
+  import { Sidebar } from '@app-template/ui/components';
 
   import type { Snippet } from 'svelte';
 

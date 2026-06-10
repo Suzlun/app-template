@@ -67,8 +67,8 @@
 
 - [x] 9.1 `packages/backend/internal/adapters/mailer/account_recovery_sender.go` の `SendPasskeyOtp()` と `buildPasskeyOtpMessage()` を削除
 - [x] 9.2 `SendAccountRecovery()` は `delivery.Kind` を参照し、kind に応じてメール件名・文面を分岐するよう修正（既存の recovery 文面は維持、device-link は新規文面）
-- [x] 9.3 新規 `buildDeviceLinkMessage(from, email, url, requestID string) string` を追加。件名: "www-template device login link"、本文に device-link URL を含める
-- [x] 9.4 `AccountRecoverySender` に `sendRecoveryComplete` と `sendDeviceLinkComplete` の notification 送信メソッドを追加。件名例: "www-template passkey recovered" / "www-template passkey added on new device"
+- [x] 9.3 新規 `buildDeviceLinkMessage(from, email, url, requestID string) string` を追加。件名: "app-template device login link"、本文に device-link URL を含める
+- [x] 9.4 `AccountRecoverySender` に `sendRecoveryComplete` と `sendDeviceLinkComplete` の notification 送信メソッドを追加。件名例: "app-template passkey recovered" / "app-template passkey added on new device"
 
 ## 10. Go Router 層の変更
 

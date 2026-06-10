@@ -9,7 +9,7 @@ import {
   type LocaleCatalogMap,
   type TranslationValues,
   type Locale,
-} from '@www-template/i18n';
+} from '@app-template/i18n';
 
 import commonEn from './messages/en/common.json';
 import deviceManagerEn from './messages/en/device-manager.json';
@@ -46,7 +46,7 @@ const catalogs: LocaleCatalogMap<AppNamespaceMap> = {
   },
 };
 
-const LOCAL_STORAGE_KEY = 'www-template:locale';
+const LOCAL_STORAGE_KEY = 'app-template:locale';
 
 /**
  * localStorage から保存済み locale を読み込む。

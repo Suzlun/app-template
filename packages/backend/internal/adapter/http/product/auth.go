@@ -10,11 +10,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	sharedhttp "www-template/packages/backend/internal/adapter/http/shared"
-	application "www-template/packages/backend/internal/application/auth"
-	"www-template/packages/backend/internal/generated/openapi"
-	"www-template/packages/backend/internal/platform/config"
-	"www-template/packages/backend/internal/platform/id"
+	sharedhttp "app-template/packages/backend/internal/adapter/http/shared"
+	application "app-template/packages/backend/internal/application/auth"
+	"app-template/packages/backend/internal/generated/openapi"
+	"app-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/id"
 )
 
 const noStoreValue = "no-store"

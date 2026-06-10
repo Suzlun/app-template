@@ -13,10 +13,10 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
 
-  import { useAccount } from '@www-template/domain';
-  import { useSessionGuard } from '@www-template/domain/auth/guard';
-  import { useAuthSession } from '@www-template/domain/auth/session';
-  import { useAccountLocaleSync } from '@www-template/domain/account';
+  import { useAccount } from '@app-template/domain';
+  import { useSessionGuard } from '@app-template/domain/auth/guard';
+  import { useAuthSession } from '@app-template/domain/auth/session';
+  import { useAccountLocaleSync } from '@app-template/domain/account';
 
   import AppShell from '$lib/layouts/AppShell.svelte';
   import AppSidebar from '$lib/layouts/AppSidebar.svelte';

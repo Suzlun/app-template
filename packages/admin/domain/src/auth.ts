@@ -2,7 +2,9 @@ import {
   type AdminOperatorAuthSessionResponse,
   type AdminOperatorContextRefreshResponse,
   type AdminOperatorProfile,
-  type WWWTemplateContextIndexUpdateHint,
+  type ContextIndexUpdateHint,
+  type PasskeyAddStartResponse,
+  type PasskeyStartResponse,
   requestCurrentAdminOperator,
   requestFinishInitialAdminSetup,
   requestFinishAdminLogin,
@@ -12,11 +14,9 @@ import {
   requestStartInitialAdminSetup,
   requestStartAdminLogin,
   requestStartOperatorSetup,
-  type WWWTemplatePasskeyAddStartResponse,
-  type WWWTemplatePasskeyStartResponse,
-  type WWWTemplateWebAuthnAssertionCredential,
-  type WWWTemplateWebAuthnAttestationCredential,
-} from '@www-template/admin-api';
+  type WebAuthnAssertionCredential,
+  type WebAuthnAttestationCredential,
+} from '@app-template/admin-api';
 
 import {
   clearAdminContextIndex,
@@ -65,7 +65,7 @@ export type AdminProtectedRouteState =
  */
 export interface AdminLoginStartResult {
   requestId: string;
-  options: WWWTemplatePasskeyStartResponse;
+  options: PasskeyStartResponse;
 }
 
 /**
@@ -75,7 +75,7 @@ export interface AdminLoginStartResult {
  */
 export interface AdminOperatorSetupStartResult {
   requestId: string;
-  options: WWWTemplatePasskeyAddStartResponse;
+  options: PasskeyAddStartResponse;
 }
 
 /**
@@ -96,7 +96,7 @@ export interface AdminInitialSetupStartInput {
  * それ以外は setup form を閉じるための秘匿的な UI 分類で、backend error reason は保持しません。
  */
 export type AdminInitialSetupStartResult =
-  | { status: 'started'; requestId: string; options: WWWTemplatePasskeyAddStartResponse }
+  | { status: 'started'; requestId: string; options: PasskeyAddStartResponse }
   | { status: 'invalid' | 'operator-exists' | 'bootstrap-disabled' | 'unavailable' };
 
 let currentSession: AdminSessionState | null = null;
@@ -127,7 +127,7 @@ function removeAdminSessionContext(authContextId: string): void {
   writeAdminContextIndex(index);
 }
 
-function applyAdminContextIndexHints(hints: WWWTemplateContextIndexUpdateHint[]): void {
+function applyAdminContextIndexHints(hints: ContextIndexUpdateHint[]): void {
   // backend の logout/revoke hint を正として index を同期し、client 側の推測で Cookie 対象を決めない。
   const index = readAdminContextIndex() ?? createEmptyAdminContextIndex();
   for (const hint of hints) {
@@ -211,7 +211,7 @@ export async function startAdminLogin(identifier: string): Promise<AdminLoginSta
  */
 export async function finishAdminLogin(
   requestId: string,
-  credential: WWWTemplateWebAuthnAssertionCredential
+  credential: WebAuthnAssertionCredential
 ): Promise<AdminSessionState | null> {
   // finish request では cookie credential mode を明示し、Admin backend の Cookie session 発行へ固定する。
   const response = await requestFinishAdminLogin({
@@ -263,7 +263,7 @@ export async function startOperatorSetup(
 export async function finishOperatorSetup(
   setupToken: string,
   requestId: string,
-  credential: WWWTemplateWebAuthnAttestationCredential
+  credential: WebAuthnAttestationCredential
 ): Promise<AdminSessionState | null> {
   // finish request でも token 平文を memory session へ移さず、backend transaction の入力に限定する。
   const response = await requestFinishOperatorSetup({
@@ -318,7 +318,7 @@ export async function startInitialAdminSetup(
 export async function finishInitialAdminSetup(
   input: AdminInitialSetupStartInput,
   requestId: string,
-  credential: WWWTemplateWebAuthnAttestationCredential
+  credential: WebAuthnAttestationCredential
 ): Promise<AdminSessionState | null> {
   // bootstrap secret は finish API の入力に限定し、domain session state には決して保存しない。
   const response = await requestFinishInitialAdminSetup({

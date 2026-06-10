@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	"www-template/packages/backend/internal/adapter/webauthn"
-	productaccounts "www-template/packages/backend/internal/application/accounts"
-	application "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
-	"www-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/adapter/webauthn"
+	productaccounts "app-template/packages/backend/internal/application/accounts"
+	application "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 func TestBuildProductContainerUsesValkeyRepositoryWhenConfigured(t *testing.T) {

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"www-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 const defaultInfrastructureTimeout = 3 * time.Second

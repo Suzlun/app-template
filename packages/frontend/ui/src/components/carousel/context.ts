@@ -1,6 +1,6 @@
 import { getContext, hasContext, setContext } from 'svelte';
 
-import type { WithElementRef } from '@www-template/ui/lib/utils';
+import type { WithElementRef } from '@app-template/ui/lib/utils';
 
 import type {
   EmblaCarouselSvelteType,

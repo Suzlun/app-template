@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	application "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
+	application "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
 
-	"www-template/packages/backend/internal/platform/config"
-	"www-template/packages/backend/internal/platform/id"
+	"app-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/id"
 )
 
 // ─── stubs ───────────────────────────────────────────────────────────────────

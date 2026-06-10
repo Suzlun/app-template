@@ -1,3 +1,5 @@
+import type { AuthSessionSummary } from '../types';
+
 /**
  * JWT アクセストークンのペイロードに含まれる最小クレーム。
  * クライアントは署名を検証せず、デコードのみを行う。
@@ -84,6 +86,20 @@ export function decodeAccessToken(token: string): AccessTokenClaims | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * accessToken の claims が指定 session の account/session に対応しているか検証する。
+ *
+ * @param claims - デコード済み accessToken claims
+ * @param session - 照合対象の認証セッション概要
+ * @returns accountId と sessionId が一致する場合は true
+ */
+export function isAccessTokenForSession(
+  claims: AccessTokenClaims,
+  session: AuthSessionSummary
+): boolean {
+  return claims.accountId === session.accountId && claims.sessionId === session.sessionId;
 }
 
 /**

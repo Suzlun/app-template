@@ -8,9 +8,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	sharedhttp "www-template/packages/backend/internal/adapter/http/shared"
-	"www-template/packages/backend/internal/generated/adminopenapi"
-	"www-template/packages/backend/internal/platform/config"
+	sharedhttp "app-template/packages/backend/internal/adapter/http/shared"
+	"app-template/packages/backend/internal/generated/adminopenapi"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 const adminAuthHeader = "Authorization"
@@ -299,11 +299,11 @@ func writeAdminAuthValidationError(c *gin.Context, err error) {
 	}
 }
 
-func writeAdminAuthFailure(c *gin.Context, status int, classification adminopenapi.WWWTemplateAuthFailureClassification) {
+func writeAdminAuthFailure(c *gin.Context, status int, classification adminopenapi.AppTemplate) {
 	// Step 1: middleware で返す失敗応答にも no-store と security headers を適用し、generated handler 到達時と同じ header 境界を保つ。
 	applyAdminSecurityHeaders(c)
 
 	// Step 2: non-secret な分類と request ID だけを返し、token/session の詳細を外部へ露出しない。
 	// request ID は handler と同じ nextAdminRequestID を使い、固定 fallback との非対称を解消する。
-	c.AbortWithStatusJSON(status, adminopenapi.WWWTemplateAuthFailureResponse{Error: classification, RequestId: nextAdminRequestID()})
+	c.AbortWithStatusJSON(status, adminopenapi.AppTemplate{Error: classification, RequestId: nextAdminRequestID()})
 }

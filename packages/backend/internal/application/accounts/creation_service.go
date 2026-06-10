@@ -6,8 +6,8 @@ import (
 	"errors"
 	"time"
 
-	"www-template/packages/backend/internal/application/audit"
-	domain "www-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/application/audit"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 const (

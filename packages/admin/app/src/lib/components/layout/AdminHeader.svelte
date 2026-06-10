@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Breadcrumb } from '@www-template/ui/components';
+	import { Breadcrumb } from '@app-template/ui/components';
 
 	const {
 		adminLabel,

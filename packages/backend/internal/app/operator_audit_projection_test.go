@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	auditapplication "www-template/packages/backend/internal/application/audit"
-	"www-template/packages/backend/internal/platform/config"
+	auditapplication "app-template/packages/backend/internal/application/audit"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 // [ADMIN-CONSOLE-BE-S085] Operator audit projection は Admin audit prefix の月次 index にだけ書き込む。

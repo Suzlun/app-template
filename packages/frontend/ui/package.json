@@ -1,5 +1,5 @@
 {
-  "name": "@www-template/ui",
+  "name": "@app-template/ui",
   "version": "0.1.0",
   "private": true,
   "type": "module",

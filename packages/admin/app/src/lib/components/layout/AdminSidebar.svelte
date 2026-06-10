@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Avatar, Button, DropdownMenu, Sidebar } from '@www-template/ui/components';
+	import { Avatar, Button, DropdownMenu, Sidebar } from '@app-template/ui/components';
 	import LayoutDashboardIcon from '@lucide/svelte/icons/layout-dashboard';
 	import UsersIcon from '@lucide/svelte/icons/users';
 	import ClipboardListIcon from '@lucide/svelte/icons/clipboard-list';

@@ -5,9 +5,9 @@ import (
 	"errors"
 	"time"
 
-	domain "www-template/packages/backend/internal/domain"
-	"www-template/packages/backend/internal/platform/config"
-	"www-template/packages/backend/internal/platform/id"
+	domain "app-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/id"
 )
 
 // ProductAuthService は Product HTTP adapter が必要とする認証ユースケースだけを表す facade contract である。

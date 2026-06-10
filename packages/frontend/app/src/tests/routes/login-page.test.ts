@@ -10,7 +10,7 @@ vi.mock('$app/navigation', () => ({
 
 describe('[LOCALIZATION-FE-S006] ログイン画面の fallback locale 表示', () => {
   beforeEach(() => {
-    localStorage.setItem('www-template:locale', 'ja');
+    localStorage.setItem('app-template:locale', 'ja');
   });
 
   afterEach(() => {

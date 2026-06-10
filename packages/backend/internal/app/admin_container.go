@@ -8,17 +8,17 @@ import (
 	"errors"
 	"time"
 
-	"www-template/packages/backend/internal/adapter/mailer"
-	"www-template/packages/backend/internal/adapter/postgres"
-	adminvalkey "www-template/packages/backend/internal/adapter/valkey/admin"
-	webauthnadapter "www-template/packages/backend/internal/adapter/webauthn"
-	accountsapplication "www-template/packages/backend/internal/application/accounts"
-	auditapplication "www-template/packages/backend/internal/application/audit"
-	adminauth "www-template/packages/backend/internal/application/auth"
-	operatorsapplication "www-template/packages/backend/internal/application/operators"
-	"www-template/packages/backend/internal/platform/config"
-	"www-template/packages/backend/internal/platform/id"
-	"www-template/packages/backend/internal/platform/secret"
+	"app-template/packages/backend/internal/adapter/mailer"
+	"app-template/packages/backend/internal/adapter/postgres"
+	adminvalkey "app-template/packages/backend/internal/adapter/valkey/admin"
+	webauthnadapter "app-template/packages/backend/internal/adapter/webauthn"
+	accountsapplication "app-template/packages/backend/internal/application/accounts"
+	auditapplication "app-template/packages/backend/internal/application/audit"
+	adminauth "app-template/packages/backend/internal/application/auth"
+	operatorsapplication "app-template/packages/backend/internal/application/operators"
+	"app-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/id"
+	"app-template/packages/backend/internal/platform/secret"
 )
 
 // AdminContainer は Admin API binary 専用の application service と close 関数を保持する。

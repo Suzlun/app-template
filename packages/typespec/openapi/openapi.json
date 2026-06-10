@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "www-template API",
+    "title": "app-template API",
     "version": "1.0.0"
   },
   "tags": [
@@ -3609,7 +3609,7 @@
   },
   "servers": [
     {
-      "url": "https://product.www-template.example",
+      "url": "https://product.app-template.example",
       "description": "Product API server",
       "variables": {}
     }

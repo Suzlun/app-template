@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-const modulePath = "www-template/packages/backend"
+const modulePath = "app-template/packages/backend"
 
 var migrationFilePattern = regexp.MustCompile(`^\d{6}_[a-z0-9_]+\.(up|down)\.sql$`)
 

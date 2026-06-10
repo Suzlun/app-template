@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
-  import { BrandMark } from '@www-template/ui';
+  import { BrandMark } from '@app-template/ui';
 
   /**
    * 認証 surface の共通レイアウト。

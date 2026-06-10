@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	domain "www-template/packages/backend/internal/domain"
-	"www-template/packages/backend/internal/platform/config"
-	"www-template/packages/backend/internal/platform/id"
+	domain "app-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/id"
 )
 
 // AuthSession は Product 認証 facade が HTTP adapter へ返す認証成功 DTO である。

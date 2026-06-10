@@ -8,8 +8,8 @@ import (
 
 	"gorm.io/gorm"
 
-	auditapplication "www-template/packages/backend/internal/application/audit"
-	"www-template/packages/backend/internal/platform/id"
+	auditapplication "app-template/packages/backend/internal/application/audit"
+	"app-template/packages/backend/internal/platform/id"
 )
 
 var _ auditapplication.Repository = (*OperatorAuditRepository)(nil)

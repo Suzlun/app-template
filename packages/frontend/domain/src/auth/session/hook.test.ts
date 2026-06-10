@@ -5,8 +5,8 @@ import { promisify } from 'node:util';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { authApi } from '@www-template/api';
-import * as apiModule from '@www-template/api';
+import { authApi } from '@app-template/api';
+import * as apiModule from '@app-template/api';
 
 import { usePasskeyLogin } from '../passkey/hook.svelte';
 import { usePasskeyManagement } from '../passkey/management/hook.svelte';
@@ -150,7 +150,7 @@ describe('useAuthSession hook', () => {
 
     // context index は localStorage に書き込むが、token/secret は含まない
     const contextIndexCall = setItemSpy.mock.calls.find(
-      (call) => call[0] === 'www-template:product:context-index'
+      (call) => call[0] === 'app-template:product:context-index'
     );
     if (contextIndexCall != null) {
       const indexValue = contextIndexCall[1];
@@ -308,7 +308,7 @@ describe('useAuthSession hook', () => {
         },
       ],
     });
-    localStorage.setItem('www-template:product:context-index', preIndex);
+    localStorage.setItem('app-template:product:context-index', preIndex);
 
     await actions.logoutCurrentSession();
 
@@ -317,7 +317,7 @@ describe('useAuthSession hook', () => {
     expect(data.state.sessions?.[0]?.sessionId).toBe(sidA);
 
     // context index: server hint に従い account A の entry が削除される
-    const raw = localStorage.getItem('www-template:product:context-index') ?? '';
+    const raw = localStorage.getItem('app-template:product:context-index') ?? '';
     const postIndex = JSON.parse(raw);
     expect(postIndex.entries).toHaveLength(1);
     expect(postIndex.entries[0].authContextId).toBe(

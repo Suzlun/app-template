@@ -6,7 +6,7 @@
  * tamper された index は fail-close で破棄し、bootstrap 時に server refresh で再検証する。
  */
 
-const CONTEXT_INDEX_KEY = 'www-template:product:context-index';
+const CONTEXT_INDEX_KEY = 'app-template:product:context-index';
 const CONTEXT_INDEX_VERSION = 1;
 const MAX_ENTRIES = 10;
 

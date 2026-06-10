@@ -3,9 +3,9 @@
 	import SelectPortal from "./select-portal.svelte";
 	import SelectScrollUpButton from "./select-scroll-up-button.svelte";
 	import SelectScrollDownButton from "./select-scroll-down-button.svelte";
-	import { cn, type WithoutChild , type WithoutChildrenOrChild } from "@www-template/ui/lib/utils";
+	import { cn, type WithoutChild , type WithoutChildrenOrChild } from "@app-template/ui/lib/utils";
 	import type { ComponentProps } from "svelte";
-	
+
 	let {
 		ref = $bindable(null),
 		class: className,

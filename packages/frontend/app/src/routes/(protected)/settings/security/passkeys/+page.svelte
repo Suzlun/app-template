@@ -4,7 +4,7 @@
    * 1ページ1概念: パスキーの表示・追加・削除のみを担当する。
    * 既存 PasskeyList コンポーネントを再利用する。
    */
-  import { usePasskeyManagement } from '@www-template/domain/auth/passkey/management';
+  import { usePasskeyManagement } from '@app-template/domain/auth/passkey/management';
 
   import PasskeyList from '$lib/profiles/PasskeyList.svelte';
 

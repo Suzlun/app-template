@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"www-template/packages/backend/internal/application/audit"
-	domain "www-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/application/audit"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 var adminAccountCreationCreatedAt = time.Date(2026, 5, 26, 3, 0, 0, 0, time.UTC)

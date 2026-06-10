@@ -1,4 +1,4 @@
-namespace WWWTemplate;
+namespace AppTemplate;
 
 model ErrorResponse {
   error: string;

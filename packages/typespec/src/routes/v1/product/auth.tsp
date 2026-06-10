@@ -4,24 +4,24 @@ import "@typespec/openapi";
 using Http;
 using TypeSpec.OpenAPI;
 
-namespace WWWTemplate.ApiV1 {
+namespace AppTemplate.ApiV1 {
   @tag("auth")
   @summary("Starts a passkey authentication ceremony")
   @operationId("startPasskeyAuthentication")
   @post
   @route("/auth/passkey/start")
-  op startPasskeyAuthentication(@body body: WWWTemplate.PasskeyStartRequest): {
+  op startPasskeyAuthentication(@body body: AppTemplate.PasskeyStartRequest): {
     @statusCode statusCode: 200;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.PasskeyStartResponse;
+    @body body: AppTemplate.PasskeyStartResponse;
   } | {
     @statusCode statusCode: 400;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.AuthOperationErrorResponse;
+    @body body: AppTemplate.AuthOperationErrorResponse;
   } | {
     @statusCode statusCode: 503;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.AuthFailureResponse;
+    @body body: AppTemplate.AuthFailureResponse;
   };
 
   @tag("auth")
@@ -29,26 +29,26 @@ namespace WWWTemplate.ApiV1 {
   @operationId("finishPasskeyAuthentication")
   @post
   @route("/auth/passkey/finish")
-  op finishPasskeyAuthentication(@body body: WWWTemplate.PasskeyFinishRequest):
+  op finishPasskeyAuthentication(@body body: AppTemplate.PasskeyFinishRequest):
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.ProductAuthSessionResponse;
+        @body body: AppTemplate.ProductAuthSessionResponse;
       }
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("auth")
@@ -56,18 +56,18 @@ namespace WWWTemplate.ApiV1 {
   @operationId("requestPasskeyRecovery")
   @post
   @route("/auth/recovery")
-  op requestPasskeyRecovery(@body body: WWWTemplate.RecoveryRequest): {
+  op requestPasskeyRecovery(@body body: AppTemplate.RecoveryRequest): {
     @statusCode statusCode: 202;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.RecoveryAcceptedResponse;
+    @body body: AppTemplate.RecoveryAcceptedResponse;
   } | {
     @statusCode statusCode: 400;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.AuthOperationErrorResponse;
+    @body body: AppTemplate.AuthOperationErrorResponse;
   } | {
     @statusCode statusCode: 503;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.AuthFailureResponse;
+    @body body: AppTemplate.AuthFailureResponse;
   };
 
   @tag("auth")
@@ -75,18 +75,18 @@ namespace WWWTemplate.ApiV1 {
   @operationId("consumeRecoveryToken")
   @post
   @route("/auth/recovery/consume")
-  op consumeRecoveryToken(@body body: WWWTemplate.RecoveryConsumeRequest): {
+  op consumeRecoveryToken(@body body: AppTemplate.RecoveryConsumeRequest): {
     @statusCode statusCode: 200;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.RecoveryConsumeResponse;
+    @body body: AppTemplate.RecoveryConsumeResponse;
   } | {
     @statusCode statusCode: 400;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.AuthOperationErrorResponse;
+    @body body: AppTemplate.AuthOperationErrorResponse;
   } | {
     @statusCode statusCode: 503;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.AuthFailureResponse;
+    @body body: AppTemplate.AuthFailureResponse;
   };
 
   @tag("auth")
@@ -94,18 +94,18 @@ namespace WWWTemplate.ApiV1 {
   @operationId("startPasskeyRegistration")
   @post
   @route("/auth/passkey/register/start")
-  op startPasskeyRegistration(@body body: WWWTemplate.PasskeyRegisterStartRequest): {
+  op startPasskeyRegistration(@body body: AppTemplate.PasskeyRegisterStartRequest): {
     @statusCode statusCode: 200;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.PasskeyAddStartResponse;
+    @body body: AppTemplate.PasskeyAddStartResponse;
   } | {
     @statusCode statusCode: 400;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.AuthOperationErrorResponse;
+    @body body: AppTemplate.AuthOperationErrorResponse;
   } | {
     @statusCode statusCode: 503;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.AuthFailureResponse;
+    @body body: AppTemplate.AuthFailureResponse;
   };
 
   @tag("auth")
@@ -113,18 +113,18 @@ namespace WWWTemplate.ApiV1 {
   @operationId("registerPasskey")
   @post
   @route("/auth/passkey/register")
-  op registerPasskey(@body body: WWWTemplate.PasskeyRegisterRequest): {
+  op registerPasskey(@body body: AppTemplate.PasskeyRegisterRequest): {
     @statusCode statusCode: 200;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.ProductAuthSessionResponse;
+    @body body: AppTemplate.ProductAuthSessionResponse;
   } | {
     @statusCode statusCode: 400;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.AuthOperationErrorResponse;
+    @body body: AppTemplate.AuthOperationErrorResponse;
   } | {
     @statusCode statusCode: 503;
     @header("Cache-Control") cacheControl: "no-store";
-    @body body: WWWTemplate.AuthFailureResponse;
+    @body body: AppTemplate.AuthFailureResponse;
   };
 
   @tag("auth")
@@ -133,67 +133,67 @@ namespace WWWTemplate.ApiV1 {
   @post
   @route("/auth/contexts/{authContextId}/refresh")
   op refreshToken(
-    @path authContextId: WWWTemplate.UlidId,
-    @body body?: WWWTemplate.BearerContextRefreshRequest,
+    @path authContextId: AppTemplate.UlidId,
+    @body body?: AppTemplate.BearerContextRefreshRequest,
   ):
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.RefreshTokenResponse;
+        @body body: AppTemplate.RefreshTokenResponse;
       }
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 }
 
-namespace WWWTemplate.ApiV1App {
+namespace AppTemplate.ApiV1App {
   @tag("app-auth")
   @summary("Starts a WebAuthn reauthentication ceremony for a high-risk operation")
   @operationId("startReauthentication")
   @post
   @route("/auth/reauth/start")
-  op startReauthentication(@body body: WWWTemplate.ReauthenticationStartRequest):
+  op startReauthentication(@body body: AppTemplate.ReauthenticationStartRequest):
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.PasskeyStartResponse;
+        @body body: AppTemplate.PasskeyStartResponse;
       }
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("app-auth")
@@ -201,31 +201,31 @@ namespace WWWTemplate.ApiV1App {
   @operationId("finishReauthentication")
   @post
   @route("/auth/reauth/finish")
-  op finishReauthentication(@body body: WWWTemplate.ReauthenticationFinishRequest):
+  op finishReauthentication(@body body: AppTemplate.ReauthenticationFinishRequest):
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.ReauthenticationSessionResponse;
+        @body body: AppTemplate.ReauthenticationSessionResponse;
       }
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("app-auth")
@@ -237,22 +237,22 @@ namespace WWWTemplate.ApiV1App {
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.LogoutResponse;
+        @body body: AppTemplate.LogoutResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("app-auth")
@@ -264,22 +264,22 @@ namespace WWWTemplate.ApiV1App {
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.PasskeyListResponse;
+        @body body: AppTemplate.PasskeyListResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("app-auth")
@@ -291,22 +291,22 @@ namespace WWWTemplate.ApiV1App {
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.PasskeyAddStartResponse;
+        @body body: AppTemplate.PasskeyAddStartResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("app-auth")
@@ -314,31 +314,31 @@ namespace WWWTemplate.ApiV1App {
   @operationId("finishPasskeyAddition")
   @post
   @route("/passkeys/finish")
-  op finishPasskeyAddition(@body body: WWWTemplate.PasskeyAddFinishRequest):
+  op finishPasskeyAddition(@body body: AppTemplate.PasskeyAddFinishRequest):
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.PasskeyListResponse;
+        @body body: AppTemplate.PasskeyListResponse;
       }
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("app-auth")
@@ -347,7 +347,7 @@ namespace WWWTemplate.ApiV1App {
   @delete
   @route("/passkeys/{id}")
   op deletePasskey(
-    @path id: WWWTemplate.UlidId,
+    @path id: AppTemplate.UlidId,
     @header("X-Reauth-Session") reauthSession: string,
   ):
     | {
@@ -357,27 +357,27 @@ namespace WWWTemplate.ApiV1App {
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse | WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse | AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 409;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("app-auth")
@@ -389,27 +389,27 @@ namespace WWWTemplate.ApiV1App {
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.DeviceLinkResponse;
+        @body body: AppTemplate.DeviceLinkResponse;
       }
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse | WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse | AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("app-auth")
@@ -421,22 +421,22 @@ namespace WWWTemplate.ApiV1App {
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.SessionListResponse;
+        @body body: AppTemplate.SessionListResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("app-auth")
@@ -444,7 +444,7 @@ namespace WWWTemplate.ApiV1App {
   @operationId("revokeSession")
   @delete
   @route("/sessions/{id}")
-  op revokeSession(@path id: WWWTemplate.UlidId):
+  op revokeSession(@path id: AppTemplate.UlidId):
     | {
         @statusCode statusCode: 204;
         @header("Cache-Control") cacheControl: "no-store";
@@ -452,17 +452,17 @@ namespace WWWTemplate.ApiV1App {
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse | WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse | AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("app-auth")
@@ -478,16 +478,16 @@ namespace WWWTemplate.ApiV1App {
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 }

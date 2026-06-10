@@ -1,4 +1,4 @@
-const CONTEXT_INDEX_KEY = 'www-template:admin:context-index';
+const CONTEXT_INDEX_KEY = 'app-template:admin:context-index';
 const CONTEXT_INDEX_VERSION = 1;
 const MAX_ENTRIES = 10;
 const ULID_PATTERN = /^[0-9A-Z]{26}$/u;

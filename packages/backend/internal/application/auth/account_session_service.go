@@ -9,7 +9,7 @@ import (
 	"errors"
 	"time"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // AccountSessionService は Product account auth の login / refresh / revoke / bearer validation use case を提供する。

@@ -5,7 +5,7 @@ import "@typespec/openapi3";
 using Http;
 using TypeSpec.OpenAPI;
 
-namespace WWWTemplate;
+namespace AppTemplate;
 
 model RecoveryRequest {
   @format("email")

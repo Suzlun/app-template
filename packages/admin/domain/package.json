@@ -1,5 +1,5 @@
 {
-  "name": "@www-template/admin-domain",
+  "name": "@app-template/admin-domain",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -12,7 +12,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@www-template/admin-api": "workspace:*"
+    "@app-template/admin-api": "workspace:*"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"

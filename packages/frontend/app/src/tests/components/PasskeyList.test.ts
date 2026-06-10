@@ -13,7 +13,7 @@ import PasskeyList from '../../lib/profiles/PasskeyList.svelte';
  */
 describe('PasskeyList', () => {
   beforeEach(() => {
-    localStorage.setItem('www-template:locale', 'ja');
+    localStorage.setItem('app-template:locale', 'ja');
   });
 
   afterEach(() => {
@@ -77,7 +77,7 @@ describe('PasskeyList', () => {
 
   it('[LOCALIZATION-FE-S006] passkey error code は保存済み locale に合わせて英語表示される', () => {
     // Arrange: 英語 locale を保存し、WebAuthn 非対応コードでレンダリングする
-    localStorage.setItem('www-template:locale', 'en');
+    localStorage.setItem('app-template:locale', 'en');
     render(PasskeyList, {
       props: {
         passkeys: [],

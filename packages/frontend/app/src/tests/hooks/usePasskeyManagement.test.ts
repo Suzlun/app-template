@@ -7,7 +7,7 @@ import {
   applyPasskeyList,
   createPasskeyManagementInitialState,
   toPasskeyManagementErrorMessage,
-} from '@www-template/domain/auth/passkey/management';
+} from '@app-template/domain/auth/passkey/management';
 
 import { NO_STORE_HEADERS, TEST_ULID } from '../mocks/handlers';
 import { server } from '../mocks/server';

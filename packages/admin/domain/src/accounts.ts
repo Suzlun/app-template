@@ -2,9 +2,9 @@ import {
   requestAdminAccount,
   requestAdminAccounts,
   requestCreateAdminAccount,
-  type WWWTemplateAccountSummary,
-  type WWWTemplateAccountLocale,
-} from '@www-template/admin-api';
+  type AccountLocale,
+  type AccountSummary,
+} from '@app-template/admin-api';
 
 import { getAdminSession } from './auth';
 
@@ -49,7 +49,7 @@ export interface AdminAccountSearchResult {
  */
 export interface AdminAccountCreateInput {
   email: string;
-  locale?: WWWTemplateAccountLocale;
+  locale?: AccountLocale;
 }
 
 /**
@@ -162,7 +162,7 @@ export async function createCustomerAccount(
   return { success: true, data: toAccountListItem(response.data.account) };
 }
 
-function toAccountListItem(account: WWWTemplateAccountSummary): AdminAccountListItem {
+function toAccountListItem(account: AccountSummary): AdminAccountListItem {
   // generated DTO の `accountId` を UI component 既存 props の `id` に写像する。
   return {
     id: account.accountId,

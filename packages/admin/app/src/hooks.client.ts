@@ -1,4 +1,4 @@
-import { configureAdminContextIndexStorage } from '@www-template/admin-domain';
+import { configureAdminContextIndexStorage } from '@app-template/admin-domain';
 
 // Admin client boot 用の最小フックファイル。
 // 認証 API と cache 制御は Go Admin API と domain layer へ寄せつつ、browser storage の実体だけを app 層で注入する。

@@ -8,7 +8,7 @@ import (
 
 	"gorm.io/gorm"
 
-	accountsapplication "www-template/packages/backend/internal/application/accounts"
+	accountsapplication "app-template/packages/backend/internal/application/accounts"
 )
 
 var _ accountsapplication.AccountRepository = (*AccountManagementRepository)(nil)

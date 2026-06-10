@@ -5,11 +5,11 @@
     "baseColor": "neutral"
   },
   "aliases": {
-    "components": "@www-template/ui/components",
-    "utils": "@www-template/ui/lib/utils",
-    "ui": "@www-template/ui/components",
-    "hooks": "@www-template/ui/hooks",
-    "lib": "@www-template/ui"
+    "components": "@app-template/ui/components",
+    "utils": "@app-template/ui/lib/utils",
+    "ui": "@app-template/ui/components",
+    "hooks": "@app-template/ui/hooks",
+    "lib": "@app-template/ui"
   },
   "typescript": {
     "config": "tsconfig.json"

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test.describe('www-template auth surface', () => {
+test.describe('app-template auth surface', () => {
   test.skip(
     ({ browserName }) => browserName !== 'chromium',
     'surface smoke is validated in Chromium for stability'

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { useAdminAccountDetail } from '@www-template/admin-domain';
-	import type { AdminAccountDomainError } from '@www-template/admin-domain';
-	import { Badge, Button, CardNS, ConfirmDialog, Input, Label, Separator } from '@www-template/ui/components';
+	import { useAdminAccountDetail } from '@app-template/admin-domain';
+	import type { AdminAccountDomainError } from '@app-template/admin-domain';
+	import { Badge, Button, CardNS, ConfirmDialog, Input, Label, Separator } from '@app-template/ui/components';
 
 	import { page } from '$app/state';
 

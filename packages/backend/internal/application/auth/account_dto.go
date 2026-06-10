@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 var (

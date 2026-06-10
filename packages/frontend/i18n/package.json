@@ -1,5 +1,5 @@
 {
-  "name": "@www-template/i18n",
+  "name": "@app-template/i18n",
   "version": "0.1.0",
   "private": true,
   "type": "module",

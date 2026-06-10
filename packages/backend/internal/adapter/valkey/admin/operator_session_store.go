@@ -8,8 +8,8 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	adminauth "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
+	adminauth "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // OperatorRefreshSessionStore は Admin Operator refresh session state を Valkey に保存する adapter である。

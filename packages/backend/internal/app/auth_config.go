@@ -1,8 +1,8 @@
 package app
 
 import (
-	adminauth "www-template/packages/backend/internal/application/auth"
-	"www-template/packages/backend/internal/platform/config"
+	adminauth "app-template/packages/backend/internal/application/auth"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 // operatorAuthConfigFromRuntime は共通 auth runtime 設定を Admin operator session 設定へ変換する。

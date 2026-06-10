@@ -2,10 +2,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type {
   AdminOperatorSessionResponse,
-  WWWTemplatePasskeyAddStartResponse,
-  WWWTemplatePasskeyStartResponse,
-  WWWTemplateWebAuthnAttestationCredential,
-} from '@www-template/admin-api';
+  AppTemplate,
+  AppTemplate,
+  AppTemplate,
+} from '@app-template/admin-api';
 
 import {
   clearAdminSession,
@@ -38,7 +38,7 @@ const apiMocks = vi.hoisted(() => ({
   requestStartOperatorSetup: vi.fn(),
 }));
 
-vi.mock('@www-template/admin-api', () => ({
+vi.mock('@app-template/admin-api', () => ({
   requestCurrentAdminOperator: apiMocks.requestCurrentAdminOperator,
   requestFinishAdminLogin: apiMocks.requestFinishAdminLogin,
   requestFinishInitialAdminSetup: apiMocks.requestFinishInitialAdminSetup,
@@ -67,14 +67,14 @@ const sessionResponse: AdminOperatorSessionResponse = {
   clearCookieCommands: [],
 };
 
-const loginOptions: WWWTemplatePasskeyStartResponse = {
+const loginOptions: AppTemplate = {
   requestId: '01JLOGINSTART000000000000',
   challenge: 'challenge',
   rpId: 'admin.example.com',
   userVerification: 'required',
 };
 
-const setupOptions: WWWTemplatePasskeyAddStartResponse = {
+const setupOptions: AppTemplate = {
   requestId: '01JSETUPSTART000000000000',
   challenge: 'challenge',
   rpId: 'admin.example.com',
@@ -90,7 +90,7 @@ const setupOptions: WWWTemplatePasskeyAddStartResponse = {
   userVerification: 'required',
 };
 
-const attestationCredential: WWWTemplateWebAuthnAttestationCredential = {
+const attestationCredential: AppTemplate = {
   id: 'credential-id',
   rawId: 'credential-raw-id',
   type: 'public-key',
@@ -278,7 +278,7 @@ describe('Admin auth domain orchestration', () => {
     expect(raw).not.toContain('operator-access-token');
     expect(raw).not.toContain('refreshToken');
     expect(raw).not.toContain('Cookie');
-    expect(localStorage.getItem('www-template:product:context-index')).toBeNull();
+    expect(localStorage.getItem('app-template:product:context-index')).toBeNull();
   });
 
   it('[ADMIN-AUTH-FE-S041] tampered context index cannot restore an authenticated session', async () => {

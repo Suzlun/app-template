@@ -10,9 +10,9 @@
    */
   import { goto } from '$app/navigation';
 
-  import { Avatar, DropdownMenu } from '@www-template/ui/components';
+  import { Avatar, DropdownMenu } from '@app-template/ui/components';
 
-  import type { AuthSessionSummary } from '@www-template/domain/auth';
+  import type { AuthSessionSummary } from '@app-template/domain/auth';
 
   interface AppUserMenuProps {
     /** メモリ上に保持されている認証セッション一覧。 */

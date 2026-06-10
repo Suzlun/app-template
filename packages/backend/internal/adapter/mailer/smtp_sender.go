@@ -8,7 +8,7 @@ import (
 	"net/smtp"
 	"strings"
 
-	"www-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 type SMTPSender struct {

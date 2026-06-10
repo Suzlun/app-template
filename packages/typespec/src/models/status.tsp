@@ -1,4 +1,4 @@
-namespace WWWTemplate;
+namespace AppTemplate;
 
 model StatusResponse {
   message: string;

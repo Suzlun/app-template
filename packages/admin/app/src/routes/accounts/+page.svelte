@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { useAdminAccounts } from '@www-template/admin-domain';
-	import type { AdminAccountDomainError } from '@www-template/admin-domain';
-	import { Button, CardNS, EmptyState, Field, Input, Label, Select, Separator, Spinner } from '@www-template/ui/components';
+	import { useAdminAccounts } from '@app-template/admin-domain';
+	import type { AdminAccountDomainError } from '@app-template/admin-domain';
+	import { Button, CardNS, EmptyState, Field, Input, Label, Select, Separator, Spinner } from '@app-template/ui/components';
 
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';

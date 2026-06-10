@@ -11,7 +11,7 @@ import (
 	"syscall"
 	"time"
 
-	"www-template/packages/backend/internal/app"
+	"app-template/packages/backend/internal/app"
 )
 
 // main は Admin API 専用 GoServer binary の process entrypoint である。
@@ -60,7 +60,7 @@ func run(logger *slog.Logger) error {
 	}()
 
 	// Step 5: Admin API binary として待受を開始し、正常 shutdown 以外の ListenAndServe error だけを呼び出し元へ返す。
-	logger.Info("www-template admin api listening", slog.String("addr", runtime.Config().Port))
+	logger.Info("app-template admin api listening", slog.String("addr", runtime.Config().Port))
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, stdhttp.ErrServerClosed) {
 		return fmt.Errorf("listen and serve admin api: %w", err)
 	}

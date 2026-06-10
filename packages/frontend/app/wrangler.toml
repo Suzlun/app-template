@@ -1,4 +1,4 @@
-name = "www-template-app"
+name = "app-template-app"
 compatibility_date = "2025-11-13"
 compatibility_flags = ["nodejs_compat"]
 

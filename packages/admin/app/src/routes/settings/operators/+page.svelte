@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { useAdminOperators } from '@www-template/admin-domain';
-	import type { AdminOperatorDomainError } from '@www-template/admin-domain';
-	import { Button, CardNS, Dialog, Input, Label, Select, Spinner } from '@www-template/ui/components';
+	import { useAdminOperators } from '@app-template/admin-domain';
+	import type { AdminOperatorDomainError } from '@app-template/admin-domain';
+	import { Button, CardNS, Dialog, Input, Label, Select, Spinner } from '@app-template/ui/components';
 
 	import OperatorTable from '$lib/components/operators/OperatorTable.svelte';
 	import { createCurrentAdminI18n } from '$lib/i18n';

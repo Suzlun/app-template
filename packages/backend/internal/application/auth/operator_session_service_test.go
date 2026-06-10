@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // [AUTH-BE-S061] Operator login は OperatorAuth domain を使う。

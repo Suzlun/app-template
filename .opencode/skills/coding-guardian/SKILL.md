@@ -51,8 +51,8 @@ description: Enforce this repository's actual coding rules and verification flow
 - `packages/typespec/openapi/openapi.json`、`packages/frontend/api/src/generated/client.ts`、`packages/backend/internal/generated/openapi/openapi.gen.go` は手で直さない
 - Frontend app / domain で `fetch`, `globalThis.fetch`, `axios`, `cross-fetch` を直接使わない
 - Frontend web は native `fetch` を使ってよいが、`axios` / `cross-fetch` は使わない
-- Frontend web / app から `@www-template/api` を直 import しない
-- Frontend web から `@www-template/domain` を import しない
+- Frontend web / app から `@app-template/api` を直 import しない
+- Frontend web から `@app-template/domain` を import しない
 - Active frontend source に React / TSX を持ち込まない
 - Domain hooks は `use*` export、`{ data, actions }` 戻り値、stateful 実装は `.svelte.ts`
 - Frontend app は SvelteKit SPA（SSR 無効）として保ち、server route / server hook / server-only lib を持ち込まない
@@ -87,8 +87,8 @@ Changed-file 向けの軽量チェック:
 ## Common violations to prevent
 
 - generated file の手編集
-- `packages/web` または `packages/frontend/app` から `@www-template/api` の直 import
-- `packages/web` から `@www-template/domain` の直 import
+- `packages/web` または `packages/frontend/app` から `@app-template/api` の直 import
+- `packages/web` から `@app-template/domain` の直 import
 - frontend app / domain での `fetch` / `axios` / `cross-fetch`
 - `packages/web` での `axios` / `cross-fetch`
 - active frontend source での React / TSX

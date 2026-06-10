@@ -3,7 +3,7 @@ package auth
 import (
 	"context"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // OperatorWebAuthnCredentialStore は WebAuthn assertion 検証に必要な credential state を扱う port である。

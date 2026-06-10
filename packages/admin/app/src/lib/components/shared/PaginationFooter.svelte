@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Pagination } from '@www-template/ui/components';
+	import { Pagination } from '@app-template/ui/components';
 
 	const {
 		page = 1,

@@ -128,13 +128,13 @@ importers:
       '@simplewebauthn/browser':
         specifier: ^11.0.0
         version: 11.0.0
-      '@www-template/admin-domain':
+      '@app-template/admin-domain':
         specifier: workspace:*
         version: link:../domain
-      '@www-template/i18n':
+      '@app-template/i18n':
         specifier: workspace:*
         version: link:../../frontend/i18n
-      '@www-template/ui':
+      '@app-template/ui':
         specifier: workspace:*
         version: link:../../frontend/ui
     devDependencies:
@@ -171,7 +171,7 @@ importers:
 
   packages/admin/domain:
     dependencies:
-      '@www-template/admin-api':
+      '@app-template/admin-api':
         specifier: workspace:*
         version: link:../api
     devDependencies:
@@ -226,13 +226,13 @@ importers:
       '@opentelemetry/semantic-conventions':
         specifier: ^1.40.0
         version: 1.40.0
-      '@www-template/domain':
+      '@app-template/domain':
         specifier: workspace:*
         version: link:../domain
-      '@www-template/i18n':
+      '@app-template/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@www-template/ui':
+      '@app-template/ui':
         specifier: workspace:*
         version: link:../ui
     devDependencies:
@@ -314,7 +314,7 @@ importers:
       '@opentelemetry/semantic-conventions':
         specifier: ^1.40.0
         version: 1.40.0
-      '@www-template/api':
+      '@app-template/api':
         specifier: workspace:*
         version: link:../api
     devDependencies:
@@ -502,10 +502,10 @@ importers:
       '@tanstack/svelte-query':
         specifier: ^6.1.18
         version: 6.1.18(svelte@5.53.9)
-      '@www-template/i18n':
+      '@app-template/i18n':
         specifier: workspace:*
         version: link:../frontend/i18n
-      '@www-template/ui':
+      '@app-template/ui':
         specifier: workspace:*
         version: link:../frontend/ui
     devDependencies:

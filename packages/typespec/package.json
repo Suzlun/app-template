@@ -1,5 +1,5 @@
 {
-  "name": "@www-template/typespec",
+  "name": "@app-template/typespec",
   "version": "0.1.0",
   "private": true,
   "type": "module",

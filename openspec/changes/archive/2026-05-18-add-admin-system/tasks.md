@@ -14,7 +14,7 @@
 
 ## 2. Project Scaffold & Workspace Integration
 
-- [x] 2.1 `packages/admin/package.json` — deps: @prisma/client, jose, bcryptjs, ioredis, @opensearch-project/opensearch, @simplewebauthn/server, @simplewebauthn/browser, zod, @www-template/ui。devDeps: prisma
+- [x] 2.1 `packages/admin/package.json` — deps: @prisma/client, jose, bcryptjs, ioredis, @opensearch-project/opensearch, @simplewebauthn/server, @simplewebauthn/browser, zod, @app-template/ui。devDeps: prisma
 - [x] 2.2 `packages/admin/svelte.config.js` — adapter-node
 - [x] 2.3 `packages/admin/vite.config.ts` — tailwindcss + sveltekit, port 5176
 - [x] 2.4 `packages/admin/Dockerfile` — multistage build（builder → Node.js runtime, port 3000）
@@ -25,8 +25,8 @@
 - [x] 2.6 `packages/admin/src/app.d.ts` — App.Locals (`operator: { id, email, role, sessionId, jti } | null`), App.Platform (env vars)
 - [x] 2.7 `packages/admin/src/app.css` — tailwind import
 - [x] 2.8 `pnpm-workspace.yaml` に `packages/admin` 追加
-- [x] 2.9 `tsconfig.base.json` に `@www-template/admin` パスエイリアス追加
-- [x] 2.10 `.devcontainer/compose.yaml` に `www-template` DB 作成用 init SQL 追加
+- [x] 2.9 `tsconfig.base.json` に `@app-template/admin` パスエイリアス追加
+- [x] 2.10 `.devcontainer/compose.yaml` に `app-template` DB 作成用 init SQL 追加
 
 ## 3. Infrastructure Layer
 
@@ -368,6 +368,6 @@
 - [x] 19.3a UT: Prisma unsafe raw query lint error [ADMIN-CONSOLE-BE-S051]
 - [x] 19.4 UT: Model→services import lint error [ADMIN-CONSOLE-BE-S027]
 - [x] 19.5 UT: Service→components import lint error [ADMIN-CONSOLE-BE-S028]
-- [x] 19.6 UT: admin→@www-template/api import lint error [ADMIN-CONSOLE-BE-S029]
+- [x] 19.6 UT: admin→@app-template/api import lint error [ADMIN-CONSOLE-BE-S029]
 - [x] 19.7 UT: View→Model import lint error [ADMIN-CONSOLE-FE-S034]
 - [x] 19.8 UT: admin→api import lint error [ADMIN-CONSOLE-FE-S035]

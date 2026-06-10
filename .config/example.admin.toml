@@ -49,8 +49,8 @@ product_index_prefix = "product-domain"
 otel_exporter_otlp_endpoint = "signoz-otel-collector:4317"
 otel_exporter_otlp_traces_endpoint = "signoz-otel-collector:4317"
 otel_exporter_otlp_logs_endpoint = "signoz-otel-collector:4317"
-otel_service_name = "www-template-admin-api"
-otel_resource_attributes = "service.namespace=www-template,deployment.environment=production"
+otel_service_name = "app-template-admin-api"
+otel_resource_attributes = "service.namespace=app-template,deployment.environment=production"
 
 [bootstrap]
 # Disable after the first operator is created.

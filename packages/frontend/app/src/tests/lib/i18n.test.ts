@@ -18,7 +18,7 @@ describe('[LOCALIZATION-FE-S006] app i18n locale resolver と dot-key translator
   });
 
   it('resolveUnauthenticatedLocale: 保存済み locale を優先する', () => {
-    localStorage.setItem('www-template:locale', 'en');
+    localStorage.setItem('app-template:locale', 'en');
 
     expect(resolveUnauthenticatedLocale()).toBe('en');
   });

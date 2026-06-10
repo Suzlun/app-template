@@ -1,4 +1,4 @@
-# www-template
+# app-template
 
 TypeSpec を API 契約の正とし、Svelte フロントエンドと Go バックエンドを同じリポジトリで運用するモノレポテンプレートです。
 
@@ -117,7 +117,7 @@ packages/frontend/app  ──►  packages/frontend/domain  ──►  packages/
 
 ```
 
-- `web` は `@www-template/ui` のみ利用可。`@www-template/domain` / `@www-template/api` の import は ESLint で禁止。
+- `web` は `@app-template/ui` のみ利用可。`@app-template/domain` / `@app-template/api` の import は ESLint で禁止。
 - `app` はページ・コンポーネントで直接 API を呼ばず、`domain` の `use*` フックを経由します。
 - `domain` フックは `{ data, actions }` を返す `use*` export に統一します（`.svelte.ts` に配置）。
 - ページ・コンポーネントは副作用（`onMount`, `$effect` による I/O）を書かず、フックの `actions` を呼ぶだけにします。
@@ -467,7 +467,7 @@ cp .env.example .env
 | `APP_BEARER_TOKEN`          | `dev-app-auth`（dev のみ）                         | app API 用 Bearer token                          |
 | `PORT`                      | `8080`                                             | backend listen port                              |
 | `ALLOWED_ORIGINS`           | `http://www.localhost:5173,...`                    | CORS 許可オリジン（カンマ区切り）                |
-| `VALKEY_KEY_PREFIX`         | `www-template`                                     | Valkey key の共通プレフィックス                  |
+| `VALKEY_KEY_PREFIX`         | `app-template`                                     | Valkey key の共通プレフィックス                  |
 | `R2_USE_PATH_STYLE`         | `false`                                            | MinIO 等 path-style endpoint を使う場合は `true` |
 | `WEBAUTHN_RP_ID`            | `app.localhost`                                    | WebAuthn の Relying Party ID                     |
 | `ACCOUNT_RECOVERY_URL_BASE` | `http://app.localhost:5174/login/recovery/consume` | recovery リンクのベース URL                      |
@@ -547,7 +547,7 @@ staged ファイルに対して以下を自動適用します。
 | -------------------------------------- | ----------------------------------------------------------------------- |
 | `*.{ts,tsx,js,jsx}`                    | `eslint --fix --no-inline-config --max-warnings 0` → `prettier --write` |
 | `*.{json,md,yml,yaml}`                 | `prettier --write`                                                      |
-| `*.go`                                 | `gofmt -w` + `goimports -local www-template -w`                         |
+| `*.go`                                 | `gofmt -w` + `goimports -local app-template -w`                         |
 | `packages/backend/db/migrations/*.sql` | migration ファイル名 / ペアポリシーの検証                               |
 
 codegen drift check は pre-commit には含まれず、`pnpm lint` と CI で実行されます。
@@ -574,7 +574,7 @@ Conventional Commits 形式を強制します（`commitlint`）。
 ### フロントエンド（ESLint）
 
 - `eslint-plugin-boundaries`: パッケージ間依存方向の強制
-- `no-restricted-imports`: `app` からの `@www-template/api` 直接 import 禁止など
+- `no-restricted-imports`: `app` からの `@app-template/api` 直接 import 禁止など
 - `frontend-svelte5/no-legacy-syntax`: Svelte 5 記法の強制（`on:click` 等の旧記法禁止）
 - `sveltekit-app-policy`: サーバー面 route・サーバー import の禁止
 - `hooks-domain/require-domain-structure`: `use*` + `{ data, actions }` 形式の強制

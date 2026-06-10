@@ -1,7 +1,7 @@
 import { finishAdminLogin, startAdminLogin } from '../auth';
 
 import type { AdminLoginStartResult } from '../auth';
-import type { WWWTemplateWebAuthnAssertionCredential } from '@www-template/admin-api';
+import type { AppTemplate } from '@app-template/admin-api';
 
 interface AdminLoginState {
   email: string;
@@ -15,9 +15,7 @@ interface AdminLoginData {
 
 interface AdminLoginActions {
   submit: (
-    authenticate: (
-      options: AdminLoginStartResult['options']
-    ) => Promise<WWWTemplateWebAuthnAssertionCredential>,
+    authenticate: (options: AdminLoginStartResult['options']) => Promise<AppTemplate>,
     navigateHome: () => void
   ) => Promise<void>;
 }

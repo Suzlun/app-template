@@ -23,8 +23,8 @@
 </script>
 
 <script lang="ts">
-  import { Card, CardContent } from '@www-template/ui/components/card';
-  import { cn } from '@www-template/ui/lib/utils';
+  import { Card, CardContent } from '@app-template/ui/components/card';
+  import { cn } from '@app-template/ui/lib/utils';
 
   let { children, footer, width = 'default', class: className }: AuthPanelProps = $props();
 

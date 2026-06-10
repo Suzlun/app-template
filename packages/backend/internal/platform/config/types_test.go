@@ -214,7 +214,7 @@ jwt_secret = "dev-admin-jwt-secret-change-in-production"
 
 [database]
 admin_role = "admin_console_write"
-url = "postgres://admin_console:admin_console@postgres:5432/www-template?sslmode=disable"
+url = "postgres://admin_console:admin_console@postgres:5432/app-template?sslmode=disable"
 
 [valkey]
 admin_url = "redis://valkey:6379/1"
@@ -227,7 +227,7 @@ product_index_prefix = "product-domain"
 
 [observability]
 otel_exporter_otlp_endpoint = "signoz-otel-collector:4317"
-otel_service_name = "www-template-admin-api"
+otel_service_name = "app-template-admin-api"
 `)
 	if err := os.WriteFile(configPath, data, 0o600); err != nil {
 		t.Fatalf("write temp admin config: %v", err)
@@ -267,7 +267,7 @@ func assertAdminConfigSurfaceInfrastructure(t *testing.T, cfg Config) {
 	if cfg.Infra.OpenSearch.OperatorAuditIndexPrefix != "admin-audit" || cfg.Infra.OpenSearch.ProductIndexPrefix != "product-domain" {
 		t.Fatalf("expected OpenSearch namespace mapping, got %#v", cfg.Infra.OpenSearch)
 	}
-	if cfg.Observability.OTELExporterOTLPEndpoint != "signoz-otel-collector:4317" || cfg.Observability.OTELServiceName != "www-template-admin-api" {
+	if cfg.Observability.OTELExporterOTLPEndpoint != "signoz-otel-collector:4317" || cfg.Observability.OTELServiceName != "app-template-admin-api" {
 		t.Fatalf("expected Admin observability mapping, got %#v", cfg.Observability)
 	}
 }

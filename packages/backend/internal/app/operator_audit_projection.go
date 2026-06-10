@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	auditapplication "www-template/packages/backend/internal/application/audit"
-	"www-template/packages/backend/internal/platform/config"
-	"www-template/packages/backend/internal/platform/observability"
+	auditapplication "app-template/packages/backend/internal/application/audit"
+	"app-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/observability"
 )
 
 const operatorAuditProjectionTimeout = 3 * time.Second

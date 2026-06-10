@@ -14,7 +14,7 @@ repo_root="$(git -C "${script_dir}/../.." rev-parse --show-toplevel)"
 
 # Step 3: DevContainer 内の workspace path と Compose 定義を固定し、ホスト側の cwd や環境差分で検証場所がぶれないようにする。
 compose_file="${repo_root}/.devcontainer/compose.yaml"
-container_workspace="/workspaces/www-template"
+container_workspace="/workspaces/app-template"
 
 # Step 4: すでに DevContainer 内で実行されている場合は、再度 docker compose exec せず、その場の container toolchain で対象コマンドへ置き換える。
 if [ -f /.dockerenv ]; then

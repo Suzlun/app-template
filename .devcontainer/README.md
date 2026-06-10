@@ -54,8 +54,8 @@
 
 ## 主要な環境変数
 
-- `DATABASE_URL=postgres://www-template:www-template@postgres:5432/www-template?sslmode=disable`
-- `ADMIN_CONFIG_PATH=/workspaces/www-template/.config/local.admin.toml`
+- `DATABASE_URL=postgres://app-template:app-template@postgres:5432/app-template?sslmode=disable`
+- `ADMIN_CONFIG_PATH=/workspaces/app-template/.config/local.admin.toml`
 - `VALKEY_URL=redis://valkey:6379/0`
 - `OPENSEARCH_URL=http://opensearch:9200`
 - `R2_ENDPOINT=http://minio:9000`

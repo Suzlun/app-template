@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useAdminSession } from '@www-template/admin-domain';
+	import { useAdminSession } from '@app-template/admin-domain';
 
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';

@@ -6,7 +6,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"www-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 func TestAdminValkeyNamespaceScenarios(t *testing.T) {

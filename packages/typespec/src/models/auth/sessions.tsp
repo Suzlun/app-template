@@ -5,7 +5,7 @@ import "@typespec/openapi3";
 using Http;
 using TypeSpec.OpenAPI;
 
-namespace WWWTemplate;
+namespace AppTemplate;
 
 @doc("Cookie mode session / refresh response が共有する auth envelope。Product/Admin はこの単一定義を spread して同じ field 名を公開する。")
 model CookieAuthEnvelope {

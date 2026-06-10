@@ -31,11 +31,11 @@ secret_hash_key = "dev-pepper-change-in-production"
 jwt_secret = "change-this-to-a-long-random-jwt-secret-in-production"
 
 [database]
-url = "postgres://www-template:www-template@postgres:5432/www-template?sslmode=disable"
+url = "postgres://app-template:app-template@postgres:5432/app-template?sslmode=disable"
 
 [valkey]
 url = "redis://valkey:6379/0"
-key_prefix = "www-template"
+key_prefix = "app-template"
 
 [opensearch]
 url = "http://opensearch:9200"
@@ -61,5 +61,5 @@ from_address = "noreply@example.com"
 otel_exporter_otlp_endpoint = "signoz-otel-collector:4317"
 otel_exporter_otlp_traces_endpoint = "signoz-otel-collector:4317"
 otel_exporter_otlp_logs_endpoint = "signoz-otel-collector:4317"
-otel_service_name = "www-template-api"
-otel_resource_attributes = "service.namespace=www-template,deployment.environment=development"
+otel_service_name = "app-template-api"
+otel_resource_attributes = "service.namespace=app-template,deployment.environment=development"

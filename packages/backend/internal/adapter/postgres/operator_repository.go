@@ -9,9 +9,9 @@ import (
 
 	"gorm.io/gorm"
 
-	adminauth "www-template/packages/backend/internal/application/auth"
-	operatorsapplication "www-template/packages/backend/internal/application/operators"
-	domain "www-template/packages/backend/internal/domain"
+	adminauth "app-template/packages/backend/internal/application/auth"
+	operatorsapplication "app-template/packages/backend/internal/application/operators"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 var _ operatorsapplication.OperatorRepository = (*OperatorRepository)(nil)

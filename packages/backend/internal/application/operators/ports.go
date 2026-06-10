@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	authapplication "www-template/packages/backend/internal/application/auth"
+	authapplication "app-template/packages/backend/internal/application/auth"
 )
 
 // ─── Port interface ────────────────────────────────────────────────────────

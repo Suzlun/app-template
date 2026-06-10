@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	"www-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 // [AUTH-BE-S027] production recovery mail delivery は TLS または STARTTLS を強制する

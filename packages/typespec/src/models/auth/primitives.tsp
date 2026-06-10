@@ -5,7 +5,7 @@ import "@typespec/openapi3";
 using Http;
 using TypeSpec.OpenAPI;
 
-namespace WWWTemplate;
+namespace AppTemplate;
 
 @doc("JWT 形式のアクセストークンを使用した Bearer 認証。Authorization ヘッダーに `Bearer <JWT>` を付与すること。トークンは短命の JWT であり、subject・sessionID・iat・exp を含む。")
 model BearerAuth {

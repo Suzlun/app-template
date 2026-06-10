@@ -1,10 +1,10 @@
 <script lang="ts">
-	import * as Tooltip from "@www-template/ui/components/tooltip";
+	import * as Tooltip from "@app-template/ui/components/tooltip";
 	import {
 		cn,
 		type WithElementRef,
 		type WithoutChildrenOrChild,
-	} from "@www-template/ui/lib/utils";
+	} from "@app-template/ui/lib/utils";
 	import { mergeProps } from "bits-ui";
 	import type { ComponentProps, Snippet } from "svelte";
 	import type { HTMLAnchorAttributes } from "svelte/elements";

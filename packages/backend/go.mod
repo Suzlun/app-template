@@ -1,4 +1,4 @@
-module www-template/packages/backend
+module app-template/packages/backend
 
 go 1.26.4
 

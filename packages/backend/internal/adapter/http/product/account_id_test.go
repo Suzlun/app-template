@@ -1,6 +1,6 @@
 package product
 
-import domain "www-template/packages/backend/internal/domain"
+import domain "app-template/packages/backend/internal/domain"
 
 func testAccountID(raw string) domain.AccountID {
 	accountID, err := domain.NewAccountID(raw)

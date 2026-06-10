@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	domain "www-template/packages/backend/internal/domain"
-	"www-template/packages/backend/internal/platform/config"
+	domain "app-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 // TestConsumeRecoveryTokenAtomicConcurrent は ConsumeRecoveryTokenAtomic が

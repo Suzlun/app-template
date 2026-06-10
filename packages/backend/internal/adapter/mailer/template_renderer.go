@@ -7,7 +7,7 @@ import (
 	"strings"
 	texttemplate "text/template"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // renderedMail はレンダリング済みメールの件名と本文（HTML / plain text 両方）である。

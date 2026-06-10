@@ -2,7 +2,7 @@ import {
   requestCreateAdminOperator,
   type AdminOperatorProfile,
   type AdminOperatorRole,
-} from '@www-template/admin-api';
+} from '@app-template/admin-api';
 
 import { getAdminSession, verifyProtectedAdminRoute } from './auth';
 

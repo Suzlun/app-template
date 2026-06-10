@@ -93,7 +93,7 @@ If any are missing, do not start. Reply with Status BLOCKED and list missing inp
 - Treat `packages/frontend/ui` as the reusable UI components, styling primitives, assets, and presentation utilities owner
 - Treat `packages/frontend/api` as generated SDK/types; read and consume it only, never hand-edit generated artifacts
 - Enforce frontend dependency direction: `packages/web -> packages/frontend/ui` and `packages/frontend/app -> packages/frontend/domain -> packages/frontend/api`
-- Never import `@www-template/api` directly from `app`; always go through a domain hook
+- Never import `@app-template/api` directly from `app`; always go through a domain hook
 - Never use `fetch`, `axios`, or `cross-fetch` directly in `packages/frontend/app` or `packages/frontend/domain`; `packages/web` may use native `fetch` for web-local data access, but not `axios` or `cross-fetch`
 - Keep `packages/frontend/app` as the `/app`-served CSR surface and keep auth routes under that app without reintroducing SvelteKit-only route behavior there
 - Never hand-edit generated files (`openapi.json`, `client.ts`, `openapi.gen.go`)

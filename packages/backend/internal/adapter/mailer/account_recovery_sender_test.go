@@ -5,10 +5,10 @@ import (
 	"strings"
 	"testing"
 
-	productaccounts "www-template/packages/backend/internal/application/accounts"
-	application "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
-	"www-template/packages/backend/internal/platform/config"
+	productaccounts "app-template/packages/backend/internal/application/accounts"
+	application "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 type stubMailerAccountSettingRepository struct {
@@ -64,7 +64,7 @@ func testMailerConfig() config.InfraConfig {
 	return config.InfraConfig{
 		Mail: config.MailConfig{
 			FromAddress: "from@example.com",
-			ProductName: "www-template",
+			ProductName: "app-template",
 		},
 	}
 }
@@ -93,7 +93,7 @@ func TestAccountRecoveryMessageUsesAccountSettingLocale(t *testing.T) {
 	if err != nil {
 		t.Fatalf("buildAccountRecoveryMessage: %v", err)
 	}
-	assertMailContainsAll(t, message, "Subject: www-template Passkey Recovery", "Use the link below to recover your passkey.")
+	assertMailContainsAll(t, message, "Subject: app-template Passkey Recovery", "Use the link below to recover your passkey.")
 }
 
 // [LOCALIZATION-BE-S007] device-link 完了メールは AccountSetting.locale の日本語文面を選択する。
@@ -111,7 +111,7 @@ func TestDeviceLinkCompleteMessageUsesAccountSettingLocale(t *testing.T) {
 	if err != nil {
 		t.Fatalf("buildCompletionMessage: %v", err)
 	}
-	assertMailContainsAll(t, message, "Subject: www-template 新しいデバイスのパスキー追加完了", "新しいデバイスでパスキーが追加されました。")
+	assertMailContainsAll(t, message, "Subject: app-template 新しいデバイスのパスキー追加完了", "新しいデバイスでパスキーが追加されました。")
 }
 
 // [LOCALIZATION-BE-S008] 未対応 locale は template 解決時に拒否される。
@@ -166,14 +166,14 @@ func TestRecoveryMessageJapaneseRendering(t *testing.T) {
 		t.Fatalf("resolveMailTemplate: %v", err)
 	}
 	rendered, err := renderMailTemplate(tmpl, recoveryMessageTemplateData{
-		ProductName: "www-template",
+		ProductName: "app-template",
 		URL:         "https://example.com/recover",
 		RequestID:   "REQ001",
 	})
 	if err != nil {
 		t.Fatalf("renderMailTemplate: %v", err)
 	}
-	if !strings.Contains(rendered.subject, "www-template") {
+	if !strings.Contains(rendered.subject, "app-template") {
 		t.Fatalf("subject must contain product name, got: %s", rendered.subject)
 	}
 	if !strings.Contains(rendered.bodyText, "https://example.com/recover") {
@@ -189,7 +189,7 @@ func TestCompletionMessageHTMLRendering(t *testing.T) {
 		t.Fatalf("resolveMailTemplate: %v", err)
 	}
 	rendered, err := renderMailTemplate(tmpl, recoveryCompleteTemplateData{
-		ProductName: "www-template",
+		ProductName: "app-template",
 	})
 	if err != nil {
 		t.Fatalf("renderMailTemplate: %v", err)
@@ -197,7 +197,7 @@ func TestCompletionMessageHTMLRendering(t *testing.T) {
 	if !strings.Contains(rendered.bodyHTML, "<p>") {
 		t.Fatalf("body_html must contain HTML tags, got: %s", rendered.bodyHTML)
 	}
-	if !strings.Contains(rendered.subject, "www-template") {
+	if !strings.Contains(rendered.subject, "app-template") {
 		t.Fatalf("subject must contain product name, got: %s", rendered.subject)
 	}
 }

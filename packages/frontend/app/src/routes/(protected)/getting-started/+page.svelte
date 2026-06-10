@@ -4,8 +4,8 @@
    * テンプレート利用者向けの短い行リスト。
    * 冗長説明・装飾コピー・詩的コピーは禁止。
    */
-  import { useAccount } from '@www-template/domain';
-  import { Item } from '@www-template/ui/components';
+  import { useAccount } from '@app-template/domain';
+  import { Item } from '@app-template/ui/components';
 
   import { resolveUnauthenticatedLocale, useI18n } from '$lib/i18n';
 

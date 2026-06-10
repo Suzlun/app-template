@@ -15,10 +15,10 @@ import (
 
 	"gorm.io/gorm"
 
-	accountsapplication "www-template/packages/backend/internal/application/accounts"
-	auditapplication "www-template/packages/backend/internal/application/audit"
-	domain "www-template/packages/backend/internal/domain"
-	"www-template/packages/backend/internal/platform/id"
+	accountsapplication "app-template/packages/backend/internal/application/accounts"
+	auditapplication "app-template/packages/backend/internal/application/audit"
+	domain "app-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/platform/id"
 )
 
 // testPostgresOwnerURL はテスト用 DB の作成・削除に使う owner/maintenance DSN である。

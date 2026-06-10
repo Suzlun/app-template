@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CardNS, EmptyState } from '@www-template/ui/components';
+	import { CardNS, EmptyState } from '@app-template/ui/components';
 
 	import { goto } from '$app/navigation';
 

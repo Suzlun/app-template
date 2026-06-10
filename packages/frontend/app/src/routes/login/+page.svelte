@@ -1,8 +1,8 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
 
-  import { usePasskeyLogin } from '@www-template/domain/auth/passkey';
-  import { AuthPanel, Button } from '@www-template/ui';
+  import { usePasskeyLogin } from '@app-template/domain/auth/passkey';
+  import { AuthPanel, Button } from '@app-template/ui';
 
   import AuthLayout from '$lib/layouts/AuthLayout.svelte';
   import {

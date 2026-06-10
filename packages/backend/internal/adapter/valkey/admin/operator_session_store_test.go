@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	adminauth "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
-	"www-template/packages/backend/internal/platform/config"
+	adminauth "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 func TestOperatorRefreshSessionStoreRotateConsumesOldRefreshSession(t *testing.T) {

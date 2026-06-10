@@ -8,8 +8,8 @@ import (
 
 	"gorm.io/gorm"
 
-	application "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
+	application "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 type gormAccountRecord struct {

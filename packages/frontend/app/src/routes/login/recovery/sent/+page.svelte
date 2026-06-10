@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { useRecoveryFlow } from '@www-template/domain/auth/recovery';
-  import { AuthPanel, MonoLabel, StatusIcon } from '@www-template/ui';
+  import { useRecoveryFlow } from '@app-template/domain/auth/recovery';
+  import { AuthPanel, MonoLabel, StatusIcon } from '@app-template/ui';
 
   import AuthLayout from '$lib/layouts/AuthLayout.svelte';
   import { resolveUnauthenticatedLocale, useI18n } from '$lib/i18n';

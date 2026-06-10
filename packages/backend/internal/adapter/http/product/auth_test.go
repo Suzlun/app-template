@@ -14,11 +14,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	application "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
-	"www-template/packages/backend/internal/platform/config"
+	application "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/platform/config"
 
-	"www-template/packages/backend/internal/platform/id"
+	"app-template/packages/backend/internal/platform/id"
 )
 
 var ulidRegex = regexp.MustCompile(`^[0-9A-HJKMNP-TV-Z]{26}$`)
@@ -133,7 +133,7 @@ func TestAuthPasskeyStartUsesConfiguredWebAuthnRPID(t *testing.T) {
 	stateRepo := newStubAuthStateRepository(clock.Now)
 	accountRepo := stubAccountAuthRepositoryWithMember()
 	cfg := testConfig()
-	cfg.Auth.WebAuthnRPID = "www-template"
+	cfg.Auth.WebAuthnRPID = "app-template"
 	auth := mustNewProductAuthForTest(t, stateRepo, accountRepo, &capturingAccountRecoverySender{}, &stubInvitationPasskeyRegistrar{}, nil, clock.Now, cfg.AuthRuntime(), application.AuthServiceOptionalPorts{WebAuthn: newMockWebAuthnProvider()})
 	router := NewRouter(cfg, Dependencies{Auth: auth})
 
@@ -143,8 +143,8 @@ func TestAuthPasskeyStartUsesConfiguredWebAuthnRPID(t *testing.T) {
 	assertNoStore(t, response)
 	var body map[string]any
 	decodeJSON(t, response, &body)
-	if body["rpId"] != "www-template" {
-		t.Fatalf("expected rpId www-template, got %#v", body["rpId"])
+	if body["rpId"] != "app-template" {
+		t.Fatalf("expected rpId app-template, got %#v", body["rpId"])
 	}
 }
 

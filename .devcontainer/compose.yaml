@@ -18,12 +18,12 @@ services:
       signoz-otel-collector:
         condition: service_healthy
     environment:
-      CONFIG_PATH: /workspaces/www-template/.config/local.toml
+      CONFIG_PATH: /workspaces/app-template/.config/local.toml
       GOPATH: /go
       GOMODCACHE: /go/pkg/mod
       GOCACHE: /home/node/.cache/go-build
       PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
-      ADMIN_CONFIG_PATH: /workspaces/www-template/.config/local.admin.toml
+      ADMIN_CONFIG_PATH: /workspaces/app-template/.config/local.admin.toml
       NODE_ENV: development
       TOOLCHAIN_GO_VERSION: 1.26.4
       TOOLCHAIN_PNPM_VERSION: 11.5.1
@@ -46,7 +46,7 @@ services:
       - '127.0.0.1:8080:8080'
       - '127.0.0.1:8081:8081'
     volumes:
-      - ..:/workspaces/www-template:cached
+      - ..:/workspaces/app-template:cached
       - go-build-cache:/home/node/.cache/go-build
       - go-mod-cache:/go/pkg/mod
       - playwright-cache:/ms-playwright
@@ -56,11 +56,11 @@ services:
   postgres:
     image: postgres:18.4
     environment:
-      POSTGRES_DB: www-template
-      POSTGRES_PASSWORD: www-template
-      POSTGRES_USER: www-template
+      POSTGRES_DB: app-template
+      POSTGRES_PASSWORD: app-template
+      POSTGRES_USER: app-template
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U www-template -d www-template']
+      test: ['CMD-SHELL', 'pg_isready -U app-template -d app-template']
       interval: 10s
       timeout: 5s
       retries: 10

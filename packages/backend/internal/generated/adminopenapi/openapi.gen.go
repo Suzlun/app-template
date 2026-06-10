@@ -20,6 +20,18 @@ const (
 	BearerAuthScopes = "BearerAuth.Scopes"
 )
 
+// Defines values for AccountLocale.
+const (
+	En AccountLocale = "en"
+	Ja AccountLocale = "ja"
+)
+
+// Defines values for AccountStatus.
+const (
+	Active    AccountStatus = "active"
+	Suspended AccountStatus = "suspended"
+)
+
 // Defines values for AdminBearerContextRefreshResponseCredentialMode.
 const (
 	AdminBearerContextRefreshResponseCredentialModeBearer AdminBearerContextRefreshResponseCredentialMode = "bearer"
@@ -52,95 +64,128 @@ const (
 	Sent AdminSetupTokenDeliveryStatus = "sent"
 )
 
-// Defines values for WWWTemplateAccountLocale.
+// Defines values for AuthFailureClassification.
 const (
-	En WWWTemplateAccountLocale = "en"
-	Ja WWWTemplateAccountLocale = "ja"
+	AccountSuspended         AuthFailureClassification = "account-suspended"
+	CredentialAmbiguous      AuthFailureClassification = "credential-ambiguous"
+	InternalError            AuthFailureClassification = "internal-error"
+	InvalidRefreshCredential AuthFailureClassification = "invalid-refresh-credential"
+	SessionExpired           AuthFailureClassification = "session-expired"
+	Unauthenticated          AuthFailureClassification = "unauthenticated"
 )
 
-// Defines values for WWWTemplateAccountStatus.
+// Defines values for BearerContextRefreshRequestCredentialMode.
 const (
-	Active    WWWTemplateAccountStatus = "active"
-	Suspended WWWTemplateAccountStatus = "suspended"
+	BearerContextRefreshRequestCredentialModeBearer BearerContextRefreshRequestCredentialMode = "bearer"
 )
 
-// Defines values for WWWTemplateAuthFailureClassification.
+// Defines values for ContextIndexUpdateAction.
 const (
-	AccountSuspended         WWWTemplateAuthFailureClassification = "account-suspended"
-	CredentialAmbiguous      WWWTemplateAuthFailureClassification = "credential-ambiguous"
-	InternalError            WWWTemplateAuthFailureClassification = "internal-error"
-	InvalidRefreshCredential WWWTemplateAuthFailureClassification = "invalid-refresh-credential"
-	SessionExpired           WWWTemplateAuthFailureClassification = "session-expired"
-	Unauthenticated          WWWTemplateAuthFailureClassification = "unauthenticated"
+	ClearSurface ContextIndexUpdateAction = "clear-surface"
+	Remove       ContextIndexUpdateAction = "remove"
+	Upsert       ContextIndexUpdateAction = "upsert"
 )
 
-// Defines values for WWWTemplateBearerContextRefreshRequestCredentialMode.
+// Defines values for CookieClearCommandHttpOnly.
 const (
-	WWWTemplateBearerContextRefreshRequestCredentialModeBearer WWWTemplateBearerContextRefreshRequestCredentialMode = "bearer"
+	CookieClearCommandHttpOnlyTrue CookieClearCommandHttpOnly = true
 )
 
-// Defines values for WWWTemplateContextIndexUpdateAction.
+// Defines values for CookieClearCommandMaxAge.
 const (
-	ClearSurface WWWTemplateContextIndexUpdateAction = "clear-surface"
-	Remove       WWWTemplateContextIndexUpdateAction = "remove"
-	Upsert       WWWTemplateContextIndexUpdateAction = "upsert"
+	N0 CookieClearCommandMaxAge = 0
 )
 
-// Defines values for WWWTemplateCookieClearCommandHttpOnly.
+// Defines values for CookieClearCommandSameSite.
 const (
-	WWWTemplateCookieClearCommandHttpOnlyTrue WWWTemplateCookieClearCommandHttpOnly = true
+	Lax CookieClearCommandSameSite = "Lax"
 )
 
-// Defines values for WWWTemplateCookieClearCommandMaxAge.
+// Defines values for CookieClearCommandSecure.
 const (
-	N0 WWWTemplateCookieClearCommandMaxAge = 0
+	CookieClearCommandSecureTrue CookieClearCommandSecure = true
 )
 
-// Defines values for WWWTemplateCookieClearCommandSameSite.
+// Defines values for CredentialMode.
 const (
-	Lax WWWTemplateCookieClearCommandSameSite = "Lax"
+	CredentialModeBearer CredentialMode = "bearer"
+	CredentialModeCookie CredentialMode = "cookie"
 )
 
-// Defines values for WWWTemplateCookieClearCommandSecure.
+// Defines values for LogoutResponseRevoked.
 const (
-	WWWTemplateCookieClearCommandSecureTrue WWWTemplateCookieClearCommandSecure = true
+	LogoutResponseRevokedTrue LogoutResponseRevoked = true
 )
 
-// Defines values for WWWTemplateCredentialMode.
+// Defines values for PasskeyAddStartResponseRequireResidentKey.
 const (
-	WWWTemplateCredentialModeBearer WWWTemplateCredentialMode = "bearer"
-	WWWTemplateCredentialModeCookie WWWTemplateCredentialMode = "cookie"
+	PasskeyAddStartResponseRequireResidentKeyTrue PasskeyAddStartResponseRequireResidentKey = true
 )
 
-// Defines values for WWWTemplateLogoutResponseRevoked.
+// Defines values for PasskeyAddStartResponseResidentKey.
 const (
-	WWWTemplateLogoutResponseRevokedTrue WWWTemplateLogoutResponseRevoked = true
+	PasskeyAddStartResponseResidentKeyRequired PasskeyAddStartResponseResidentKey = "required"
 )
 
-// Defines values for WWWTemplatePasskeyAddStartResponseRequireResidentKey.
+// Defines values for PasskeyAddStartResponseUserVerification.
 const (
-	WWWTemplatePasskeyAddStartResponseRequireResidentKeyTrue WWWTemplatePasskeyAddStartResponseRequireResidentKey = true
+	PasskeyAddStartResponseUserVerificationRequired PasskeyAddStartResponseUserVerification = "required"
 )
 
-// Defines values for WWWTemplatePasskeyAddStartResponseResidentKey.
+// Defines values for PasskeyStartResponseUserVerification.
 const (
-	WWWTemplatePasskeyAddStartResponseResidentKeyRequired WWWTemplatePasskeyAddStartResponseResidentKey = "required"
+	Required PasskeyStartResponseUserVerification = "required"
 )
 
-// Defines values for WWWTemplatePasskeyAddStartResponseUserVerification.
-const (
-	WWWTemplatePasskeyAddStartResponseUserVerificationRequired WWWTemplatePasskeyAddStartResponseUserVerification = "required"
-)
+// AccountDetailResponse account 詳細 API の response。
+type AccountDetailResponse struct {
+	// Account 対象 Product Account の read model。
+	Account AccountSummary `json:"account"`
 
-// Defines values for WWWTemplatePasskeyStartResponseUserVerification.
-const (
-	Required WWWTemplatePasskeyStartResponseUserVerification = "required"
-)
+	// RequestId 詳細取得 request に対応する canonical ULID の追跡 ID。
+	RequestId UlidId `json:"requestId"`
+}
+
+// AccountListResponse account 一覧 API の response。requestId は監査・追跡に使用し、accounts は account concept read model として返す。
+type AccountListResponse struct {
+	// Accounts 検索条件に一致した Product Account の要約一覧。
+	Accounts []AccountSummary `json:"accounts"`
+
+	// NextCursor 次ページが存在するときだけ返す opaque cursor。
+	NextCursor *string `json:"nextCursor,omitempty"`
+
+	// RequestId 一覧取得 request に対応する canonical ULID の追跡 ID。
+	RequestId UlidId `json:"requestId"`
+}
+
+// AccountLocale Product Account が表示と通知に使用する保存済みロケール。運用者向け設定や画面一時状態ではなく、AccountSetting.locale の値だけを表す。
+type AccountLocale string
+
+// AccountStatus Admin surface で表示・監査に使う Product Account の状態。Product domain の永続値を Admin API の read model として表すだけで、Admin 固有状態を混ぜない。
+type AccountStatus string
+
+// AccountSummary Account 一覧と詳細で返す Product Account の要約。Admin route から参照できる account concept model であり、Admin surface 固有の catch-all DTO ではない。
+type AccountSummary struct {
+	// AccountId 対象 Product Account の canonical ULID。
+	AccountId UlidId `json:"accountId"`
+
+	// CreatedAt Product Account が作成された日時。
+	CreatedAt time.Time `json:"createdAt"`
+
+	// Email Product Account の canonical email address。
+	Email string `json:"email"`
+
+	// PasskeyCount 対象 Product Account に登録済みの passkey 数。
+	PasskeyCount int32 `json:"passkeyCount"`
+
+	// Status API が観測した Product Account lifecycle state。
+	Status AccountStatus `json:"status"`
+}
 
 // AdminAuthorizationBoundary Admin operator の authorization concept を所有する marker model。RBAC の詳細は backend application が評価し、契約には role と operator profile だけを公開する。
 type AdminAuthorizationBoundary struct {
 	// OperatorId authorization 判定対象 operator の canonical ULID。
-	OperatorId WWWTemplateUlidId `json:"operatorId"`
+	OperatorId UlidId `json:"operatorId"`
 }
 
 // AdminBearerContextRefreshResponse Admin automation client の Bearer mode context refresh 成功 response。Cookie command や browser context index hint を含めない。
@@ -149,7 +194,7 @@ type AdminBearerContextRefreshResponse struct {
 	AccessToken string `json:"accessToken"`
 
 	// AuthContextId refreshToken と session metadata を束縛する auth context。
-	AuthContextId WWWTemplateUlidId `json:"authContextId"`
+	AuthContextId UlidId `json:"authContextId"`
 
 	// CredentialMode external bearer mode で発行されたことを示す discriminator。
 	CredentialMode AdminBearerContextRefreshResponseCredentialMode `json:"credentialMode"`
@@ -164,10 +209,10 @@ type AdminBearerContextRefreshResponse struct {
 	RefreshToken string `json:"refreshToken"`
 
 	// RequestId 認証 request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 
 	// SessionId 対象 session の canonical ULID。
-	SessionId WWWTemplateUlidId `json:"sessionId"`
+	SessionId UlidId `json:"sessionId"`
 }
 
 // AdminBearerContextRefreshResponseCredentialMode external bearer mode で発行されたことを示す discriminator。
@@ -179,7 +224,7 @@ type AdminBearerOperatorSessionResponse struct {
 	AccessToken string `json:"accessToken"`
 
 	// AuthContextId refreshToken と session metadata を束縛する auth context。
-	AuthContextId WWWTemplateUlidId `json:"authContextId"`
+	AuthContextId UlidId `json:"authContextId"`
 
 	// CredentialMode external bearer mode で発行されたことを示す discriminator。
 	CredentialMode AdminBearerOperatorSessionResponseCredentialMode `json:"credentialMode"`
@@ -194,10 +239,10 @@ type AdminBearerOperatorSessionResponse struct {
 	RefreshToken string `json:"refreshToken"`
 
 	// RequestId 認証 request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 
 	// SessionId 対象 session の canonical ULID。
-	SessionId WWWTemplateUlidId `json:"sessionId"`
+	SessionId UlidId `json:"sessionId"`
 }
 
 // AdminBearerOperatorSessionResponseCredentialMode external bearer mode で発行されたことを示す discriminator。
@@ -209,13 +254,13 @@ type AdminContextRefreshResponse struct {
 	AccessToken string `json:"accessToken"`
 
 	// AuthContextId refresh path と session metadata を束縛する auth context。
-	AuthContextId WWWTemplateUlidId `json:"authContextId"`
+	AuthContextId UlidId `json:"authContextId"`
 
 	// ClearCookieCommands logout / revoke / suspend などで削除すべき旧 refresh Cookie がある場合の command。通常 login では空配列。
-	ClearCookieCommands []WWWTemplateCookieClearCommand `json:"clearCookieCommands"`
+	ClearCookieCommands []CookieClearCommand `json:"clearCookieCommands"`
 
 	// ContextIndexUpdateHints browser の origin-local context index を更新する非 secret hint。
-	ContextIndexUpdateHints []WWWTemplateContextIndexUpdateHint `json:"contextIndexUpdateHints"`
+	ContextIndexUpdateHints []ContextIndexUpdateHint `json:"contextIndexUpdateHints"`
 
 	// CredentialMode browser cookie mode で発行されたことを示す discriminator。
 	CredentialMode AdminContextRefreshResponseCredentialMode `json:"credentialMode"`
@@ -227,10 +272,10 @@ type AdminContextRefreshResponse struct {
 	Operator AdminOperatorProfile `json:"operator"`
 
 	// RequestId 認証 request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 
 	// SessionId 対象 session の canonical ULID。
-	SessionId WWWTemplateUlidId `json:"sessionId"`
+	SessionId UlidId `json:"sessionId"`
 }
 
 // AdminContextRefreshResponseCredentialMode browser cookie mode で発行されたことを示す discriminator。
@@ -248,7 +293,7 @@ type AdminCreateOperatorRequest struct {
 // AdminCreateOperatorResponse Admin operator 作成 API の response。operator summary、delivery status、audit correlation だけを返し、setup token 平文は含めない。
 type AdminCreateOperatorResponse struct {
 	// AuditEventId Operator 作成 intent/outcome を記録する Admin audit event の canonical ULID。
-	AuditEventId WWWTemplateUlidId `json:"auditEventId"`
+	AuditEventId UlidId `json:"auditEventId"`
 
 	// DeliveryStatus setup token の配送結果。
 	DeliveryStatus AdminSetupTokenDeliveryStatus `json:"deliveryStatus"`
@@ -257,7 +302,7 @@ type AdminCreateOperatorResponse struct {
 	Operator AdminOperatorProfile `json:"operator"`
 
 	// RequestId 作成 request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 }
 
 // AdminCurrentOperatorResponse 現在の Admin operator を返す response。
@@ -266,7 +311,7 @@ type AdminCurrentOperatorResponse struct {
 	Operator AdminOperatorProfile `json:"operator"`
 
 	// RequestId current operator request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 }
 
 // AdminInitialSetupFinishRequest 初回 Admin operator 作成 ceremony を完了する request。bootstrapSecret は finish 時にも再検証し、start 後の競合や期限切れを fail-close にする。
@@ -275,10 +320,10 @@ type AdminInitialSetupFinishRequest struct {
 	BootstrapSecret string `json:"bootstrapSecret"`
 
 	// Credential browser WebAuthn API から返された attestation credential。
-	Credential WWWTemplateWebAuthnAttestationCredential `json:"credential"`
+	Credential WebAuthnAttestationCredential `json:"credential"`
 
 	// CredentialMode session credential の発行方式。Admin Console は cookie、automation client は bearer を指定する。
-	CredentialMode WWWTemplateCredentialMode `json:"credentialMode"`
+	CredentialMode CredentialMode `json:"credentialMode"`
 
 	// DisplayName WebAuthn user displayName に使う表示名。
 	DisplayName string `json:"displayName"`
@@ -287,7 +332,7 @@ type AdminInitialSetupFinishRequest struct {
 	Email openapi_types.Email `json:"email"`
 
 	// RequestId start response と対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 }
 
 // AdminInitialSetupStartRequest 初回 Admin operator 作成 ceremony を開始する request。bootstrapSecret は backend で opaque hash と期限を検証し、response body や永続化先へ出さない。
@@ -318,7 +363,7 @@ type AdminOperatorPasskeyItem struct {
 	CreatedAt time.Time `json:"createdAt"`
 
 	// Id Admin operator passkey credential の canonical ULID。削除 API の path parameter として使う。
-	Id WWWTemplateUlidId `json:"id"`
+	Id UlidId `json:"id"`
 
 	// LastUsedAt 最後にこの passkey credential が認証に使われた日時。未使用の場合は返さない。
 	LastUsedAt *time.Time `json:"lastUsedAt,omitempty"`
@@ -330,7 +375,7 @@ type AdminOperatorPasskeyListResponse struct {
 	Passkeys []AdminOperatorPasskeyItem `json:"passkeys"`
 
 	// RequestId 一覧取得 request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 }
 
 // AdminOperatorProfile Admin operator の現在状態を返す read model。
@@ -342,7 +387,7 @@ type AdminOperatorProfile struct {
 	Email string `json:"email"`
 
 	// OperatorId Admin operator の canonical ULID。
-	OperatorId WWWTemplateUlidId `json:"operatorId"`
+	OperatorId UlidId `json:"operatorId"`
 
 	// Role Admin operator に割り当てられた role。
 	Role AdminOperatorRole `json:"role"`
@@ -357,13 +402,13 @@ type AdminOperatorSessionResponse struct {
 	AccessToken string `json:"accessToken"`
 
 	// AuthContextId refresh path と session metadata を束縛する auth context。
-	AuthContextId WWWTemplateUlidId `json:"authContextId"`
+	AuthContextId UlidId `json:"authContextId"`
 
 	// ClearCookieCommands logout / revoke / suspend などで削除すべき旧 refresh Cookie がある場合の command。通常 login では空配列。
-	ClearCookieCommands []WWWTemplateCookieClearCommand `json:"clearCookieCommands"`
+	ClearCookieCommands []CookieClearCommand `json:"clearCookieCommands"`
 
 	// ContextIndexUpdateHints browser の origin-local context index を更新する非 secret hint。
-	ContextIndexUpdateHints []WWWTemplateContextIndexUpdateHint `json:"contextIndexUpdateHints"`
+	ContextIndexUpdateHints []ContextIndexUpdateHint `json:"contextIndexUpdateHints"`
 
 	// CredentialMode browser cookie mode で発行されたことを示す discriminator。
 	CredentialMode AdminOperatorSessionResponseCredentialMode `json:"credentialMode"`
@@ -375,10 +420,10 @@ type AdminOperatorSessionResponse struct {
 	Operator AdminOperatorProfile `json:"operator"`
 
 	// RequestId 認証 request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 
 	// SessionId 対象 session の canonical ULID。
-	SessionId WWWTemplateUlidId `json:"sessionId"`
+	SessionId UlidId `json:"sessionId"`
 }
 
 // AdminOperatorSessionResponseCredentialMode browser cookie mode で発行されたことを示す discriminator。
@@ -387,13 +432,13 @@ type AdminOperatorSessionResponseCredentialMode string
 // AdminOperatorSetupFinishRequest Admin operator 初期設定 ceremony を完了する request。
 type AdminOperatorSetupFinishRequest struct {
 	// Credential browser WebAuthn API から返された attestation credential。
-	Credential WWWTemplateWebAuthnAttestationCredential `json:"credential"`
+	Credential WebAuthnAttestationCredential `json:"credential"`
 
 	// CredentialMode session credential の発行方式。Admin Console は cookie、automation client は bearer を指定する。
-	CredentialMode WWWTemplateCredentialMode `json:"credentialMode"`
+	CredentialMode CredentialMode `json:"credentialMode"`
 
 	// RequestId start response と対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 
 	// SetupToken operator setup に使う一回限りの token。
 	SetupToken string `json:"setupToken"`
@@ -408,13 +453,13 @@ type AdminOperatorSetupStartRequest struct {
 // AdminPasskeyFinishRequest Admin operator passkey login ceremony を完了する request。
 type AdminPasskeyFinishRequest struct {
 	// Credential browser WebAuthn API から返された assertion credential。
-	Credential WWWTemplateWebAuthnAssertionCredential `json:"credential"`
+	Credential WebAuthnAssertionCredential `json:"credential"`
 
 	// CredentialMode session credential の発行方式。Admin Console は cookie、automation client は bearer を指定する。
-	CredentialMode WWWTemplateCredentialMode `json:"credentialMode"`
+	CredentialMode CredentialMode `json:"credentialMode"`
 
 	// RequestId start response と対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 }
 
 // AdminPasskeyStartRequest Admin operator passkey login ceremony を開始する request。
@@ -426,86 +471,41 @@ type AdminPasskeyStartRequest struct {
 // AdminSetupTokenDeliveryStatus setup token delivery の結果。平文 token ではなく配送状態だけを表す。
 type AdminSetupTokenDeliveryStatus string
 
-// WWWTemplateAccountDetailResponse account 詳細 API の response。
-type WWWTemplateAccountDetailResponse struct {
-	// Account 対象 Product Account の read model。
-	Account WWWTemplateAccountSummary `json:"account"`
+// AuthFailureClassification 認証・認可 failure を Product/Admin の両 artifact で同じ語彙に正規化する分類。
+type AuthFailureClassification string
 
-	// RequestId 詳細取得 request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
-}
-
-// WWWTemplateAccountListResponse account 一覧 API の response。requestId は監査・追跡に使用し、accounts は account concept read model として返す。
-type WWWTemplateAccountListResponse struct {
-	// Accounts 検索条件に一致した Product Account の要約一覧。
-	Accounts []WWWTemplateAccountSummary `json:"accounts"`
-
-	// NextCursor 次ページが存在するときだけ返す opaque cursor。
-	NextCursor *string `json:"nextCursor,omitempty"`
-
-	// RequestId 一覧取得 request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
-}
-
-// WWWTemplateAccountLocale Product Account が表示と通知に使用する保存済みロケール。運用者向け設定や画面一時状態ではなく、AccountSetting.locale の値だけを表す。
-type WWWTemplateAccountLocale string
-
-// WWWTemplateAccountStatus Admin surface で表示・監査に使う Product Account の状態。Product domain の永続値を Admin API の read model として表すだけで、Admin 固有状態を混ぜない。
-type WWWTemplateAccountStatus string
-
-// WWWTemplateAccountSummary Account 一覧と詳細で返す Product Account の要約。Admin route から参照できる account concept model であり、Admin surface 固有の catch-all DTO ではない。
-type WWWTemplateAccountSummary struct {
-	// AccountId 対象 Product Account の canonical ULID。
-	AccountId WWWTemplateUlidId `json:"accountId"`
-
-	// CreatedAt Product Account が作成された日時。
-	CreatedAt time.Time `json:"createdAt"`
-
-	// Email Product Account の canonical email address。
-	Email string `json:"email"`
-
-	// PasskeyCount 対象 Product Account に登録済みの passkey 数。
-	PasskeyCount int32 `json:"passkeyCount"`
-
-	// Status API が観測した Product Account lifecycle state。
-	Status WWWTemplateAccountStatus `json:"status"`
-}
-
-// WWWTemplateAuthFailureClassification 認証・認可 failure を Product/Admin の両 artifact で同じ語彙に正規化する分類。
-type WWWTemplateAuthFailureClassification string
-
-// WWWTemplateAuthFailureResponse 認証・認可 failure の共通 response。requestId と normalized error だけを返し、token や Cookie 値は含めない。
-type WWWTemplateAuthFailureResponse struct {
+// AuthFailureResponse 認証・認可 failure の共通 response。requestId と normalized error だけを返し、token や Cookie 値は含めない。
+type AuthFailureResponse struct {
 	// Error client が fail-close 処理を選ぶための normalized failure classification。
-	Error WWWTemplateAuthFailureClassification `json:"error"`
+	Error AuthFailureClassification `json:"error"`
 
 	// RequestId request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 }
 
-// WWWTemplateAuthOperationErrorResponse 入力不正や操作競合など、認証 credential 検証以外の operation error response。
-type WWWTemplateAuthOperationErrorResponse struct {
+// AuthOperationErrorResponse 入力不正や操作競合など、認証 credential 検証以外の operation error response。
+type AuthOperationErrorResponse struct {
 	// Error client が表示・分岐に使う error code。secret や token 値は含めない。
 	Error string `json:"error"`
 
 	// RequestId request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 }
 
-// WWWTemplateBearerContextRefreshRequest Bearer client が context refresh で送る request body。Cookie mode では body を送らず、path-scoped HttpOnly Cookie だけを提示する。
-type WWWTemplateBearerContextRefreshRequest struct {
+// BearerContextRefreshRequest Bearer client が context refresh で送る request body。Cookie mode では body を送らず、path-scoped HttpOnly Cookie だけを提示する。
+type BearerContextRefreshRequest struct {
 	// CredentialMode external bearer mode refresh であることを示す discriminator。
-	CredentialMode WWWTemplateBearerContextRefreshRequestCredentialMode `json:"credentialMode"`
+	CredentialMode BearerContextRefreshRequestCredentialMode `json:"credentialMode"`
 
 	// RefreshToken rotation 対象の opaque refreshToken。Authorization header ではなく body だけで提示する。
 	RefreshToken string `json:"refreshToken"`
 }
 
-// WWWTemplateBearerContextRefreshRequestCredentialMode external bearer mode refresh であることを示す discriminator。
-type WWWTemplateBearerContextRefreshRequestCredentialMode string
+// BearerContextRefreshRequestCredentialMode external bearer mode refresh であることを示す discriminator。
+type BearerContextRefreshRequestCredentialMode string
 
-// WWWTemplateContextIndexDisplayHint browser context index に保存してよい非 secret の表示 hint。accessToken、refreshToken、Cookie 値、setup token は含めない。
-type WWWTemplateContextIndexDisplayHint struct {
+// ContextIndexDisplayHint browser context index に保存してよい非 secret の表示 hint。accessToken、refreshToken、Cookie 値、setup token は含めない。
+type ContextIndexDisplayHint struct {
 	// Label Account email や operator email など、UI 表示に使う非 secret label。
 	Label string `json:"label"`
 
@@ -513,19 +513,19 @@ type WWWTemplateContextIndexDisplayHint struct {
 	SecondaryLabel *string `json:"secondaryLabel,omitempty"`
 }
 
-// WWWTemplateContextIndexUpdateAction browser 内の context index に対する更新種別。token や Cookie 値を含めず、UI と refresh bootstrap の hint だけを更新する。
-type WWWTemplateContextIndexUpdateAction string
+// ContextIndexUpdateAction browser 内の context index に対する更新種別。token や Cookie 値を含めず、UI と refresh bootstrap の hint だけを更新する。
+type ContextIndexUpdateAction string
 
-// WWWTemplateContextIndexUpdateHint browser context index を更新するための非 secret hint。service artifact が Product/Admin context を決定するため、payload discriminator は持たない。
-type WWWTemplateContextIndexUpdateHint struct {
+// ContextIndexUpdateHint browser context index を更新するための非 secret hint。service artifact が Product/Admin context を決定するため、payload discriminator は持たない。
+type ContextIndexUpdateHint struct {
 	// Action context index に対して行う操作。
-	Action WWWTemplateContextIndexUpdateAction `json:"action"`
+	Action ContextIndexUpdateAction `json:"action"`
 
 	// AuthContextId 操作対象の auth context。clear-surface では省略できる。
-	AuthContextId *WWWTemplateUlidId `json:"authContextId,omitempty"`
+	AuthContextId *UlidId `json:"authContextId,omitempty"`
 
 	// DisplayHint token を含まない UI 表示用 hint。upsert 時だけ返す。
-	DisplayHint *WWWTemplateContextIndexDisplayHint `json:"displayHint,omitempty"`
+	DisplayHint *ContextIndexDisplayHint `json:"displayHint,omitempty"`
 
 	// ExpiresHintAt context index entry を削除する目安時刻。認可可否は refresh response で再検証する。
 	ExpiresHintAt *time.Time `json:"expiresHintAt,omitempty"`
@@ -534,19 +534,19 @@ type WWWTemplateContextIndexUpdateHint struct {
 	LastSeenAt *time.Time `json:"lastSeenAt,omitempty"`
 
 	// SessionId 対象 session の canonical ULID。upsert 時だけ返す。
-	SessionId *WWWTemplateUlidId `json:"sessionId,omitempty"`
+	SessionId *UlidId `json:"sessionId,omitempty"`
 }
 
-// WWWTemplateCookieClearCommand HttpOnly refresh Cookie を削除するために backend が返す command。transport adapter はこの内容から Set-Cookie Max-Age=0 を組み立てる。
-type WWWTemplateCookieClearCommand struct {
+// CookieClearCommand HttpOnly refresh Cookie を削除するために backend が返す command。transport adapter はこの内容から Set-Cookie Max-Age=0 を組み立てる。
+type CookieClearCommand struct {
 	// AuthContextId 削除対象 Cookie が束縛されていた auth context。
-	AuthContextId WWWTemplateUlidId `json:"authContextId"`
+	AuthContextId UlidId `json:"authContextId"`
 
 	// HttpOnly 削除対象 Cookie が HttpOnly 属性を持つこと。
-	HttpOnly WWWTemplateCookieClearCommandHttpOnly `json:"httpOnly"`
+	HttpOnly CookieClearCommandHttpOnly `json:"httpOnly"`
 
 	// MaxAge Cookie 削除を表す Max-Age 値。
-	MaxAge WWWTemplateCookieClearCommandMaxAge `json:"maxAge"`
+	MaxAge CookieClearCommandMaxAge `json:"maxAge"`
 
 	// Name 削除対象の Cookie 名。
 	Name string `json:"name"`
@@ -555,86 +555,86 @@ type WWWTemplateCookieClearCommand struct {
 	Path string `json:"path"`
 
 	// SameSite 削除対象 Cookie の SameSite 属性。
-	SameSite WWWTemplateCookieClearCommandSameSite `json:"sameSite"`
+	SameSite CookieClearCommandSameSite `json:"sameSite"`
 
 	// Secure 削除対象 Cookie が Secure 属性を持つこと。
-	Secure WWWTemplateCookieClearCommandSecure `json:"secure"`
+	Secure CookieClearCommandSecure `json:"secure"`
 }
 
-// WWWTemplateCookieClearCommandHttpOnly 削除対象 Cookie が HttpOnly 属性を持つこと。
-type WWWTemplateCookieClearCommandHttpOnly bool
+// CookieClearCommandHttpOnly 削除対象 Cookie が HttpOnly 属性を持つこと。
+type CookieClearCommandHttpOnly bool
 
-// WWWTemplateCookieClearCommandMaxAge Cookie 削除を表す Max-Age 値。
-type WWWTemplateCookieClearCommandMaxAge float32
+// CookieClearCommandMaxAge Cookie 削除を表す Max-Age 値。
+type CookieClearCommandMaxAge float32
 
-// WWWTemplateCookieClearCommandSameSite 削除対象 Cookie の SameSite 属性。
-type WWWTemplateCookieClearCommandSameSite string
+// CookieClearCommandSameSite 削除対象 Cookie の SameSite 属性。
+type CookieClearCommandSameSite string
 
-// WWWTemplateCookieClearCommandSecure 削除対象 Cookie が Secure 属性を持つこと。
-type WWWTemplateCookieClearCommandSecure bool
+// CookieClearCommandSecure 削除対象 Cookie が Secure 属性を持つこと。
+type CookieClearCommandSecure bool
 
-// WWWTemplateCreateAccountRequest operator が customer account を作成するときの request body。email と初期 locale だけを受け取り、Account 不変条件は Go backend domain object が検証する。
-type WWWTemplateCreateAccountRequest struct {
+// CreateAccountRequest operator が customer account を作成するときの request body。email と初期 locale だけを受け取り、Account 不変条件は Go backend domain object が検証する。
+type CreateAccountRequest struct {
 	// Email 作成対象 Product Account の email address。
 	Email openapi_types.Email `json:"email"`
 
 	// Locale 作成時に保存する Product AccountSetting locale。未指定時の default は backend application が決定する。
-	Locale *WWWTemplateAccountLocale `json:"locale,omitempty"`
+	Locale *AccountLocale `json:"locale,omitempty"`
 }
 
-// WWWTemplateCreateAccountResponse account 作成 API の response。作成された Product Account と、対応する audit event の相関 ID だけを返す。
-type WWWTemplateCreateAccountResponse struct {
+// CreateAccountResponse account 作成 API の response。作成された Product Account と、対応する audit event の相関 ID だけを返す。
+type CreateAccountResponse struct {
 	// Account 作成された Product Account の read model。
-	Account WWWTemplateAccountSummary `json:"account"`
+	Account AccountSummary `json:"account"`
 
 	// AuditEventId Account 作成 intent/outcome を記録する Admin audit event の canonical ULID。
-	AuditEventId WWWTemplateUlidId `json:"auditEventId"`
+	AuditEventId UlidId `json:"auditEventId"`
 
 	// RequestId 作成 request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 }
 
-// WWWTemplateCredentialMode 認証 session credential の発行方式。browser は cookie mode を使い、external API / mobile / CLI / SDK は bearer mode を使う。
-type WWWTemplateCredentialMode string
+// CredentialMode 認証 session credential の発行方式。browser は cookie mode を使い、external API / mobile / CLI / SDK は bearer mode を使う。
+type CredentialMode string
 
-// WWWTemplateLogoutResponse logout / revoke 処理の共通 response。accessToken claims で確定した context の Cookie clear と context index cleanup だけを返す。
-type WWWTemplateLogoutResponse struct {
+// LogoutResponse logout / revoke 処理の共通 response。accessToken claims で確定した context の Cookie clear と context index cleanup だけを返す。
+type LogoutResponse struct {
 	// ClearCookieCommands revocation 対象 refresh Cookie を exact Path で削除する command 一覧。
-	ClearCookieCommands []WWWTemplateCookieClearCommand `json:"clearCookieCommands"`
+	ClearCookieCommands []CookieClearCommand `json:"clearCookieCommands"`
 
 	// ContextIndexUpdateHints revocation 後に browser context index から対象 entry を削除するための hint。
-	ContextIndexUpdateHints []WWWTemplateContextIndexUpdateHint `json:"contextIndexUpdateHints"`
+	ContextIndexUpdateHints []ContextIndexUpdateHint `json:"contextIndexUpdateHints"`
 
 	// RequestId logout / revoke request に対応する canonical ULID の追跡 ID。
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 
 	// Revoked 対象 session または refresh family が失効されたことを示す。
-	Revoked WWWTemplateLogoutResponseRevoked `json:"revoked"`
+	Revoked LogoutResponseRevoked `json:"revoked"`
 }
 
-// WWWTemplateLogoutResponseRevoked 対象 session または refresh family が失効されたことを示す。
-type WWWTemplateLogoutResponseRevoked bool
+// LogoutResponseRevoked 対象 session または refresh family が失効されたことを示す。
+type LogoutResponseRevoked bool
 
-// WWWTemplatePasskeyAddStartResponse WebAuthn PublicKeyCredentialCreationOptions returned by the server after BeginRegistration.
-type WWWTemplatePasskeyAddStartResponse struct {
+// PasskeyAddStartResponse WebAuthn PublicKeyCredentialCreationOptions returned by the server after BeginRegistration.
+type PasskeyAddStartResponse struct {
 	Attestation *string `json:"attestation,omitempty"`
 
 	// Challenge base64url-encoded challenge bytes issued by the server.
-	Challenge          string                                     `json:"challenge"`
-	ExcludeCredentials *[]WWWTemplateWebAuthnCredentialDescriptor `json:"excludeCredentials,omitempty"`
+	Challenge          string                          `json:"challenge"`
+	ExcludeCredentials *[]WebAuthnCredentialDescriptor `json:"excludeCredentials,omitempty"`
 
 	// PubKeyCredParams Supported public key credential algorithms.
-	PubKeyCredParams []WWWTemplateWebAuthnCredentialParameter `json:"pubKeyCredParams"`
+	PubKeyCredParams []WebAuthnCredentialParameter `json:"pubKeyCredParams"`
 
 	// RequestId Canonical ULID string used for auth-owned resource and correlation identifiers.
-	RequestId WWWTemplateUlidId `json:"requestId"`
+	RequestId UlidId `json:"requestId"`
 
 	// RequireResidentKey residentKey required と同じ要求を boolean でも伝える WebAuthn 標準 field。
-	RequireResidentKey WWWTemplatePasskeyAddStartResponseRequireResidentKey `json:"requireResidentKey"`
+	RequireResidentKey PasskeyAddStartResponseRequireResidentKey `json:"requireResidentKey"`
 
 	// ResidentKey 作成する credential が usernameless login で使える discoverable credential であることを要求する。
-	ResidentKey WWWTemplatePasskeyAddStartResponseResidentKey `json:"residentKey"`
-	RpId        string                                        `json:"rpId"`
+	ResidentKey PasskeyAddStartResponseResidentKey `json:"residentKey"`
+	RpId        string                             `json:"rpId"`
 
 	// RpName Relying Party display name.
 	RpName string `json:"rpName"`
@@ -643,55 +643,55 @@ type WWWTemplatePasskeyAddStartResponse struct {
 	Timeout *int64 `json:"timeout,omitempty"`
 
 	// User User entity (id is base64url-encoded bytes).
-	User             WWWTemplateWebAuthnUserEntity                      `json:"user"`
-	UserVerification WWWTemplatePasskeyAddStartResponseUserVerification `json:"userVerification"`
+	User             WebAuthnUserEntity                      `json:"user"`
+	UserVerification PasskeyAddStartResponseUserVerification `json:"userVerification"`
 }
 
-// WWWTemplatePasskeyAddStartResponseRequireResidentKey residentKey required と同じ要求を boolean でも伝える WebAuthn 標準 field。
-type WWWTemplatePasskeyAddStartResponseRequireResidentKey bool
+// PasskeyAddStartResponseRequireResidentKey residentKey required と同じ要求を boolean でも伝える WebAuthn 標準 field。
+type PasskeyAddStartResponseRequireResidentKey bool
 
-// WWWTemplatePasskeyAddStartResponseResidentKey 作成する credential が usernameless login で使える discoverable credential であることを要求する。
-type WWWTemplatePasskeyAddStartResponseResidentKey string
+// PasskeyAddStartResponseResidentKey 作成する credential が usernameless login で使える discoverable credential であることを要求する。
+type PasskeyAddStartResponseResidentKey string
 
-// WWWTemplatePasskeyAddStartResponseUserVerification defines model for WWWTemplatePasskeyAddStartResponse.UserVerification.
-type WWWTemplatePasskeyAddStartResponseUserVerification string
+// PasskeyAddStartResponseUserVerification defines model for PasskeyAddStartResponse.UserVerification.
+type PasskeyAddStartResponseUserVerification string
 
-// WWWTemplatePasskeyStartResponse WebAuthn PublicKeyCredentialRequestOptions returned by the server after BeginLogin.
-type WWWTemplatePasskeyStartResponse struct {
+// PasskeyStartResponse WebAuthn PublicKeyCredentialRequestOptions returned by the server after BeginLogin.
+type PasskeyStartResponse struct {
 	// AllowCredentials Allowed credential descriptors (empty for usernameless flows).
-	AllowCredentials *[]WWWTemplateWebAuthnCredentialDescriptor `json:"allowCredentials,omitempty"`
+	AllowCredentials *[]WebAuthnCredentialDescriptor `json:"allowCredentials,omitempty"`
 
 	// Challenge base64url-encoded challenge bytes issued by the server.
 	Challenge string `json:"challenge"`
 
 	// RequestId Canonical ULID string used for auth-owned resource and correlation identifiers.
-	RequestId WWWTemplateUlidId `json:"requestId"`
-	RpId      string            `json:"rpId"`
+	RequestId UlidId `json:"requestId"`
+	RpId      string `json:"rpId"`
 
 	// Timeout Timeout in milliseconds suggested by the server.
-	Timeout          *int64                                          `json:"timeout,omitempty"`
-	UserVerification WWWTemplatePasskeyStartResponseUserVerification `json:"userVerification"`
+	Timeout          *int64                               `json:"timeout,omitempty"`
+	UserVerification PasskeyStartResponseUserVerification `json:"userVerification"`
 }
 
-// WWWTemplatePasskeyStartResponseUserVerification defines model for WWWTemplatePasskeyStartResponse.UserVerification.
-type WWWTemplatePasskeyStartResponseUserVerification string
+// PasskeyStartResponseUserVerification defines model for PasskeyStartResponse.UserVerification.
+type PasskeyStartResponseUserVerification string
 
-// WWWTemplateUlidId Canonical ULID string used for auth-owned resource and correlation identifiers.
-type WWWTemplateUlidId = string
+// UlidId Canonical ULID string used for auth-owned resource and correlation identifiers.
+type UlidId = string
 
-// WWWTemplateWebAuthnAssertionCredential WebAuthn PublicKeyCredential for login (navigator.credentials.get result).
-type WWWTemplateWebAuthnAssertionCredential struct {
+// WebAuthnAssertionCredential WebAuthn PublicKeyCredential for login (navigator.credentials.get result).
+type WebAuthnAssertionCredential struct {
 	AuthenticatorAttachment *string `json:"authenticatorAttachment,omitempty"`
 	Id                      string  `json:"id"`
 	RawId                   string  `json:"rawId"`
 
 	// Response WebAuthn AuthenticatorAssertionResponse (login).
-	Response WWWTemplateWebAuthnAssertionResponse `json:"response"`
-	Type     string                               `json:"type"`
+	Response WebAuthnAssertionResponse `json:"response"`
+	Type     string                    `json:"type"`
 }
 
-// WWWTemplateWebAuthnAssertionResponse WebAuthn AuthenticatorAssertionResponse (login).
-type WWWTemplateWebAuthnAssertionResponse struct {
+// WebAuthnAssertionResponse WebAuthn AuthenticatorAssertionResponse (login).
+type WebAuthnAssertionResponse struct {
 	// AuthenticatorData base64url-encoded authenticatorData.
 	AuthenticatorData string `json:"authenticatorData"`
 
@@ -705,19 +705,19 @@ type WWWTemplateWebAuthnAssertionResponse struct {
 	UserHandle *string `json:"userHandle,omitempty"`
 }
 
-// WWWTemplateWebAuthnAttestationCredential WebAuthn PublicKeyCredential for registration (navigator.credentials.create result).
-type WWWTemplateWebAuthnAttestationCredential struct {
+// WebAuthnAttestationCredential WebAuthn PublicKeyCredential for registration (navigator.credentials.create result).
+type WebAuthnAttestationCredential struct {
 	AuthenticatorAttachment *string `json:"authenticatorAttachment,omitempty"`
 	Id                      string  `json:"id"`
 	RawId                   string  `json:"rawId"`
 
 	// Response WebAuthn AuthenticatorAttestationResponse (registration).
-	Response WWWTemplateWebAuthnAttestationResponse `json:"response"`
-	Type     string                                 `json:"type"`
+	Response WebAuthnAttestationResponse `json:"response"`
+	Type     string                      `json:"type"`
 }
 
-// WWWTemplateWebAuthnAttestationResponse WebAuthn AuthenticatorAttestationResponse (registration).
-type WWWTemplateWebAuthnAttestationResponse struct {
+// WebAuthnAttestationResponse WebAuthn AuthenticatorAttestationResponse (registration).
+type WebAuthnAttestationResponse struct {
 	// AttestationObject base64url-encoded attestationObject.
 	AttestationObject string `json:"attestationObject"`
 
@@ -726,23 +726,23 @@ type WWWTemplateWebAuthnAttestationResponse struct {
 	Transports     *[]string `json:"transports,omitempty"`
 }
 
-// WWWTemplateWebAuthnCredentialDescriptor Credential descriptor used in allowCredentials and excludeCredentials lists.
-type WWWTemplateWebAuthnCredentialDescriptor struct {
+// WebAuthnCredentialDescriptor Credential descriptor used in allowCredentials and excludeCredentials lists.
+type WebAuthnCredentialDescriptor struct {
 	// Id base64url-encoded credential ID.
 	Id         string    `json:"id"`
 	Transports *[]string `json:"transports,omitempty"`
 	Type       string    `json:"type"`
 }
 
-// WWWTemplateWebAuthnCredentialParameter WebAuthn public key credential parameter (algorithm descriptor).
-type WWWTemplateWebAuthnCredentialParameter struct {
+// WebAuthnCredentialParameter WebAuthn public key credential parameter (algorithm descriptor).
+type WebAuthnCredentialParameter struct {
 	// Alg COSE algorithm identifier.
 	Alg  int32  `json:"alg"`
 	Type string `json:"type"`
 }
 
-// WWWTemplateWebAuthnUserEntity WebAuthn user entity (id is base64url-encoded bytes).
-type WWWTemplateWebAuthnUserEntity struct {
+// WebAuthnUserEntity WebAuthn user entity (id is base64url-encoded bytes).
+type WebAuthnUserEntity struct {
 	DisplayName string `json:"displayName"`
 
 	// Id base64url-encoded user ID bytes.
@@ -758,10 +758,10 @@ type ListAdminAccountsParams struct {
 }
 
 // CreateAdminAccountJSONRequestBody defines body for CreateAdminAccount for application/json ContentType.
-type CreateAdminAccountJSONRequestBody = WWWTemplateCreateAccountRequest
+type CreateAdminAccountJSONRequestBody = CreateAccountRequest
 
 // RefreshAdminOperatorSessionJSONRequestBody defines body for RefreshAdminOperatorSession for application/json ContentType.
-type RefreshAdminOperatorSessionJSONRequestBody = WWWTemplateBearerContextRefreshRequest
+type RefreshAdminOperatorSessionJSONRequestBody = BearerContextRefreshRequest
 
 // FinishAdminOperatorSetupJSONRequestBody defines body for FinishAdminOperatorSetup for application/json ContentType.
 type FinishAdminOperatorSetupJSONRequestBody = AdminOperatorSetupFinishRequest
@@ -918,10 +918,10 @@ type ServerInterface interface {
 	CreateAdminAccount(c *gin.Context)
 	// Gets one customer account for the Admin Console
 	// (GET /api/v1/accounts/{accountId})
-	GetAdminAccount(c *gin.Context, accountId WWWTemplateUlidId)
+	GetAdminAccount(c *gin.Context, accountId UlidId)
 	// Refreshes the Admin operator access token for one auth context
 	// (POST /api/v1/auth/contexts/{authContextId}/refresh)
-	RefreshAdminOperatorSession(c *gin.Context, authContextId WWWTemplateUlidId)
+	RefreshAdminOperatorSession(c *gin.Context, authContextId UlidId)
 	// Finishes Admin operator setup and returns an operator session
 	// (POST /api/v1/auth/operator-setup/finish)
 	FinishAdminOperatorSetup(c *gin.Context)
@@ -948,7 +948,7 @@ type ServerInterface interface {
 	ListAdminOperatorPasskeys(c *gin.Context)
 	// Deletes a registered passkey for the current Admin operator
 	// (DELETE /api/v1/auth/passkeys/{id})
-	DeleteAdminOperatorPasskey(c *gin.Context, id WWWTemplateUlidId)
+	DeleteAdminOperatorPasskey(c *gin.Context, id UlidId)
 	// Finishes initial Admin operator setup and returns an operator session
 	// (POST /api/v1/auth/setup/finish)
 	FinishAdminInitialSetup(c *gin.Context)
@@ -1031,7 +1031,7 @@ func (siw *ServerInterfaceWrapper) GetAdminAccount(c *gin.Context) {
 	var err error
 
 	// ------------- Path parameter "accountId" -------------
-	var accountId WWWTemplateUlidId
+	var accountId UlidId
 
 	err = runtime.BindStyledParameterWithOptions("simple", "accountId", c.Param("accountId"), &accountId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
 	if err != nil {
@@ -1057,7 +1057,7 @@ func (siw *ServerInterfaceWrapper) RefreshAdminOperatorSession(c *gin.Context) {
 	var err error
 
 	// ------------- Path parameter "authContextId" -------------
-	var authContextId WWWTemplateUlidId
+	var authContextId UlidId
 
 	err = runtime.BindStyledParameterWithOptions("simple", "authContextId", c.Param("authContextId"), &authContextId, runtime.BindStyledParameterOptions{Explode: false, Required: true})
 	if err != nil {
@@ -1193,7 +1193,7 @@ func (siw *ServerInterfaceWrapper) DeleteAdminOperatorPasskey(c *gin.Context) {
 	var err error
 
 	// ------------- Path parameter "id" -------------
-	var id WWWTemplateUlidId
+	var id UlidId
 
 	err = runtime.BindStyledParameterWithOptions("simple", "id", c.Param("id"), &id, runtime.BindStyledParameterOptions{Explode: false, Required: true})
 	if err != nil {
@@ -1296,7 +1296,7 @@ type ListAdminAccounts200ResponseHeaders struct {
 }
 
 type ListAdminAccounts200JSONResponse struct {
-	Body    WWWTemplateAccountListResponse
+	Body    AccountListResponse
 	Headers ListAdminAccounts200ResponseHeaders
 }
 
@@ -1313,7 +1313,7 @@ type ListAdminAccounts400ResponseHeaders struct {
 }
 
 type ListAdminAccounts400JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers ListAdminAccounts400ResponseHeaders
 }
 
@@ -1330,7 +1330,7 @@ type ListAdminAccounts401ResponseHeaders struct {
 }
 
 type ListAdminAccounts401JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers ListAdminAccounts401ResponseHeaders
 }
 
@@ -1347,7 +1347,7 @@ type ListAdminAccounts403ResponseHeaders struct {
 }
 
 type ListAdminAccounts403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers ListAdminAccounts403ResponseHeaders
 }
 
@@ -1364,7 +1364,7 @@ type ListAdminAccounts503ResponseHeaders struct {
 }
 
 type ListAdminAccounts503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers ListAdminAccounts503ResponseHeaders
 }
 
@@ -1389,7 +1389,7 @@ type CreateAdminAccount201ResponseHeaders struct {
 }
 
 type CreateAdminAccount201JSONResponse struct {
-	Body    WWWTemplateCreateAccountResponse
+	Body    CreateAccountResponse
 	Headers CreateAdminAccount201ResponseHeaders
 }
 
@@ -1406,7 +1406,7 @@ type CreateAdminAccount400ResponseHeaders struct {
 }
 
 type CreateAdminAccount400JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers CreateAdminAccount400ResponseHeaders
 }
 
@@ -1423,7 +1423,7 @@ type CreateAdminAccount401ResponseHeaders struct {
 }
 
 type CreateAdminAccount401JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers CreateAdminAccount401ResponseHeaders
 }
 
@@ -1440,7 +1440,7 @@ type CreateAdminAccount403ResponseHeaders struct {
 }
 
 type CreateAdminAccount403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers CreateAdminAccount403ResponseHeaders
 }
 
@@ -1457,7 +1457,7 @@ type CreateAdminAccount409ResponseHeaders struct {
 }
 
 type CreateAdminAccount409JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers CreateAdminAccount409ResponseHeaders
 }
 
@@ -1474,7 +1474,7 @@ type CreateAdminAccount503ResponseHeaders struct {
 }
 
 type CreateAdminAccount503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers CreateAdminAccount503ResponseHeaders
 }
 
@@ -1487,7 +1487,7 @@ func (response CreateAdminAccount503JSONResponse) VisitCreateAdminAccountRespons
 }
 
 type GetAdminAccountRequestObject struct {
-	AccountId WWWTemplateUlidId `json:"accountId"`
+	AccountId UlidId `json:"accountId"`
 }
 
 type GetAdminAccountResponseObject interface {
@@ -1499,7 +1499,7 @@ type GetAdminAccount200ResponseHeaders struct {
 }
 
 type GetAdminAccount200JSONResponse struct {
-	Body    WWWTemplateAccountDetailResponse
+	Body    AccountDetailResponse
 	Headers GetAdminAccount200ResponseHeaders
 }
 
@@ -1516,7 +1516,7 @@ type GetAdminAccount401ResponseHeaders struct {
 }
 
 type GetAdminAccount401JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers GetAdminAccount401ResponseHeaders
 }
 
@@ -1533,7 +1533,7 @@ type GetAdminAccount403ResponseHeaders struct {
 }
 
 type GetAdminAccount403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers GetAdminAccount403ResponseHeaders
 }
 
@@ -1550,7 +1550,7 @@ type GetAdminAccount404ResponseHeaders struct {
 }
 
 type GetAdminAccount404JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers GetAdminAccount404ResponseHeaders
 }
 
@@ -1567,7 +1567,7 @@ type GetAdminAccount503ResponseHeaders struct {
 }
 
 type GetAdminAccount503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers GetAdminAccount503ResponseHeaders
 }
 
@@ -1580,7 +1580,7 @@ func (response GetAdminAccount503JSONResponse) VisitGetAdminAccountResponse(w ht
 }
 
 type RefreshAdminOperatorSessionRequestObject struct {
-	AuthContextId WWWTemplateUlidId `json:"authContextId"`
+	AuthContextId UlidId `json:"authContextId"`
 	Body          *RefreshAdminOperatorSessionJSONRequestBody
 }
 
@@ -1610,7 +1610,7 @@ type RefreshAdminOperatorSession401ResponseHeaders struct {
 }
 
 type RefreshAdminOperatorSession401JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers RefreshAdminOperatorSession401ResponseHeaders
 }
 
@@ -1627,7 +1627,7 @@ type RefreshAdminOperatorSession403ResponseHeaders struct {
 }
 
 type RefreshAdminOperatorSession403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers RefreshAdminOperatorSession403ResponseHeaders
 }
 
@@ -1644,7 +1644,7 @@ type RefreshAdminOperatorSession503ResponseHeaders struct {
 }
 
 type RefreshAdminOperatorSession503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers RefreshAdminOperatorSession503ResponseHeaders
 }
 
@@ -1686,7 +1686,7 @@ type FinishAdminOperatorSetup400ResponseHeaders struct {
 }
 
 type FinishAdminOperatorSetup400JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers FinishAdminOperatorSetup400ResponseHeaders
 }
 
@@ -1703,7 +1703,7 @@ type FinishAdminOperatorSetup403ResponseHeaders struct {
 }
 
 type FinishAdminOperatorSetup403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers FinishAdminOperatorSetup403ResponseHeaders
 }
 
@@ -1720,7 +1720,7 @@ type FinishAdminOperatorSetup503ResponseHeaders struct {
 }
 
 type FinishAdminOperatorSetup503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers FinishAdminOperatorSetup503ResponseHeaders
 }
 
@@ -1745,7 +1745,7 @@ type StartAdminOperatorSetup200ResponseHeaders struct {
 }
 
 type StartAdminOperatorSetup200JSONResponse struct {
-	Body    WWWTemplatePasskeyAddStartResponse
+	Body    PasskeyAddStartResponse
 	Headers StartAdminOperatorSetup200ResponseHeaders
 }
 
@@ -1762,7 +1762,7 @@ type StartAdminOperatorSetup400ResponseHeaders struct {
 }
 
 type StartAdminOperatorSetup400JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers StartAdminOperatorSetup400ResponseHeaders
 }
 
@@ -1779,7 +1779,7 @@ type StartAdminOperatorSetup403ResponseHeaders struct {
 }
 
 type StartAdminOperatorSetup403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers StartAdminOperatorSetup403ResponseHeaders
 }
 
@@ -1796,7 +1796,7 @@ type StartAdminOperatorSetup503ResponseHeaders struct {
 }
 
 type StartAdminOperatorSetup503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers StartAdminOperatorSetup503ResponseHeaders
 }
 
@@ -1837,7 +1837,7 @@ type GetCurrentAdminOperator401ResponseHeaders struct {
 }
 
 type GetCurrentAdminOperator401JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers GetCurrentAdminOperator401ResponseHeaders
 }
 
@@ -1854,7 +1854,7 @@ type GetCurrentAdminOperator403ResponseHeaders struct {
 }
 
 type GetCurrentAdminOperator403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers GetCurrentAdminOperator403ResponseHeaders
 }
 
@@ -1871,7 +1871,7 @@ type GetCurrentAdminOperator503ResponseHeaders struct {
 }
 
 type GetCurrentAdminOperator503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers GetCurrentAdminOperator503ResponseHeaders
 }
 
@@ -1895,7 +1895,7 @@ type LogoutAdminOperator200ResponseHeaders struct {
 }
 
 type LogoutAdminOperator200JSONResponse struct {
-	Body    WWWTemplateLogoutResponse
+	Body    LogoutResponse
 	Headers LogoutAdminOperator200ResponseHeaders
 }
 
@@ -1912,7 +1912,7 @@ type LogoutAdminOperator401ResponseHeaders struct {
 }
 
 type LogoutAdminOperator401JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers LogoutAdminOperator401ResponseHeaders
 }
 
@@ -1929,7 +1929,7 @@ type LogoutAdminOperator403ResponseHeaders struct {
 }
 
 type LogoutAdminOperator403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers LogoutAdminOperator403ResponseHeaders
 }
 
@@ -1946,7 +1946,7 @@ type LogoutAdminOperator503ResponseHeaders struct {
 }
 
 type LogoutAdminOperator503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers LogoutAdminOperator503ResponseHeaders
 }
 
@@ -1988,7 +1988,7 @@ type CreateAdminOperator400ResponseHeaders struct {
 }
 
 type CreateAdminOperator400JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers CreateAdminOperator400ResponseHeaders
 }
 
@@ -2005,7 +2005,7 @@ type CreateAdminOperator401ResponseHeaders struct {
 }
 
 type CreateAdminOperator401JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers CreateAdminOperator401ResponseHeaders
 }
 
@@ -2022,7 +2022,7 @@ type CreateAdminOperator403ResponseHeaders struct {
 }
 
 type CreateAdminOperator403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers CreateAdminOperator403ResponseHeaders
 }
 
@@ -2039,7 +2039,7 @@ type CreateAdminOperator409ResponseHeaders struct {
 }
 
 type CreateAdminOperator409JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers CreateAdminOperator409ResponseHeaders
 }
 
@@ -2056,7 +2056,7 @@ type CreateAdminOperator503ResponseHeaders struct {
 }
 
 type CreateAdminOperator503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers CreateAdminOperator503ResponseHeaders
 }
 
@@ -2098,7 +2098,7 @@ type FinishAdminPasskeyAuthentication400ResponseHeaders struct {
 }
 
 type FinishAdminPasskeyAuthentication400JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers FinishAdminPasskeyAuthentication400ResponseHeaders
 }
 
@@ -2115,7 +2115,7 @@ type FinishAdminPasskeyAuthentication403ResponseHeaders struct {
 }
 
 type FinishAdminPasskeyAuthentication403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers FinishAdminPasskeyAuthentication403ResponseHeaders
 }
 
@@ -2132,7 +2132,7 @@ type FinishAdminPasskeyAuthentication503ResponseHeaders struct {
 }
 
 type FinishAdminPasskeyAuthentication503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers FinishAdminPasskeyAuthentication503ResponseHeaders
 }
 
@@ -2157,7 +2157,7 @@ type StartAdminPasskeyAuthentication200ResponseHeaders struct {
 }
 
 type StartAdminPasskeyAuthentication200JSONResponse struct {
-	Body    WWWTemplatePasskeyStartResponse
+	Body    PasskeyStartResponse
 	Headers StartAdminPasskeyAuthentication200ResponseHeaders
 }
 
@@ -2174,7 +2174,7 @@ type StartAdminPasskeyAuthentication400ResponseHeaders struct {
 }
 
 type StartAdminPasskeyAuthentication400JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers StartAdminPasskeyAuthentication400ResponseHeaders
 }
 
@@ -2191,7 +2191,7 @@ type StartAdminPasskeyAuthentication503ResponseHeaders struct {
 }
 
 type StartAdminPasskeyAuthentication503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers StartAdminPasskeyAuthentication503ResponseHeaders
 }
 
@@ -2232,7 +2232,7 @@ type ListAdminOperatorPasskeys401ResponseHeaders struct {
 }
 
 type ListAdminOperatorPasskeys401JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers ListAdminOperatorPasskeys401ResponseHeaders
 }
 
@@ -2249,7 +2249,7 @@ type ListAdminOperatorPasskeys403ResponseHeaders struct {
 }
 
 type ListAdminOperatorPasskeys403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers ListAdminOperatorPasskeys403ResponseHeaders
 }
 
@@ -2266,7 +2266,7 @@ type ListAdminOperatorPasskeys503ResponseHeaders struct {
 }
 
 type ListAdminOperatorPasskeys503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers ListAdminOperatorPasskeys503ResponseHeaders
 }
 
@@ -2279,7 +2279,7 @@ func (response ListAdminOperatorPasskeys503JSONResponse) VisitListAdminOperatorP
 }
 
 type DeleteAdminOperatorPasskeyRequestObject struct {
-	Id WWWTemplateUlidId `json:"id"`
+	Id UlidId `json:"id"`
 }
 
 type DeleteAdminOperatorPasskeyResponseObject interface {
@@ -2305,7 +2305,7 @@ type DeleteAdminOperatorPasskey400ResponseHeaders struct {
 }
 
 type DeleteAdminOperatorPasskey400JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers DeleteAdminOperatorPasskey400ResponseHeaders
 }
 
@@ -2322,7 +2322,7 @@ type DeleteAdminOperatorPasskey401ResponseHeaders struct {
 }
 
 type DeleteAdminOperatorPasskey401JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers DeleteAdminOperatorPasskey401ResponseHeaders
 }
 
@@ -2339,7 +2339,7 @@ type DeleteAdminOperatorPasskey403ResponseHeaders struct {
 }
 
 type DeleteAdminOperatorPasskey403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers DeleteAdminOperatorPasskey403ResponseHeaders
 }
 
@@ -2356,7 +2356,7 @@ type DeleteAdminOperatorPasskey409ResponseHeaders struct {
 }
 
 type DeleteAdminOperatorPasskey409JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers DeleteAdminOperatorPasskey409ResponseHeaders
 }
 
@@ -2373,7 +2373,7 @@ type DeleteAdminOperatorPasskey503ResponseHeaders struct {
 }
 
 type DeleteAdminOperatorPasskey503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers DeleteAdminOperatorPasskey503ResponseHeaders
 }
 
@@ -2415,7 +2415,7 @@ type FinishAdminInitialSetup400ResponseHeaders struct {
 }
 
 type FinishAdminInitialSetup400JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers FinishAdminInitialSetup400ResponseHeaders
 }
 
@@ -2432,7 +2432,7 @@ type FinishAdminInitialSetup403ResponseHeaders struct {
 }
 
 type FinishAdminInitialSetup403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers FinishAdminInitialSetup403ResponseHeaders
 }
 
@@ -2449,7 +2449,7 @@ type FinishAdminInitialSetup409ResponseHeaders struct {
 }
 
 type FinishAdminInitialSetup409JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers FinishAdminInitialSetup409ResponseHeaders
 }
 
@@ -2466,7 +2466,7 @@ type FinishAdminInitialSetup503ResponseHeaders struct {
 }
 
 type FinishAdminInitialSetup503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers FinishAdminInitialSetup503ResponseHeaders
 }
 
@@ -2491,7 +2491,7 @@ type StartAdminInitialSetup200ResponseHeaders struct {
 }
 
 type StartAdminInitialSetup200JSONResponse struct {
-	Body    WWWTemplatePasskeyAddStartResponse
+	Body    PasskeyAddStartResponse
 	Headers StartAdminInitialSetup200ResponseHeaders
 }
 
@@ -2508,7 +2508,7 @@ type StartAdminInitialSetup400ResponseHeaders struct {
 }
 
 type StartAdminInitialSetup400JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers StartAdminInitialSetup400ResponseHeaders
 }
 
@@ -2525,7 +2525,7 @@ type StartAdminInitialSetup403ResponseHeaders struct {
 }
 
 type StartAdminInitialSetup403JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers StartAdminInitialSetup403ResponseHeaders
 }
 
@@ -2542,7 +2542,7 @@ type StartAdminInitialSetup409ResponseHeaders struct {
 }
 
 type StartAdminInitialSetup409JSONResponse struct {
-	Body    WWWTemplateAuthOperationErrorResponse
+	Body    AuthOperationErrorResponse
 	Headers StartAdminInitialSetup409ResponseHeaders
 }
 
@@ -2559,7 +2559,7 @@ type StartAdminInitialSetup503ResponseHeaders struct {
 }
 
 type StartAdminInitialSetup503JSONResponse struct {
-	Body    WWWTemplateAuthFailureResponse
+	Body    AuthFailureResponse
 	Headers StartAdminInitialSetup503ResponseHeaders
 }
 
@@ -2693,7 +2693,7 @@ func (sh *strictHandler) CreateAdminAccount(ctx *gin.Context) {
 }
 
 // GetAdminAccount operation middleware
-func (sh *strictHandler) GetAdminAccount(ctx *gin.Context, accountId WWWTemplateUlidId) {
+func (sh *strictHandler) GetAdminAccount(ctx *gin.Context, accountId UlidId) {
 	var request GetAdminAccountRequestObject
 
 	request.AccountId = accountId
@@ -2720,7 +2720,7 @@ func (sh *strictHandler) GetAdminAccount(ctx *gin.Context, accountId WWWTemplate
 }
 
 // RefreshAdminOperatorSession operation middleware
-func (sh *strictHandler) RefreshAdminOperatorSession(ctx *gin.Context, authContextId WWWTemplateUlidId) {
+func (sh *strictHandler) RefreshAdminOperatorSession(ctx *gin.Context, authContextId UlidId) {
 	var request RefreshAdminOperatorSessionRequestObject
 
 	request.AuthContextId = authContextId
@@ -2995,7 +2995,7 @@ func (sh *strictHandler) ListAdminOperatorPasskeys(ctx *gin.Context) {
 }
 
 // DeleteAdminOperatorPasskey operation middleware
-func (sh *strictHandler) DeleteAdminOperatorPasskey(ctx *gin.Context, id WWWTemplateUlidId) {
+func (sh *strictHandler) DeleteAdminOperatorPasskey(ctx *gin.Context, id UlidId) {
 	var request DeleteAdminOperatorPasskeyRequestObject
 
 	request.Id = id

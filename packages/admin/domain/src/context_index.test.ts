@@ -127,12 +127,12 @@ describe('Admin context index', () => {
 
     const raw = localStorage.getItem(getAdminContextIndexStorageKey()) ?? '';
 
-    expect(localStorage.getItem('www-template:admin:context-index')).not.toBeNull();
+    expect(localStorage.getItem('app-template:admin:context-index')).not.toBeNull();
     expect(raw).toContain('"version":1');
     expect(raw).toContain('"surface":"admin"');
     expect(raw).toContain('"operatorSessionId"');
     expect(raw).toContain('"roleHint":"admin"');
-    expect(raw).not.toContain('www-template:product:context-index');
+    expect(raw).not.toContain('app-template:product:context-index');
   });
 
   it('[ADMIN-AUTH-FE-S042] storage event propagates Admin context index updates across tabs', () => {

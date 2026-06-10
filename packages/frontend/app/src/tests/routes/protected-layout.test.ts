@@ -15,7 +15,7 @@ describe('[APP-IA-001] Protected layout の PageHeader 廃止', () => {
 
     // PageHeader の import がないことを確認
     expect(source).not.toMatch(/import.*PageHeader/);
-    expect(source).not.toMatch(/PageHeader.*from '@www-template\/ui'/);
+    expect(source).not.toMatch(/PageHeader.*from '@app-template\/ui'/);
   });
 
   it('ProtectedLayout が AppShell を使用している', () => {

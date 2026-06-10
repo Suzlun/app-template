@@ -1,4 +1,4 @@
-import { authApi } from '@www-template/api';
+import { authApi } from '@app-template/api';
 
 import {
   applyInvalidRecoveryToken,

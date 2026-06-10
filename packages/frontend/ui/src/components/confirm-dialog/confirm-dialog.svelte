@@ -9,8 +9,8 @@
 		AlertDialogHeader,
 		AlertDialogTitle,
 		AlertDialogTrigger,
-	} from "@www-template/ui/components/alert-dialog";
-	import type { ButtonVariant } from "@www-template/ui/components/button";
+	} from "@app-template/ui/components/alert-dialog";
+	import type { ButtonVariant } from "@app-template/ui/components/button";
 	import type { Snippet } from "svelte";
 
 	interface Props {

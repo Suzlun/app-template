@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { accountApi } from '@www-template/api';
+import { accountApi } from '@app-template/api';
 
 import { useAccount } from './hook.svelte';
 

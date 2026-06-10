@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"www-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 // validateAuthConfig は認証設定に対して fail-close バリデーションを実施する。

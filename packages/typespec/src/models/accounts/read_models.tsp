@@ -5,7 +5,7 @@ import "@typespec/openapi3";
 using Http;
 using TypeSpec.OpenAPI;
 
-namespace WWWTemplate;
+namespace AppTemplate;
 
 @doc("Product Account が表示と通知に使用する保存済みロケール。運用者向け設定や画面一時状態ではなく、AccountSetting.locale の値だけを表す。")
 enum AccountLocale {

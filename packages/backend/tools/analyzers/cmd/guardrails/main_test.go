@@ -86,7 +86,7 @@ import "../../src/routes/v1/admin/accounts.tsp";
 
 using Http;
 
-namespace WWWTemplate.ApiV1;
+namespace AppTemplate.ApiV1;
 `
 	if err := os.WriteFile(fixturePath, []byte(fixtureSource), 0o600); err != nil {
 		t.Fatalf("write TypeSpec contamination fixture: %v", err)

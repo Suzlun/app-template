@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	adminauth "www-template/packages/backend/internal/application/auth"
+	adminauth "app-template/packages/backend/internal/application/auth"
 )
 
 // AdminOperatorSessionAuthenticator は Admin HTTP session validator が利用する application auth 境界である。

@@ -4,8 +4,8 @@ import (
 	"crypto/rand"
 	"time"
 
-	domain "www-template/packages/backend/internal/domain"
-	"www-template/packages/backend/internal/platform/id"
+	domain "app-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/platform/id"
 )
 
 func newAuthIDPolicy() id.AuthIDPolicy {

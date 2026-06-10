@@ -141,7 +141,7 @@ test.describe('passkey management', () => {
         requestId: TEST_ULID.requestId,
         challenge: 'YWRkLWNoYWxsZW5nZQ',
         rpId: 'app.localhost',
-        rpName: 'www-template',
+        rpName: 'app-template',
         user: {
           id: 'dXNlcjE',
           name: 'test@example.com',

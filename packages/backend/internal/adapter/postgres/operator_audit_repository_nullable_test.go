@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	auditapplication "www-template/packages/backend/internal/application/audit"
+	auditapplication "app-template/packages/backend/internal/application/audit"
 )
 
 // TestAuditEventRecordFromIntentSetsNullTargetForPendingIntent は pending audit intent で

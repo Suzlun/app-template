@@ -20,7 +20,7 @@ rp_name = "Admin Console Dev"
 
 [database]
 admin_role = "admin_console_write"
-url = "postgres://admin_console:admin_console@postgres:5432/www-template?sslmode=disable"
+url = "postgres://admin_console:admin_console@postgres:5432/app-template?sslmode=disable"
 
 [valkey]
 admin_url = "redis://valkey:6379/1"
@@ -30,14 +30,14 @@ product_url = "redis://valkey:6379/0"
 url = "http://opensearch:9200"
 admin_audit_replicas = 0
 operator_audit_index_prefix = "admin-audit"
-product_index_prefix = "www-template"
+product_index_prefix = "app-template"
 
 [observability]
 otel_exporter_otlp_endpoint = "signoz-otel-collector:4317"
 otel_exporter_otlp_traces_endpoint = "signoz-otel-collector:4317"
 otel_exporter_otlp_logs_endpoint = "signoz-otel-collector:4317"
-otel_service_name = "www-template-admin-api"
-otel_resource_attributes = "service.namespace=www-template,deployment.environment=development"
+otel_service_name = "app-template-admin-api"
+otel_resource_attributes = "service.namespace=app-template,deployment.environment=development"
 
 [bootstrap]
 enabled = true

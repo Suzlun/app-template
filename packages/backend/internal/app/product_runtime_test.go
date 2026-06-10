@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	adminhttp "www-template/packages/backend/internal/adapter/http/admin"
-	"www-template/packages/backend/internal/platform/config"
+	adminhttp "app-template/packages/backend/internal/adapter/http/admin"
+	"app-template/packages/backend/internal/platform/config"
 )
 
 func TestNewProductRuntimeWithConfigFailsClosedWithoutTokenOutsideDevelopment(t *testing.T) {

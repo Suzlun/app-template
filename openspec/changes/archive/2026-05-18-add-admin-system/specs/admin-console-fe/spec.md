@@ -292,7 +292,7 @@ Admin Console の入口として、オペレーターはシステム全体の状
 
 ### Requirement: MVCS 層間依存と import 制約
 
-Admin Console の全コードは MVCS の層に属し、View 層は `$lib/server/` を import してはならない（MUST NOT）。全 Admin ファイルは `@www-template/api`、`@www-template/domain`、`@www-template/app`、`@www-template/web` を import してはならない（MUST NOT）。これらの制約は ESLint で強制されなければならない（SHALL）。
+Admin Console の全コードは MVCS の層に属し、View 層は `$lib/server/` を import してはならない（MUST NOT）。全 Admin ファイルは `@app-template/api`、`@app-template/domain`、`@app-template/app`、`@app-template/web` を import してはならない（MUST NOT）。これらの制約は ESLint で強制されなければならない（SHALL）。
 
 **Customer Context**
 
@@ -303,7 +303,7 @@ Admin Console の保守性を長期的に維持するため、すべてのコー
 - **WHEN** `.svelte` ファイルが `$lib/server/models/` を import している
 - **THEN** ESLint がエラーを報告する
 
-#### Scenario: Admin から @www-template/api を import すると lint エラー (ADMIN-CONSOLE-FE-S035)
+#### Scenario: Admin から @app-template/api を import すると lint エラー (ADMIN-CONSOLE-FE-S035)
 
-- **WHEN** Admin 内のファイルが `@www-template/api` を import している
+- **WHEN** Admin 内のファイルが `@app-template/api` を import している
 - **THEN** ESLint がエラーを報告する

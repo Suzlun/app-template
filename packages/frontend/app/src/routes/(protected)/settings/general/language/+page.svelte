@@ -5,9 +5,9 @@
    * Select は必ず現在値を表示し、空表示をなくす。
    * 保存中/成功/失敗を aria-live で通知する。
    */
-  import { useAccount } from '@www-template/domain';
-  import { useAuthSession } from '@www-template/domain/auth/session';
-  import * as Select from '@www-template/ui/components/select';
+  import { useAccount } from '@app-template/domain';
+  import { useAuthSession } from '@app-template/domain/auth/session';
+  import * as Select from '@app-template/ui/components/select';
   import {
     SUPPORTED_LOCALES,
     persistAppLocale,

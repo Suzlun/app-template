@@ -29,7 +29,7 @@ Account
 - Product 認証メールの AccountSetting.locale による件名・本文選択。
 - Admin-owned schema の operator locale 永続化と本人更新処理。
 - 対象パッケージに対する i18n lint 強制と辞書キー整合チェック。
-- `packages/frontend/i18n` への共有 i18n 実装導入。外部 i18n dependency に頼らず、locale 定義、loader/config、typed translator、formatter、key coverage utility を集約する。locale JSON files は `packages/web`、`packages/frontend/app`、`packages/admin` がそれぞれ所有し、各 package は `@www-template/i18n` に自分の辞書を渡して使う。
+- `packages/frontend/i18n` への共有 i18n 実装導入。外部 i18n dependency に頼らず、locale 定義、loader/config、typed translator、formatter、key coverage utility を集約する。locale JSON files は `packages/web`、`packages/frontend/app`、`packages/admin` がそれぞれ所有し、各 package は `@app-template/i18n` に自分の辞書を渡して使う。
 
 ### Out of Scope
 
@@ -55,9 +55,9 @@ Account
 - HTTP adapter は `auth` で bearer session または refresh token を検証して AccountID を得た後、`account` use case で AccountSetting を取得し、transport response を合成する。
 - `packages/frontend/app` は API を直接呼ばず、`packages/frontend/domain -> packages/frontend/api` の依存方向を維持する。
 - `packages/frontend/domain` は `src/account` を Account domain root とし、Account と AccountSetting API 協調だけを担当する。`account-settings` root、`localStorage`、browser/OS language、DOM globals による端末 fallback を所有しない。
-- `packages/web`、`packages/frontend/app`、`packages/admin` は SvelteKit 面の翻訳適用に `@www-template/i18n` を使用する。locale JSON files は表示面ごとの package が所有し、route component 内の ad hoc translator と別 surface の辞書 import を禁止する。
+- `packages/web`、`packages/frontend/app`、`packages/admin` は SvelteKit 面の翻訳適用に `@app-template/i18n` を使用する。locale JSON files は表示面ごとの package が所有し、route component 内の ad hoc translator と別 surface の辞書 import を禁止する。
 - `packages/frontend/ui` は app/admin/web の表示言語、i18n import、固定文言、固定 date/time locale を所有せず、localized props と formatter を呼び出し側から受け取る。
-- `packages/web` は公開面として `@www-template/domain` と `@www-template/api` に依存しない。
+- `packages/web` は公開面として `@app-template/domain` と `@app-template/api` に依存しない。
 - `packages/admin` は SvelteKit server routes と server load を持つため、operator locale は server hook と layout load で読み込める。Admin operator locale は Admin package-local symbols で扱い、Product AccountSetting を import しない。
 - 標準検証は `pnpm gen`、`pnpm check:codegen`、`pnpm lint`、`pnpm check`、`pnpm test:run` を使用する。
 
@@ -70,9 +70,9 @@ Account
 - Frontend API client: 生成 SDK と wrapper method。
 - Frontend domain: `src/account` の Account state hook、AccountSetting state/types。API wrapper は `packages/frontend/api` に閉じる。
 - Frontend i18n: 共有 i18n 実装、locale 定義、typed translator、formatter、key coverage utility。locale JSON files は持たない。
-- Frontend app: app-owned locale JSON files、`@www-template/i18n` 接続、settings 画面、layout 文言、auth/protected 文言、localStorage 優先 fallback、browser/OS locale resolver。
+- Frontend app: app-owned locale JSON files、`@app-template/i18n` 接続、settings 画面、layout 文言、auth/protected 文言、localStorage 優先 fallback、browser/OS locale resolver。
 - Frontend UI: i18n 非依存 reusable primitive の localized label props、aria label props、date/time formatter props。i18n import が必要な concrete component は app/admin/web 側へ移す。`DeviceManager` は `packages/frontend/app` 側へ移す。
-- Public web: web-owned locale JSON files、`@www-template/i18n` 接続、locale route、metadata、root 誘導。
+- Public web: web-owned locale JSON files、`@app-template/i18n` 接続、locale route、metadata、root 誘導。
 - Admin-owned schema: `admin.operators.locale` column と Prisma model。
 - Admin server: operator model、locals、layout data、settings action。
 - lint/tooling: ハードコード文言検知、辞書網羅性チェック、Account/Auth 境界 guard。
@@ -81,7 +81,7 @@ Account
 ## Directory Tree
 
 ```text
-www-template
+app-template
 ├─ package.json
 ├─ eslint.config.js
 ├─ scripts
@@ -240,7 +240,7 @@ www-template
 
 | Type | File                                                                             | Change                                                                                                                                                             |
 | ---- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 更新 | `package.json`                                                                   | 標準 `pnpm lint` に i18n lint と辞書網羅性チェックを組み込み、`@www-template/i18n` を `pnpm check` / `pnpm test:run` 対象に含める。                                |
+| 更新 | `package.json`                                                                   | 標準 `pnpm lint` に i18n lint と辞書網羅性チェックを組み込み、`@app-template/i18n` を `pnpm check` / `pnpm test:run` 対象に含める。                                |
 | 更新 | `AGENTS.md`、`CODING_STANDARDS.md`、`eslint.config.js`                           | `packages/frontend/i18n` を正式な共有 frontend package として許可し、domain/ui からの i18n import を禁止する。                                                     |
 | 追加 | `scripts/i18n/check-locales.ts`                                                  | `ja` と `en` の辞書キー網羅性を検証する。                                                                                                                          |
 | 更新 | `packages/typespec/main.tsp`                                                     | AccountSetting model と account settings route を読み込む。                                                                                                        |
@@ -274,8 +274,8 @@ www-template
 | 追加 | `packages/frontend/domain/src/account/*`                                         | Account と AccountSetting の state、hook、型、index を実装する。API wrapper file、端末 fallback、DOM/localStorage は持たない。                                     |
 | 追加 | `packages/frontend/i18n/package.json`、`packages/frontend/i18n/src/*`            | 共有 i18n 実装を追加する。app/web/admin の locale JSON files は置かない。                                                                                          |
 | 削除 | `packages/frontend/ui/src/components/device-manager/device-manager.svelte`       | app 固有の device/session 文言を持つ concrete component は UI package に置かないため削除する。                                                                     |
-| 追加 | `packages/frontend/app/src/components/device-manager/device-manager.svelte`      | `DeviceManager` を認証済み app 側へ移し、app-owned locale JSON files と `@www-template/i18n` から文言と formatter を受け取って描画する。                           |
-| 更新 | `packages/frontend/app/**`、`packages/web/**`、`packages/admin/**`               | 表示面ごとの locale JSON files と `@www-template/i18n` 接続を実装する。                                                                                            |
+| 追加 | `packages/frontend/app/src/components/device-manager/device-manager.svelte`      | `DeviceManager` を認証済み app 側へ移し、app-owned locale JSON files と `@app-template/i18n` から文言と formatter を受け取って描画する。                           |
+| 更新 | `packages/frontend/app/**`、`packages/web/**`、`packages/admin/**`               | 表示面ごとの locale JSON files と `@app-template/i18n` 接続を実装する。                                                                                            |
 | 追加 | `tests/i18n-lint.test.ts`                                                        | i18n lint と辞書網羅性チェックの挙動を検証する。                                                                                                                   |
 
 ## System Diagram
@@ -447,9 +447,9 @@ erDiagram
 
 | Package                                      | Purpose / Responsibility                                                     | Public API                                                                 | Dependencies                                                     |
 | -------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `packages/web`                               | 公開 URL ロケール選択、web-owned locale JSON files、共有 i18n 適用           | `/ja`、`/en`、`/`                                                          | `@www-template/ui`、`@www-template/i18n`                         |
-| `packages/frontend/app`                      | 認証済み UI、app-owned locale JSON files、Account state 同期、共有 i18n 適用 | Svelte routes                                                              | `@www-template/domain`、`@www-template/ui`、`@www-template/i18n` |
-| `packages/frontend/domain`                   | Account と AccountSetting state の domain use case。API wrapper は所有しない | `useAccount`                                                               | `@www-template/api` の public wrapper                            |
+| `packages/web`                               | 公開 URL ロケール選択、web-owned locale JSON files、共有 i18n 適用           | `/ja`、`/en`、`/`                                                          | `@app-template/ui`、`@app-template/i18n`                         |
+| `packages/frontend/app`                      | 認証済み UI、app-owned locale JSON files、Account state 同期、共有 i18n 適用 | Svelte routes                                                              | `@app-template/domain`、`@app-template/ui`、`@app-template/i18n` |
+| `packages/frontend/domain`                   | Account と AccountSetting state の domain use case。API wrapper は所有しない | `useAccount`                                                               | `@app-template/api` の public wrapper                            |
 | `packages/frontend/ui`                       | 再利用 UI の構造と表示 primitive。言語と i18n import は所有しない            | localized label / formatter props                                          | なし、または UI 内部 primitive                                   |
 | `packages/frontend/i18n`                     | web/app/admin 共通の i18n 実装。locale JSON files は所有しない               | locale resolver、JSON catalog loader、translator、formatter、coverage util | TypeScript のみ                                                  |
 | `packages/frontend/api`                      | 型付き API wrapper の集約。Account / AccountSetting API を公開する           | `accountApi`                                                               | 生成 SDK                                                         |
@@ -459,10 +459,10 @@ erDiagram
 | `packages/backend/internal/adapter/http`     | Product API の transport と use case 合成                                    | generated strict handler                                                   | application、domain、platform、生成 OpenAPI                      |
 | `packages/backend/internal/adapter/postgres` | Product Account/Auth 永続化 adapter                                          | account setting repository、account auth repository                        | PostgreSQL、domain、application                                  |
 | `packages/backend/internal/adapter/mailer`   | AccountSetting.locale-aware 認証メール送信                                   | AccountRecoverySender                                                      | SMTP、application、domain                                        |
-| `packages/admin`                             | operator locale 永続化、admin-owned locale JSON files、共有 i18n 適用        | server load/action、Prisma model                                           | Admin-owned schema、`@www-template/ui`、`@www-template/i18n`     |
+| `packages/admin`                             | operator locale 永続化、admin-owned locale JSON files、共有 i18n 適用        | server load/action、Prisma model                                           | Admin-owned schema、`@app-template/ui`、`@app-template/i18n`     |
 | `scripts/i18n`                               | 辞書網羅性検証                                                               | `check-locales.ts`                                                         | Node/tsx                                                         |
 
-`packages/frontend/i18n` は正式な共有 frontend package として扱う。実装時は `AGENTS.md`、`CODING_STANDARDS.md`、`eslint.config.js` の依存境界を同時に更新し、`packages/web`、`packages/frontend/app`、`packages/admin` からの `@www-template/i18n` import を許可する。一方で `packages/frontend/domain` と `packages/frontend/ui` からの `@www-template/i18n`、app/web/admin i18n module、surface-owned locale JSON files への依存は禁止のまま機械検証する。
+`packages/frontend/i18n` は正式な共有 frontend package として扱う。実装時は `AGENTS.md`、`CODING_STANDARDS.md`、`eslint.config.js` の依存境界を同時に更新し、`packages/web`、`packages/frontend/app`、`packages/admin` からの `@app-template/i18n` import を許可する。一方で `packages/frontend/domain` と `packages/frontend/ui` からの `@app-template/i18n`、app/web/admin i18n module、surface-owned locale JSON files への依存は禁止のまま機械検証する。
 
 ### Details
 
@@ -500,13 +500,13 @@ erDiagram
 
 - 責務: 認証済み Account state の domain use case を管理し、AccountSetting を Account child state として扱う。HTTP/generated SDK の wrapper file は所有しない。
 - 公開入口: `useAccount(): { data, actions }` と Account / AccountSetting 型。
-- 主な流れ: auth session 由来の Authorization header を受け取り、`@www-template/api` の `accountApi` を呼び出して Account state を更新し、エラーを domain state に正規化する。
-- 禁止事項: `account_setting_api.ts` や `account_settings_api.ts` などの新規 feature-specific API wrapper file、generated SDK の直接 import、`localStorage`、browser/OS language、DOM globals、UI component import、`@www-template/i18n` import、app/web/admin i18n module import、直接 `fetch` を使わない。
+- 主な流れ: auth session 由来の Authorization header を受け取り、`@app-template/api` の `accountApi` を呼び出して Account state を更新し、エラーを domain state に正規化する。
+- 禁止事項: `account_setting_api.ts` や `account_settings_api.ts` などの新規 feature-specific API wrapper file、generated SDK の直接 import、`localStorage`、browser/OS language、DOM globals、UI component import、`@app-template/i18n` import、app/web/admin i18n module import、直接 `fetch` を使わない。
 - テスト: `LOCALIZATION-FE-S004` から `LOCALIZATION-FE-S006`、`LOCALIZATION-FE-S012` の state 挙動を Vitest で確認し、domain/API 配置境界は `ARCH-FE-DOMAIN-API-BOUNDARY` source guard で確認する。
 
 #### `packages/frontend/app`
 
-- 責務: 認証前と認証後の app 文言を app-owned locale JSON files と `@www-template/i18n` から表示し、AccountSetting.locale 設定画面を提供する。
+- 責務: 認証前と認証後の app 文言を app-owned locale JSON files と `@app-template/i18n` から表示し、AccountSetting.locale 設定画面を提供する。
 - 公開入口: `/login`、protected root、protected `/settings`。
 - 主な流れ: 認証前は `localStorage` の対応 locale を優先し、存在しない場合はアクセス時の browser/OS language を `ja` / `en` へ解決する。protected layout は AccountSetting を読み込み、settings は AccountSetting.locale 更新後に app-owned locale JSON files を渡した translator の current locale を切り替える。refresh 成功後は AccountSetting snapshot を正として表示状態を置き換える。
 - テスト: component test と Playwright で `LOCALIZATION-FE-S004`、`LOCALIZATION-FE-S005`、`LOCALIZATION-FE-S006`、`LOCALIZATION-FE-S012` を確認する。
@@ -520,25 +520,25 @@ erDiagram
 #### `packages/frontend/ui`
 
 - 責務: reusable primitive の構造、slot、interaction primitive を提供し、言語・辞書・i18n package・Account/Auth/Admin 文脈を所有しない。
-- 禁止事項: 固定日本語、固定英語、固定 `ja-JP` / `en-US` formatter、`@www-template/i18n` import、app/web/admin i18n module import、Product API/domain/Admin server への依存を持たない。`DeviceManager` を UI package に置かない。
+- 禁止事項: 固定日本語、固定英語、固定 `ja-JP` / `en-US` formatter、`@app-template/i18n` import、app/web/admin i18n module import、Product API/domain/Admin server への依存を持たない。`DeviceManager` を UI package に置かない。
 - テスト: `ARCH-FE-UI-LOCALIZED-PROPS`、`ARCH-FE-UI-NO-I18N-IMPORT`、i18n lint で UI package が表示言語と i18n 実装を所有せず、`DeviceManager` を含まないことを確認する。
 
 #### `packages/web`
 
-- 責務: Product API に依存せず、公開 URL のロケール選択と web-owned locale JSON files を管理し、共通翻訳処理は `@www-template/i18n` から取得する。
+- 責務: Product API に依存せず、公開 URL のロケール選択と web-owned locale JSON files を管理し、共通翻訳処理は `@app-template/i18n` から取得する。
 - 公開入口: SvelteKit routes `/`、`/ja`、`/en`。
 - テスト: `LOCALIZATION-FE-S001` から `LOCALIZATION-FE-S003` を Playwright と unit test で確認する。
 
 #### `packages/admin`
 
-- 責務: Admin operator locale の保存、読み込み、本人更新、admin-owned locale JSON files と `@www-template/i18n` による Admin UI 文言表示を管理する。
-- 禁止事項: operator locale のために Product TypeSpec/generated SDK、`@www-template/api`、Product AccountSetting を import しない。
+- 責務: Admin operator locale の保存、読み込み、本人更新、admin-owned locale JSON files と `@app-template/i18n` による Admin UI 文言表示を管理する。
+- 禁止事項: operator locale のために Product TypeSpec/generated SDK、`@app-template/api`、Product AccountSetting を import しない。
 - エラー処理: 更新時の未対応 locale は form error とし、保存値を変更しない。DB から未知 locale が読めた場合は既定値へ黙って丸めず fail-closed にする。
 - テスト: Admin service/server/component test で `LOCALIZATION-BE-S009` から `LOCALIZATION-BE-S012`、`ARCH-ADMIN-LOCALE-INDEPENDENCE`、`LOCALIZATION-FE-S007` から `LOCALIZATION-FE-S009` を確認する。
 
 #### `scripts/i18n` と `eslint.config.js`
 
-- 責務: 対象 UI ソースの共有 i18n 辞書経由表示、UI label contract、辞書キー網羅性、UI/domain package の i18n import 禁止、`@www-template/i18n` を許可する表示面境界を標準 lint で強制する。
+- 責務: 対象 UI ソースの共有 i18n 辞書経由表示、UI label contract、辞書キー網羅性、UI/domain package の i18n import 禁止、`@app-template/i18n` を許可する表示面境界を標準 lint で強制する。
 - 公開入口: `pnpm lint`。
 - テスト: `tests/i18n-lint.test.ts` で `LOCALIZATION-FE-S011`、`ARCH-I18N-LITERAL-GUARD`、`ARCH-I18N-DICTIONARY-COVERAGE` を確認する。
 
@@ -657,7 +657,7 @@ flowchart TD
 - 公開 Web が `/ja` と `/en` で locale 別文言と metadata を表示し、`/` が対応ロケールへ到達する。
 - `packages/frontend/i18n` が共有 i18n 実装として locale 定義、loader/config、JSON catalog loader、typed translator、formatter、辞書 key coverage utility を提供し、locale JSON files は持たない。
 - `AGENTS.md`、`CODING_STANDARDS.md`、`eslint.config.js` が `packages/frontend/i18n` を正式な共有 frontend package として扱い、web/app/admin からの利用を許可し、domain/ui からの i18n 依存を禁止する。
-- `packages/web`、`packages/frontend/app`、`packages/admin` が各自の locale JSON files を所有し、それを `@www-template/i18n` に渡して使い、互いの辞書を import しない。
+- `packages/web`、`packages/frontend/app`、`packages/admin` が各自の locale JSON files を所有し、それを `@app-template/i18n` に渡して使い、互いの辞書を import しない。
 - `packages/frontend/ui` が表示言語、i18n import、固定 formatter locale を所有せず、app/Admin から localized labels/formatters を受け取る。i18n import が必要な component は UI package に存在しない。`DeviceManager` は `packages/frontend/ui` から削除され、`packages/frontend/app/src/components/device-manager` に存在する。
 - Admin Console が operator locale を server context に読み込み、認証済み本人だけが自分の locale を更新できる。Admin operator locale は Admin package-local で、Product AccountSetting を参照しない。
 - 標準 `pnpm lint` が未翻訳のユーザー向け UI 文言、対応ロケール辞書の欠落 key、Account/Auth 境界違反で失敗する。

@@ -22,7 +22,7 @@ enum AdminOperatorRole {
 @doc("Admin operator の現在状態を返す read model。")
 model AdminOperatorProfile {
   @doc("Admin operator の canonical ULID。")
-  operatorId: WWWTemplate.UlidId;
+  operatorId: AppTemplate.UlidId;
 
   @doc("Admin operator の canonical email address。")
   email: string;
@@ -37,7 +37,7 @@ model AdminOperatorProfile {
 @doc("現在の Admin operator を返す response。")
 model AdminCurrentOperatorResponse {
   @doc("current operator request に対応する canonical ULID の追跡 ID。")
-  requestId: WWWTemplate.UlidId;
+  requestId: AppTemplate.UlidId;
 
   @doc("現在の Admin operator profile。")
   operator: AdminOperatorProfile;
@@ -46,7 +46,7 @@ model AdminCurrentOperatorResponse {
 @doc("Admin operator 自身が登録している passkey credential の表示用要約。credential handle や public key は秘匿し、管理操作に必要な識別子と時刻だけを返す。")
 model AdminOperatorPasskeyItem {
   @doc("Admin operator passkey credential の canonical ULID。削除 API の path parameter として使う。")
-  id: WWWTemplate.UlidId;
+  id: AppTemplate.UlidId;
 
   @doc("passkey credential が Admin schema に登録された日時。")
   createdAt: utcDateTime;
@@ -58,7 +58,7 @@ model AdminOperatorPasskeyItem {
 @doc("Admin operator 自身の passkey credential 一覧 response。Product account passkey model を使わず、Admin operator credential だけを表す。")
 model AdminOperatorPasskeyListResponse {
   @doc("一覧取得 request に対応する canonical ULID の追跡 ID。")
-  requestId: WWWTemplate.UlidId;
+  requestId: AppTemplate.UlidId;
 
   @doc("現在の Admin operator に登録されている passkey credential 一覧。")
   passkeys: AdminOperatorPasskeyItem[];

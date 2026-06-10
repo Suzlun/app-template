@@ -1,7 +1,7 @@
 import { finishInitialAdminSetup, startInitialAdminSetup } from '../auth';
 
 import type { AdminInitialSetupStartResult } from '../auth';
-import type { WWWTemplateWebAuthnAttestationCredential } from '@www-template/admin-api';
+import type { AppTemplate } from '@app-template/admin-api';
 
 type AdminInitialSetupAvailability = 'available' | 'operator-exists' | 'bootstrap-disabled';
 type AdminInitialSetupStartedResult = Extract<AdminInitialSetupStartResult, { status: 'started' }>;
@@ -21,9 +21,7 @@ interface AdminInitialSetupData {
 
 interface AdminInitialSetupActions {
   submit: (
-    register: (
-      options: AdminInitialSetupStartedResult['options']
-    ) => Promise<WWWTemplateWebAuthnAttestationCredential>,
+    register: (options: AdminInitialSetupStartedResult['options']) => Promise<AppTemplate>,
     navigateHome: () => void
   ) => Promise<void>;
 }

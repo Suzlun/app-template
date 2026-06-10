@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // operatorAccessPayload は Operator accessToken の署名 payload を表す内部 DTO である。

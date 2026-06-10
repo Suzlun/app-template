@@ -1,6 +1,6 @@
 package auth
 
-import domain "www-template/packages/backend/internal/domain"
+import domain "app-template/packages/backend/internal/domain"
 
 // JSONSigner は JSON object payload を署名済み token へ変換する application capability である。
 //

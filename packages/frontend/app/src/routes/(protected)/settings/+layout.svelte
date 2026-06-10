@@ -14,8 +14,8 @@
 
   import { page } from '$app/state';
 
-  import { useAccount } from '@www-template/domain';
-  import { Button } from '@www-template/ui/components';
+  import { useAccount } from '@app-template/domain';
+  import { Button } from '@app-template/ui/components';
   import { resolveUnauthenticatedLocale, useI18n } from '$lib/i18n';
 
   let { children }: { children: Snippet } = $props();

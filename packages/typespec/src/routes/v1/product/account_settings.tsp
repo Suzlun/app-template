@@ -4,7 +4,7 @@ import "@typespec/openapi";
 using Http;
 using TypeSpec.OpenAPI;
 
-namespace WWWTemplate.ApiV1App {
+namespace AppTemplate.ApiV1App {
   @tag("account-settings")
   @summary("Gets the current account settings")
   @operationId("getAccountSettings")
@@ -14,22 +14,22 @@ namespace WWWTemplate.ApiV1App {
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AccountSettingResponse;
+        @body body: AppTemplate.AccountSettingResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 
   @tag("account-settings")
@@ -37,30 +37,30 @@ namespace WWWTemplate.ApiV1App {
   @operationId("updateAccountSettings")
   @patch(#{ implicitOptionality: false })
   @route("/account/settings")
-  op updateAccountSettings(@body body: WWWTemplate.UpdateAccountSettingRequest):
+  op updateAccountSettings(@body body: AppTemplate.UpdateAccountSettingRequest):
     | {
         @statusCode statusCode: 200;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AccountSettingResponse;
+        @body body: AppTemplate.AccountSettingResponse;
       }
     | {
         @statusCode statusCode: 400;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthOperationErrorResponse;
+        @body body: AppTemplate.AuthOperationErrorResponse;
       }
     | {
         @statusCode statusCode: 401;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 403;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       }
     | {
         @statusCode statusCode: 503;
         @header("Cache-Control") cacheControl: "no-store";
-        @body body: WWWTemplate.AuthFailureResponse;
+        @body body: AppTemplate.AuthFailureResponse;
       };
 }

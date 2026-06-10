@@ -10,9 +10,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	productaccounts "www-template/packages/backend/internal/application/accounts"
-	application "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
+	productaccounts "app-template/packages/backend/internal/application/accounts"
+	application "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // newJWTAuthTestEnv は canonical Product account lifecycle と SessionService を注入したテスト環境を構築する。

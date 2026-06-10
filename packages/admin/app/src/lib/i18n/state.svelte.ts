@@ -2,7 +2,7 @@ import { ADMIN_FALLBACK_LOCALE, createAdminI18n, normalizeAdminLocale } from './
 
 import type { AdminI18n, AdminLocale } from './runtime';
 
-const adminLocaleStorageKey = 'www-template:admin:locale';
+const adminLocaleStorageKey = 'app-template:admin:locale';
 
 let currentLocale = $state<AdminLocale>(initialAdminLocale());
 

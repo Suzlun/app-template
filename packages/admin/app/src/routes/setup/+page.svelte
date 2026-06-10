@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { startRegistration } from '@simplewebauthn/browser';
-	import { useAdminInitialSetup } from '@www-template/admin-domain';
-	import type { AdminInitialSetupStartResult } from '@www-template/admin-domain';
+	import { useAdminInitialSetup } from '@app-template/admin-domain';
+	import type { AdminInitialSetupStartResult } from '@app-template/admin-domain';
 
-	import { Button, CardNS, Input, Label, Spinner } from '@www-template/ui/components';
+	import { Button, CardNS, Input, Label, Spinner } from '@app-template/ui/components';
 	import { goto } from '$app/navigation';
 
 	import { createCurrentAdminI18n } from '$lib/i18n';

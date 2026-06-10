@@ -1,4 +1,4 @@
-import { statusApi } from '@www-template/api';
+import { statusApi } from '@app-template/api';
 
 import { createStatusInitialState, toStatusErrorMessage } from './state';
 

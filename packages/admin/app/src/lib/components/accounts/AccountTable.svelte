@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Badge, Table, Button } from '@www-template/ui/components';
+	import { Badge, Table, Button } from '@app-template/ui/components';
 
 	import PaginationFooter from '$lib/components/shared/PaginationFooter.svelte';
 

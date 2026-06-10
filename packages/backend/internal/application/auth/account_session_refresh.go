@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"time"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // RefreshAccountSession は Product refreshToken Cookie を rotation し、新しい accessToken と refresh Cookie command を返す。

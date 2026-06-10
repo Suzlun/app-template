@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Card, CardContent, CardHeader, CardTitle, Badge, EmptyState, Button, Item } from '@www-template/ui/components';
+	import { Card, CardContent, CardHeader, CardTitle, Badge, EmptyState, Button, Item } from '@app-template/ui/components';
 
 	import { createCurrentAdminI18n } from '$lib/i18n';
 

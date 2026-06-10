@@ -1,7 +1,7 @@
 schema: new-feature
 
 context: |
-  Repository: www-template
+  Repository: app-template
   Tech stack: TypeScript, SvelteKit, Cloudflare Workers, Go, TypeSpec, Vite
   Frontend packages: packages/frontend/app (SvelteKit app on Cloudflare Workers), packages/frontend/domain (shared domain logic), packages/frontend/api (API client), packages/frontend/ui (UI primitives)
   Backend packages: packages/backend/cmd and packages/backend/internal/* (Go API)

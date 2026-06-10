@@ -95,6 +95,6 @@
 
 ## 11. ビルド・CI 確認
 
-- [x] 11.1 `pnpm test:run` を実行してすべての単体テストが合格することを確認する（`@www-template/ui SafeHTML.test.ts` 失敗は今回の変更と無関係の既存問題）
+- [x] 11.1 `pnpm test:run` を実行してすべての単体テストが合格することを確認する（`@app-template/ui SafeHTML.test.ts` 失敗は今回の変更と無関係の既存問題）
 - [x] 11.2 `pnpm test:e2e` を実行してすべての E2E テストが合格することを確認する（passkey-management 9テスト・user-flow 3テスト 全通過確認済み。auth-contract 2テスト失敗はバックエンド DB シードデータ未投入による既存問題で今回の変更と無関係）
 - [x] 11.3 `pnpm check:codegen` を実行してドリフトがないことを最終確認する

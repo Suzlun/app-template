@@ -42,11 +42,11 @@ describe('Admin static client cleanup', () => {
     const loginPage = readPackageFile('src/routes/login/+page.svelte');
 
     expect(eslintConfig).toContain('Admin Console app 層では Admin API layer を直接 import');
-    expect(eslintConfig).toContain('@www-template/admin-api');
-    expect(accountsPage).toContain("from '@www-template/admin-domain'");
-    expect(loginPage).toContain("from '@www-template/admin-domain'");
-    expect(accountsPage).not.toContain("from '@www-template/admin-api'");
-    expect(loginPage).not.toContain("from '@www-template/admin-api'");
+    expect(eslintConfig).toContain('@app-template/admin-api');
+    expect(accountsPage).toContain("from '@app-template/admin-domain'");
+    expect(loginPage).toContain("from '@app-template/admin-domain'");
+    expect(accountsPage).not.toContain("from '@app-template/admin-api'");
+    expect(loginPage).not.toContain("from '@app-template/admin-api'");
   });
 
   it('server runtime directories and route modules are removed', () => {
@@ -137,7 +137,7 @@ describe('Admin static client cleanup', () => {
     expect(loginPage).toContain('useAdminLogin');
     expect(loginPage).toContain('await login.actions.submit(');
     expect(authDomain).toContain('requestStartAdminLogin({ identifier: normalizedIdentifier })');
-    expect(authDomain).not.toContain("from '@www-template/api'");
+    expect(authDomain).not.toContain("from '@app-template/api'");
     expect(eslintConfig).toContain('Admin domain 層から Product SDK を import しないでください');
   });
 

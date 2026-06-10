@@ -14,10 +14,10 @@ import (
 )
 
 const (
-	legacyProductAuthApplicationImportPath = "www-template/packages/backend/internal/application/product/auth"
-	legacyAdminAuthApplicationImportPath   = "www-template/packages/backend/internal/application/admin/auth"
-	conceptAuthApplicationImportPath       = "www-template/packages/backend/internal/application/auth"
-	rootAuthApplicationImportPath          = "www-template/packages/backend/internal/application"
+	legacyProductAuthApplicationImportPath = "app-template/packages/backend/internal/application/product/auth"
+	legacyAdminAuthApplicationImportPath   = "app-template/packages/backend/internal/application/admin/auth"
+	conceptAuthApplicationImportPath       = "app-template/packages/backend/internal/application/auth"
+	rootAuthApplicationImportPath          = "app-template/packages/backend/internal/application"
 )
 
 var authDomainSwitchSelectorTerms = []string{

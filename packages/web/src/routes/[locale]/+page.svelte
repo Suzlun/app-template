@@ -1,6 +1,6 @@
 <script lang="ts">
   import { env } from '$env/dynamic/public';
-  import { MonoLabel } from '@www-template/ui';
+  import { MonoLabel } from '@app-template/ui';
 
   import { useI18n, type Locale } from '$lib/i18n';
 

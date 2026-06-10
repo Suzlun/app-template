@@ -4,7 +4,7 @@ import "@typespec/openapi";
 using Http;
 using TypeSpec.OpenAPI;
 
-namespace WWWTemplate.ApiV1;
+namespace AppTemplate.ApiV1;
 
 @tag("status")
 @summary("Returns API status")
@@ -13,5 +13,5 @@ namespace WWWTemplate.ApiV1;
 @route("/status")
 op getStatus(): {
   @statusCode statusCode: 200;
-  @body body: WWWTemplate.StatusResponse;
+  @body body: AppTemplate.StatusResponse;
 };

@@ -3,7 +3,7 @@
 		Empty,
 		EmptyTitle,
 		EmptyDescription,
-	} from "@www-template/ui/components/empty";
+	} from "@app-template/ui/components/empty";
 
 	interface Props {
 		title?: string;

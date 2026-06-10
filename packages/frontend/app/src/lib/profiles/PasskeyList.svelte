@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { PasskeyItem } from '@www-template/domain/auth';
-  import { useAccount } from '@www-template/domain';
-  import { Alert, Button, Item, Separator, Spinner } from '@www-template/ui/components';
+  import type { PasskeyItem } from '@app-template/domain/auth';
+  import { useAccount } from '@app-template/domain';
+  import { Alert, Button, Item, Separator, Spinner } from '@app-template/ui/components';
   import { resolveUnauthenticatedLocale, useI18n } from '$lib/i18n';
 
 /**

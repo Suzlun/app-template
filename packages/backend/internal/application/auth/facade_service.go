@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // StartPasskeyAuthentication は公開認証セレモニーを開始する。

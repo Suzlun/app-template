@@ -1,5 +1,5 @@
 {
-  "name": "www-template-devcontainer",
+  "name": "app-template-devcontainer",
   "dockerComposeFile": "compose.yaml",
   "service": "workspace",
   "runServices": [
@@ -17,7 +17,7 @@
     "signoz-otel-collector"
   ],
   "shutdownAction": "stopCompose",
-  "workspaceFolder": "/workspaces/www-template",
+  "workspaceFolder": "/workspaces/app-template",
   "remoteUser": "node",
   "updateRemoteUserUID": true,
   "containerEnv": {

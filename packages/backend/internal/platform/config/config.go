@@ -249,7 +249,7 @@ func buildConfig(raw tomlConfig) Config {
 			},
 			Mail: MailConfig{
 				FromAddress: strings.TrimSpace(raw.Mail.FromAddress),
-				ProductName: defaultString(raw.Mail.ProductName, "www-template"),
+				ProductName: defaultString(raw.Mail.ProductName, "app-template"),
 			},
 			ObjectStorage: ObjectStorageConfig{
 				Endpoint:        strings.TrimSpace(raw.ObjectStorage.Endpoint),

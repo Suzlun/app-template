@@ -5,7 +5,7 @@
  * PublicKeyCredential objects. All serialisation lives here so that domain
  * hooks stay clean and the conversion logic is testable in isolation.
  *
- * このモジュールは pure domain module であるため、@www-template/api への依存は持ちません。
+ * このモジュールは pure domain module であるため、@app-template/api への依存は持ちません。
  * 引数/戻り値の型はローカルで定義し、generated 型と structural compatibility を保ちます。
  */
 

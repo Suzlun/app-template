@@ -6,7 +6,7 @@ import {
   type CatalogKeyPath,
   type CatalogTree,
   type LocaleCatalogMap,
-} from '@www-template/i18n';
+} from '@app-template/i18n';
 
 import enCommonCatalog from './messages/en/common.json';
 import jaCommonCatalog from './messages/ja/common.json';

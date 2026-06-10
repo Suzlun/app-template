@@ -1,4 +1,4 @@
-title = "www-template"
+title = "app-template"
 
 [[allowlists]]
 description = "Ignore dependency and generated directories"

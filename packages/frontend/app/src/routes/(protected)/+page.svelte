@@ -4,7 +4,7 @@
    * ダミー統計・旧アクションリンクを廃止し、
    * セクション＋行ベースのシンプルな構成にする。
    */
-  import { useAccount } from '@www-template/domain';
+  import { useAccount } from '@app-template/domain';
 
   import { resolveUnauthenticatedLocale, useI18n } from '$lib/i18n';
 

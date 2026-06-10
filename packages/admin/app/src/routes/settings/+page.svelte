@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { useAdminSettings } from '@www-template/admin-domain';
-	import { Button, CardNS, Label, Select, Separator } from '@www-template/ui/components';
+	import { useAdminSettings } from '@app-template/admin-domain';
+	import { Button, CardNS, Label, Select, Separator } from '@app-template/ui/components';
 
 	import { createCurrentAdminI18n, getCurrentAdminLocale, setCurrentAdminLocale } from '$lib/i18n';
 

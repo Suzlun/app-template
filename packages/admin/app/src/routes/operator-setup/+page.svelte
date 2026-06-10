@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { startRegistration } from '@simplewebauthn/browser';
-	import { useAdminOperatorSetup } from '@www-template/admin-domain';
-	import type { AdminOperatorSetupStartResult } from '@www-template/admin-domain';
+	import { useAdminOperatorSetup } from '@app-template/admin-domain';
+	import type { AdminOperatorSetupStartResult } from '@app-template/admin-domain';
 
-	import { Button, CardNS, Input, Label, Spinner } from '@www-template/ui/components';
+	import { Button, CardNS, Input, Label, Spinner } from '@app-template/ui/components';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 

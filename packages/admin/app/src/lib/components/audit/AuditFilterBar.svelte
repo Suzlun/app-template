@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Field, Input, Label, Select } from '@www-template/ui/components';
+	import { Button, Field, Input, Label, Select } from '@app-template/ui/components';
 
 	interface Operator { id: string; email: string; }
 

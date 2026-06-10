@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 // AccountSettingService は認証済み Product Account の AccountSetting を取得・更新する use case である。

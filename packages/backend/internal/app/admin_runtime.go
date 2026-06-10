@@ -6,11 +6,11 @@ import (
 	stdhttp "net/http"
 	"time"
 
-	adminhttp "www-template/packages/backend/internal/adapter/http/admin"
-	"www-template/packages/backend/internal/adapter/postgres"
-	"www-template/packages/backend/internal/platform/config"
-	"www-template/packages/backend/internal/platform/health"
-	"www-template/packages/backend/internal/platform/observability"
+	adminhttp "app-template/packages/backend/internal/adapter/http/admin"
+	"app-template/packages/backend/internal/adapter/postgres"
+	"app-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/health"
+	"app-template/packages/backend/internal/platform/observability"
 )
 
 const defaultAdminOperatorSetupTokenTTL = 24 * time.Hour

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Sidebar } from '@www-template/ui/components';
+	import { Sidebar } from '@app-template/ui/components';
 
 	import AdminHeader from './AdminHeader.svelte';
 	import AdminSidebar from './AdminSidebar.svelte';

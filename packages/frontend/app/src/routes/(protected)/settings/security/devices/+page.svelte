@@ -6,11 +6,11 @@
    */
   import { goto } from '$app/navigation';
 
-  import { useAccount } from '@www-template/domain';
-  import { useAuthSession } from '@www-template/domain/auth/session';
-  import { useDeviceManager, type DeviceManagerErrorCode } from '@www-template/domain';
-  import { Alert, AlertDescription, AlertTitle } from '@www-template/ui/components/alert';
-  import { Button, Separator } from '@www-template/ui/components';
+  import { useAccount } from '@app-template/domain';
+  import { useAuthSession } from '@app-template/domain/auth/session';
+  import { useDeviceManager, type DeviceManagerErrorCode } from '@app-template/domain';
+  import { Alert, AlertDescription, AlertTitle } from '@app-template/ui/components/alert';
+  import { Button, Separator } from '@app-template/ui/components';
 
   import { DeviceManager } from '../../../../../components/device-manager';
 

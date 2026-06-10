@@ -3,7 +3,7 @@ package operators
 import (
 	"testing"
 
-	secrethash "www-template/packages/backend/internal/platform/secret"
+	secrethash "app-template/packages/backend/internal/platform/secret"
 )
 
 type testBcryptSecretHashVerifier struct{}

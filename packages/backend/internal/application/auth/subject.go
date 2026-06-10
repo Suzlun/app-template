@@ -1,6 +1,6 @@
 package auth
 
-import domain "www-template/packages/backend/internal/domain"
+import domain "app-template/packages/backend/internal/domain"
 
 // AccountSubjectID は Product Account subject の application 境界 ID である。
 //

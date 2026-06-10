@@ -12,7 +12,7 @@ function canonicalHostRedirectPlugin(canonicalHost: string, canonicalPort: numbe
   const canonicalOrigin = `http://${canonicalHost}:${canonicalPortString}`;
 
   return {
-    name: `www-template-canonical-host:${canonicalHost}`,
+    name: `app-template-canonical-host:${canonicalHost}`,
     configureServer(server) {
       server.middlewares.use((request, response, next) => {
         // Step 2: Host header が欠けている request は Vite の通常処理に委譲し、壊れた redirect を作らない。

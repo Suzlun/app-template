@@ -7,7 +7,7 @@ import (
 	"path"
 	"strings"
 
-	domain "www-template/packages/backend/internal/domain"
+	domain "app-template/packages/backend/internal/domain"
 )
 
 //go:embed templates/ja/recovery.json templates/ja/device_link.json templates/ja/recovery_complete.json templates/ja/device_link_complete.json

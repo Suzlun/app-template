@@ -1,8 +1,8 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
 
-  import { useRecoveryFlow } from '@www-template/domain/auth/recovery';
-  import { AuthPanel, Button, StatusIcon } from '@www-template/ui';
+  import { useRecoveryFlow } from '@app-template/domain/auth/recovery';
+  import { AuthPanel, Button, StatusIcon } from '@app-template/ui';
 
   import AuthLayout from '$lib/layouts/AuthLayout.svelte';
   import { removeQueryParamFromUrl } from '../../../../lib/auth/url';

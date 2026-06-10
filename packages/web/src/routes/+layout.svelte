@@ -1,7 +1,7 @@
 <script lang="ts">
   import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
-  import { BrandMark, PageHeader } from '@www-template/ui';
-  import '@www-template/ui/styles.css';
+  import { BrandMark, PageHeader } from '@app-template/ui';
+  import '@app-template/ui/styles.css';
   import '../app.css';
   import { useObservability } from '$lib/observability.svelte';
   import { SUPPORTED_LOCALES, useI18n, type Locale } from '$lib/i18n';
@@ -14,7 +14,7 @@
 
   let { children, data }: { children: Snippet; data: { locale: Locale } } = $props();
 
-  useObservability('www-template-web');
+  useObservability('app-template-web');
 
   const queryClient = new QueryClient({
     defaultOptions: {

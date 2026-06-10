@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
 
-  import { AuthPanel, Button, StatusIcon } from '@www-template/ui';
+  import { AuthPanel, Button, StatusIcon } from '@app-template/ui';
 
   import AuthLayout from '$lib/layouts/AuthLayout.svelte';
   import { resolveUnauthenticatedLocale, useI18n } from '$lib/i18n';

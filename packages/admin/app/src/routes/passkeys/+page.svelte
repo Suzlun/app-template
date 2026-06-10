@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, CardNS, EmptyState, Spinner, ConfirmDialog } from '@www-template/ui/components';
+	import { Button, CardNS, EmptyState, Spinner, ConfirmDialog } from '@app-template/ui/components';
 
 	import { createCurrentAdminI18n } from '$lib/i18n';
 

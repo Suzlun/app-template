@@ -18,7 +18,12 @@ export {
   removeSessionById,
   switchActiveSession,
 } from './state';
-export { createEmptyAccessTokenState, decodeAccessToken, isRefreshNeeded } from './token_state';
+export {
+  createEmptyAccessTokenState,
+  decodeAccessToken,
+  isAccessTokenForSession,
+  isRefreshNeeded,
+} from './token_state';
 export type { AccessTokenClaims, MemoryAccessTokenState } from './token_state';
 export type { ContextIndex, ContextIndexEntry } from './context_index';
 export {

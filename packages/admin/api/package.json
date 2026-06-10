@@ -1,5 +1,5 @@
 {
-  "name": "@www-template/admin-api",
+  "name": "@app-template/admin-api",
   "version": "0.1.0",
   "private": true,
   "type": "module",

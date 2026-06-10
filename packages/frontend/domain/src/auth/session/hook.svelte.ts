@@ -1,6 +1,6 @@
-import { SvelteMap, SvelteSet } from 'svelte/reactivity';
+import { SvelteMap } from 'svelte/reactivity';
 
-import { authApi, refreshToken } from '@www-template/api';
+import { authApi, refreshToken } from '@app-template/api';
 
 import {
   addAuthenticatedSession,
@@ -26,9 +26,26 @@ import {
   writeContextIndex,
 } from './context_index';
 
-import { fetchDevices, revokeDevice, revokeOtherDevices } from './session_api';
+import { bootstrapSessionsFromContextIndex } from './bootstrap';
 
-import { decodeAccessToken, expToIsoString, isRefreshNeeded } from './token_state';
+import {
+  executeListDevices,
+  executeRevokeDevice,
+  executeRevokeOtherDevices,
+} from './device_actions';
+
+import {
+  ACCOUNT_SUSPENDED_ERROR,
+  COOKIE_AUTH_REQUEST_INIT,
+  SESSION_EXPIRED_ERROR,
+} from './constants';
+
+import {
+  decodeAccessToken,
+  expToIsoString,
+  isAccessTokenForSession,
+  isRefreshNeeded,
+} from './token_state';
 
 import type {
   AuthFailureState,
@@ -36,22 +53,8 @@ import type {
   AuthSessionState,
   AuthSessionSummary,
 } from '../types';
+import type { BootstrapPhase } from './bootstrap';
 import type { DeviceSession } from './session_api';
-import type { AccessTokenClaims } from './token_state';
-
-const SESSION_EXPIRED_ERROR = 'session-expired';
-const ACCOUNT_SUSPENDED_ERROR = 'account-suspended';
-
-/** same-origin Product API へのみ Cookie を添付する。 */
-const COOKIE_AUTH_REQUEST_INIT = { credentials: 'same-origin' } as const satisfies RequestInit;
-
-/** refresh 応答の accessToken が更新対象 session と一致するか検証する。 */
-function isAccessTokenForSession(claims: AccessTokenClaims, session: AuthSessionSummary): boolean {
-  return claims.accountId === session.accountId && claims.sessionId === session.sessionId;
-}
-
-/** context index bootstrap の進行状態。 */
-type BootstrapPhase = 'pending' | 'done';
 
 interface AuthSessionData {
   state: AuthSessionState;
@@ -380,160 +383,6 @@ async function withRefreshRetry<T>(
   return result.data;
 }
 
-/** ログイン中の全セッション（デバイス）一覧を取得する。 */
-async function executeListDevices(authState: AuthSessionState): Promise<DeviceSession[] | null> {
-  return withRefreshRetry(authState, (headers) => fetchDevices(headers));
-}
-
-/** 指定されたセッションをリモートで無効化し、ローカル state と context index を更新する。 */
-async function executeRevokeDevice(
-  authState: AuthSessionState,
-  sessionId: string
-): Promise<boolean> {
-  const result = await withRefreshRetry(authState, async (headers) => {
-    const res = await revokeDevice(sessionId, headers);
-    if (res.ok) {
-      return { ok: true as const, data: true };
-    }
-    return { ok: false as const, error: res.error, status: 400, failure: res.failure };
-  });
-  if (result == null) {
-    return false;
-  }
-
-  // 対象 session の context index entry を削除する
-  const targetSession = authState.sessions?.find((s) => s.sessionId === sessionId);
-  if (targetSession != null) {
-    const index = readContextIndex() ?? createEmptyContextIndex();
-    removeContextEntry(index, targetSession.authContextId);
-    writeContextIndex(index);
-  }
-
-  if (sessionId === authState.activeSessionId) {
-    removeActiveSession(authState);
-  } else {
-    authState.sessions = authState.sessions?.filter((s) => s.sessionId !== sessionId) ?? [];
-  }
-  return true;
-}
-
-/** 現在のセッション以外をすべてリモートで無効化し、ローカル state と context index を更新する。 */
-async function executeRevokeOtherDevices(authState: AuthSessionState): Promise<boolean> {
-  const result = await withRefreshRetry(authState, async (headers) => {
-    const res = await revokeOtherDevices(headers);
-    if (res.ok) {
-      return { ok: true as const, data: true };
-    }
-    return { ok: false as const, error: res.error, status: 400, failure: res.failure };
-  });
-  if (result == null) {
-    return false;
-  }
-
-  // 削除された session の context index entry を削除する
-  const active = authState.session;
-  if (active != null) {
-    const index = readContextIndex() ?? createEmptyContextIndex();
-    // active 以外の entry をすべて削除
-    index.entries = index.entries.filter((e) => e.authContextId === active.authContextId);
-    index.activeAuthContextId = active.authContextId;
-    writeContextIndex(index);
-  }
-
-  authState.sessions = active != null ? [active] : [];
-  return true;
-}
-
-/** context index から session bootstrap を試行し、成功 entry を復元する。 */
-async function bootstrapSessionsFromContextIndex(): Promise<void> {
-  try {
-    const index = readContextIndex();
-    if (index == null || index.entries.length === 0) {
-      return;
-    }
-
-    const restoredSessions: AuthSessionSummary[] = [];
-    let restoredActiveSession: AuthSessionSummary | null = null;
-
-    for (const entry of index.entries) {
-      try {
-        const response = await refreshToken(
-          entry.authContextId,
-          undefined,
-          COOKIE_AUTH_REQUEST_INIT
-        );
-        if (response.status === 200 && 'accessToken' in response.data) {
-          const { accessToken, account, sessionId, expiresAt } = response.data;
-          const accountId = account.accountId;
-          const claims = decodeAccessToken(accessToken);
-          if (claims == null || claims.accountId !== accountId || claims.sessionId !== sessionId) {
-            continue;
-          }
-          const restoredSession: AuthSessionSummary = {
-            requestId: response.data.requestId,
-            authContextId: entry.authContextId,
-            accountId,
-            passkeyCredentialId: account.passkeyCredentialId,
-            sessionId,
-            accessToken,
-            expiresAt,
-          };
-          restoredSessions.push(restoredSession);
-          if (index.activeAuthContextId === entry.authContextId) {
-            restoredActiveSession = restoredSession;
-          }
-        }
-      } catch {
-        // refresh failure: 該当 entry は authenticated state として採用しない
-      }
-    }
-
-    if (restoredSessions.length > 0) {
-      // 同一 accountId 重複を除去（後方 entry を優先）
-      const dedupedSessions: AuthSessionSummary[] = [];
-      const seenAccountIds = new SvelteSet<string>();
-      for (let i = restoredSessions.length - 1; i >= 0; i--) {
-        const s = restoredSessions[i];
-        if (!seenAccountIds.has(s.accountId)) {
-          seenAccountIds.add(s.accountId);
-          dedupedSessions.unshift(s);
-        }
-      }
-
-      state.sessions = dedupedSessions;
-      // active が dedup 後も残っていれば維持、なければ先頭へ切替
-      const active =
-        restoredActiveSession != null &&
-        dedupedSessions.some((s) => s.sessionId === restoredActiveSession.sessionId)
-          ? restoredActiveSession
-          : dedupedSessions[0];
-      state.session = active;
-      state.activeSessionId = active.sessionId;
-      state.phase = 'authenticated';
-      state.routeIntent = '/login';
-      state.lastFailure = null;
-      state.lastError = null;
-
-      // bootstrap 後に index を再構築（失敗した entry と重複 entry を除去）
-      const newIndex = createEmptyContextIndex();
-      for (const s of dedupedSessions) {
-        upsertContextEntry(
-          newIndex,
-          toContextIndexEntry(s, s.expiresAt),
-          s.sessionId === active.sessionId
-        );
-      }
-      writeContextIndex(newIndex);
-    } else {
-      // 復元できなかった場合は index をクリアする
-      clearContextIndex();
-    }
-  } finally {
-    // bootstrap 完了を記録し、guard が redirect 判断を再評価できるようにする
-    bootstrapPhase.value = 'done';
-  }
-}
-
 /** bootstrap が完了しているかどうかのフラグ。 */
 let hasBootstrapped = false;
 
@@ -545,7 +394,7 @@ function useAuthSession(): { data: AuthSessionData; actions: AuthSessionActions 
   if (!hasBootstrapped) {
     hasBootstrapped = true;
     // non-blocking で context index から session を復元する
-    void bootstrapSessionsFromContextIndex();
+    void bootstrapSessionsFromContextIndex(state, bootstrapPhase);
   }
   const actions: AuthSessionActions = {
     acceptSession: (session, cacheControl) => {
@@ -613,9 +462,9 @@ function useAuthSession(): { data: AuthSessionData; actions: AuthSessionActions 
       }
       return switched;
     },
-    listDevices: () => executeListDevices(state),
-    revokeDevice: (sessionId) => executeRevokeDevice(state, sessionId),
-    revokeOtherDevices: () => executeRevokeOtherDevices(state),
+    listDevices: () => executeListDevices(state, withRefreshRetry),
+    revokeDevice: (sessionId) => executeRevokeDevice(state, sessionId, withRefreshRetry),
+    revokeOtherDevices: () => executeRevokeOtherDevices(state, withRefreshRetry),
   };
 
   return {

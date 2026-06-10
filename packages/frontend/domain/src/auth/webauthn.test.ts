@@ -13,7 +13,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { PasskeyAddStartResponse, PasskeyStartResponse } from '@www-template/api';
+import type { PasskeyAddStartResponse, PasskeyStartResponse } from '@app-template/api';
 
 import {
   base64urlToBuffer,

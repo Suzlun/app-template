@@ -699,7 +699,7 @@ const frontendAppPrimitiveUiPlugin = {
         schema: [],
         messages: {
           forbidden:
-            'packages/frontend/app では `<{{tag}}>` を直書きしないでください。まず `@www-template/ui/components` の既存 component を使い、足りなければ `packages/frontend/ui` を発展させてから app で compose してください。',
+            'packages/frontend/app では `<{{tag}}>` を直書きしないでください。まず `@app-template/ui/components` の既存 component を使い、足りなければ `packages/frontend/ui` を発展させてから app で compose してください。',
         },
       },
       create(context) {
@@ -784,8 +784,8 @@ const frontendI18nLiteralGuardPlugin = {
           /^(?:[A-Z0-9_:-]+)$/u,
           /^(?:ja|en)(?:-[A-Z]{2})?$/u,
           /^(?:[0-9]+(?:\.[0-9]+)?)$/u,
-          /^www-template(?:\s+UI)?$/iu,
-          /^www-template(?:\s+Inc\.)?(?:\s+株式会社)?$/iu,
+          /^app-template(?:\s+UI)?$/iu,
+          /^app-template(?:\s+Inc\.)?(?:\s+株式会社)?$/iu,
         ];
 
         const isAllowedLiteral = (value) => {
@@ -1266,9 +1266,9 @@ const sdkPackageBoundaryPlugin = {
         schema: [],
         messages: {
           frontendImportsAdmin:
-            'SDK package boundary violation: packages/frontend/** から Admin SDK (@www-template/admin-api / packages/admin/api) を import しないでください。',
+            'SDK package boundary violation: packages/frontend/** から Admin SDK (@app-template/admin-api / packages/admin/api) を import しないでください。',
           adminImportsProduct:
-            'SDK package boundary violation: packages/admin/** から Product SDK (packages/frontend/api / @www-template/api) を import しないでください。',
+            'SDK package boundary violation: packages/admin/** から Product SDK (packages/frontend/api / @app-template/api) を import しないでください。',
         },
       },
       create(context) {
@@ -1281,15 +1281,15 @@ const sdkPackageBoundaryPlugin = {
 
         // alias・monorepo path・相対 path のどれでも Admin SDK surface を同じ違反として扱う。
         const isAdminSdkImport = (source) =>
-          source === '@www-template/admin-api' ||
-          source.startsWith('@www-template/admin-api/') ||
+          source === '@app-template/admin-api' ||
+          source.startsWith('@app-template/admin-api/') ||
           source.includes('packages/admin/api/') ||
           /(?:^|\/)admin\/api(?:\/|$)/.test(source);
 
         // alias・monorepo path・相対 path のどれでも Product SDK surface を同じ違反として扱う。
         const isProductSdkImport = (source) =>
-          source === '@www-template/api' ||
-          source.startsWith('@www-template/api/') ||
+          source === '@app-template/api' ||
+          source.startsWith('@app-template/api/') ||
           source.includes('packages/frontend/api/') ||
           /(?:^|\/)frontend\/api(?:\/|$)/.test(source);
 
@@ -1330,7 +1330,7 @@ const adminLayerBoundaryPlugin = {
       },
       create(context) {
         const isForbidden = (source) =>
-          /^(?:@www-template\/(?:admin-api|api|domain|app|web)(?:\/.*)?|packages\/(?:admin\/api|frontend\/api|frontend\/domain|frontend\/app|web)(?:\/.*)?)$/.test(
+          /^(?:@app-template\/(?:admin-api|api|domain|app|web)(?:\/.*)?|packages\/(?:admin\/api|frontend\/api|frontend\/domain|frontend\/app|web)(?:\/.*)?)$/.test(
             source
           );
 
@@ -1360,7 +1360,7 @@ const adminLayerBoundaryPlugin = {
       },
       create(context) {
         const forbiddenImports =
-          /^(?:@www-template\/(?:admin|api|domain|app|web)(?:\/.*)?|packages\/(?:admin\/app|frontend\/api|frontend\/domain|frontend\/app|web)(?:\/.*)?|react|react-dom|@tanstack\/react-query|svelte\/store|axios|cross-fetch)$/;
+          /^(?:@app-template\/(?:admin|api|domain|app|web)(?:\/.*)?|packages\/(?:admin\/app|frontend\/api|frontend\/domain|frontend\/app|web)(?:\/.*)?|react|react-dom|@tanstack\/react-query|svelte\/store|axios|cross-fetch)$/;
         const forbiddenSvelteNames = new Set([
           'onMount',
           'beforeUpdate',
@@ -1772,12 +1772,12 @@ export default tseslint.config(
           },
           pathGroups: [
             {
-              pattern: '@www-template/**',
+              pattern: '@app-template/**',
               group: 'internal',
               position: 'after',
             },
             {
-              pattern: '@www-template/ui/**',
+              pattern: '@app-template/ui/**',
               group: 'internal',
               position: 'after',
             },
@@ -2065,14 +2065,14 @@ export default tseslint.config(
         {
           paths: [
             {
-              name: '@www-template/api',
+              name: '@app-template/api',
               message:
                 'frontend presentation 層では API パッケージを直接 import せず、domain hooks を経由してください。',
             },
           ],
           patterns: [
             {
-              group: ['@www-template/api/**'],
+              group: ['@app-template/api/**'],
               message:
                 'frontend presentation 層では API パッケージを直接 import せず、domain hooks を経由してください。',
             },
@@ -2091,21 +2091,21 @@ export default tseslint.config(
         {
           paths: [
             {
-              name: '@www-template/api',
+              name: '@app-template/api',
               message: 'web は公開面 WebPage なので API パッケージを import できません。',
             },
             {
-              name: '@www-template/domain',
+              name: '@app-template/domain',
               message: 'web は公開面 WebPage なので domain パッケージを import できません。',
             },
           ],
           patterns: [
             {
-              group: ['@www-template/api/**'],
+              group: ['@app-template/api/**'],
               message: 'web は公開面 WebPage なので API パッケージを import できません。',
             },
             {
-              group: ['@www-template/domain/**'],
+              group: ['@app-template/domain/**'],
               message: 'web は公開面 WebPage なので domain パッケージを import できません。',
             },
           ],
@@ -2196,24 +2196,24 @@ export default tseslint.config(
         {
           paths: [
             {
-              name: '@www-template/api',
+              name: '@app-template/api',
               message:
                 'frontend domain の API import は hooks/adapters に限定してください。純粋な domain module から SDK を参照しないでください。',
             },
             {
-              name: '@www-template/admin-api',
+              name: '@app-template/admin-api',
               message:
                 'domain の API import は hooks/adapters に限定してください。純粋な domain module から SDK を参照しないでください。',
             },
           ],
           patterns: [
             {
-              group: ['@www-template/api/**'],
+              group: ['@app-template/api/**'],
               message:
                 'frontend domain の API import は hooks/adapters に限定してください。純粋な domain module から SDK を参照しないでください。',
             },
             {
-              group: ['@www-template/admin-api/**'],
+              group: ['@app-template/admin-api/**'],
               message:
                 'domain の API import は hooks/adapters に限定してください。純粋な domain module から SDK を参照しないでください。',
             },
@@ -2544,27 +2544,27 @@ export default tseslint.config(
         {
           paths: [
             {
-              name: '@www-template/app',
+              name: '@app-template/app',
               message: 'hooks では UI 層（app/pages/components）の import を禁止します。',
             },
             {
-              name: '@www-template/ui',
+              name: '@app-template/ui',
               message: 'hooks では UI 層（ui/components）の import を禁止します。',
             },
             {
               name: 'axios',
-              message: 'Use @www-template/api instead of axios.',
+              message: 'Use @app-template/api instead of axios.',
             },
             {
               name: 'cross-fetch',
-              message: 'Use @www-template/api instead of performing manual fetches.',
+              message: 'Use @app-template/api instead of performing manual fetches.',
             },
           ],
           patterns: [
             {
               group: [
-                '@www-template/app/**',
-                '@www-template/ui/**',
+                '@app-template/app/**',
+                '@app-template/ui/**',
                 '../app/**',
                 '../../app/**',
                 '../ui/**',
@@ -2624,20 +2624,20 @@ export default tseslint.config(
         {
           paths: [
             {
-              name: '@www-template/app',
+              name: '@app-template/app',
               message: 'hooks では UI 層（app/pages/components）の import を禁止します。',
             },
             {
-              name: '@www-template/ui',
+              name: '@app-template/ui',
               message: 'hooks では UI 層（ui/components）の import を禁止します。',
             },
             {
               name: 'axios',
-              message: 'Use @www-template/api instead of axios.',
+              message: 'Use @app-template/api instead of axios.',
             },
             {
               name: 'cross-fetch',
-              message: 'Use @www-template/api instead of performing manual fetches.',
+              message: 'Use @app-template/api instead of performing manual fetches.',
             },
             {
               name: 'react',
@@ -2674,8 +2674,8 @@ export default tseslint.config(
           patterns: [
             {
               group: [
-                '@www-template/app/**',
-                '@www-template/ui/**',
+                '@app-template/app/**',
+                '@app-template/ui/**',
                 '../app/**',
                 '../../app/**',
                 '../ui/**',
@@ -2881,11 +2881,11 @@ export default tseslint.config(
           paths: [
             {
               name: 'axios',
-              message: 'Use @www-template/api instead of axios.',
+              message: 'Use @app-template/api instead of axios.',
             },
             {
               name: 'cross-fetch',
-              message: 'Use @www-template/api instead of performing manual fetches.',
+              message: 'Use @app-template/api instead of performing manual fetches.',
             },
           ],
         },
@@ -2934,53 +2934,53 @@ export default tseslint.config(
         {
           paths: [
             {
-              name: '@www-template/api',
+              name: '@app-template/api',
               message:
-                'Admin Console app 層では顧客向け SDK (@www-template/api) を import しないでください。Admin domain layer を経由してください。',
+                'Admin Console app 層では顧客向け SDK (@app-template/api) を import しないでください。Admin domain layer を経由してください。',
             },
             {
-              name: '@www-template/admin-api',
+              name: '@app-template/admin-api',
               message:
                 'Admin Console app 層では Admin API layer を直接 import せず、Admin domain layer を経由してください。',
             },
             {
-              name: '@www-template/domain',
+              name: '@app-template/domain',
               message:
-                'Admin Console app 層では顧客向け domain パッケージ (@www-template/domain) を import しないでください。Admin domain layer を経由してください。',
+                'Admin Console app 層では顧客向け domain パッケージ (@app-template/domain) を import しないでください。Admin domain layer を経由してください。',
             },
             {
-              name: '@www-template/app',
+              name: '@app-template/app',
               message:
-                'Admin Console では顧客向け app パッケージ (@www-template/app) を import しないでください。',
+                'Admin Console では顧客向け app パッケージ (@app-template/app) を import しないでください。',
             },
             {
-              name: '@www-template/web',
+              name: '@app-template/web',
               message:
-                'Admin Console では顧客向け web パッケージ (@www-template/web) を import しないでください。',
+                'Admin Console では顧客向け web パッケージ (@app-template/web) を import しないでください。',
             },
           ],
           patterns: [
             {
-              group: ['packages/admin/api/**', '@www-template/admin-api/**'],
+              group: ['packages/admin/api/**', '@app-template/admin-api/**'],
               message:
                 'Admin Console app 層では Admin API layer を直接参照せず、Admin domain layer を経由してください。',
             },
             {
-              group: ['packages/frontend/api/**', '@www-template/api/**'],
+              group: ['packages/frontend/api/**', '@app-template/api/**'],
               message:
                 'Admin Console app 層では顧客向け SDK を import しないでください。Admin domain layer を経由してください。',
             },
             {
-              group: ['packages/frontend/domain/**', '@www-template/domain/**'],
+              group: ['packages/frontend/domain/**', '@app-template/domain/**'],
               message:
                 'Admin Console app 層では顧客向け domain パッケージを import しないでください。Admin domain layer を経由してください。',
             },
             {
-              group: ['packages/frontend/app/**', '@www-template/app/**'],
+              group: ['packages/frontend/app/**', '@app-template/app/**'],
               message: 'Admin Console では顧客向け app パッケージを import しないでください。',
             },
             {
-              group: ['packages/web/**', '@www-template/web/**'],
+              group: ['packages/web/**', '@app-template/web/**'],
               message: 'Admin Console では顧客向け web パッケージを import しないでください。',
             },
           ],
@@ -3002,15 +3002,15 @@ export default tseslint.config(
         {
           paths: [
             {
-              name: '@www-template/app',
+              name: '@app-template/app',
               message: 'Admin domain 層から frontend app を import しないでください。',
             },
             {
-              name: '@www-template/web',
+              name: '@app-template/web',
               message: 'Admin domain 層から web package を import しないでください。',
             },
             {
-              name: '@www-template/api',
+              name: '@app-template/api',
               message:
                 'Admin domain 層から Product SDK を import しないでください。Admin API layer を使ってください。',
             },
@@ -3025,7 +3025,7 @@ export default tseslint.config(
               message: 'Admin domain 層へ server-only module を持ち込まないでください。',
             },
             {
-              group: ['packages/frontend/api/**', '@www-template/api/**'],
+              group: ['packages/frontend/api/**', '@app-template/api/**'],
               message:
                 'Admin domain 層から Product SDK を import しないでください。Admin API layer を使ってください。',
             },
@@ -3129,17 +3129,17 @@ export default tseslint.config(
         {
           paths: [
             {
-              name: '@www-template/api',
+              name: '@app-template/api',
               message: 'Pages/Components は Hooks 経由でAPIを呼び出してください。',
             },
             {
-              name: '@www-template/domain',
+              name: '@app-template/domain',
               message: 'hooks は個別フックを指し示すパスで import してください。',
             },
           ],
           patterns: [
             {
-              group: ['@www-template/app/src/components/**', '@www-template/web/src/components/**'],
+              group: ['@app-template/app/src/components/**', '@app-template/web/src/components/**'],
               message: 'components 同士の循環参照を避け、必要なら hooks 経由にしてください。',
             },
           ],
@@ -3609,7 +3609,7 @@ export default tseslint.config(
             {
               group: [
                 '**/src/**/!(*index)',
-                '@www-template/**/!(*index)',
+                '@app-template/**/!(*index)',
                 './**/!(*index)',
                 '../**/!(*index)',
               ],
@@ -3629,12 +3629,12 @@ export default tseslint.config(
           patterns: [
             {
               group: ['../**'],
-              message: '@www-template/ui/* でパッケージ内の上位ディレクトリを参照してください。',
+              message: '@app-template/ui/* でパッケージ内の上位ディレクトリを参照してください。',
             },
             {
               group: [
                 '**/src/**/!(*index)',
-                '@www-template/**/!(*index)',
+                '@app-template/**/!(*index)',
                 './**/!(*index)',
                 '../**/!(*index)',
               ],

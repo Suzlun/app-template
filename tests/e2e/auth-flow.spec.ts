@@ -163,7 +163,7 @@ test.describe('auth flow', () => {
         requestId: TEST_ULID.requestId,
         challenge: 'cmVnaXN0ZXItY2hhbGxlbmdl',
         rpId: 'app.localhost',
-        rpName: 'www-template',
+        rpName: 'app-template',
         user: {
           id: 'dXNlcjE',
           name: 'test@example.com',

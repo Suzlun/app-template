@@ -6,15 +6,15 @@ import (
 	"log/slog"
 	"time"
 
-	"www-template/packages/backend/internal/adapter/mailer"
-	"www-template/packages/backend/internal/adapter/postgres"
-	productvalkey "www-template/packages/backend/internal/adapter/valkey/product"
-	"www-template/packages/backend/internal/adapter/webauthn"
-	productaccounts "www-template/packages/backend/internal/application/accounts"
-	productauth "www-template/packages/backend/internal/application/auth"
-	domain "www-template/packages/backend/internal/domain"
-	"www-template/packages/backend/internal/platform/config"
-	"www-template/packages/backend/internal/platform/observability"
+	"app-template/packages/backend/internal/adapter/mailer"
+	"app-template/packages/backend/internal/adapter/postgres"
+	productvalkey "app-template/packages/backend/internal/adapter/valkey/product"
+	"app-template/packages/backend/internal/adapter/webauthn"
+	productaccounts "app-template/packages/backend/internal/application/accounts"
+	productauth "app-template/packages/backend/internal/application/auth"
+	domain "app-template/packages/backend/internal/domain"
+	"app-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/observability"
 )
 
 // ProductContainer は Product Account 向けの application service と adapter 接続を束ねる DI container である。

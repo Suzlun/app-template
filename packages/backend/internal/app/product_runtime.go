@@ -4,12 +4,12 @@ import (
 	"context"
 	stdhttp "net/http"
 
-	producthttp "www-template/packages/backend/internal/adapter/http/product"
-	"www-template/packages/backend/internal/adapter/postgres"
-	productvalkey "www-template/packages/backend/internal/adapter/valkey/product"
-	"www-template/packages/backend/internal/platform/config"
-	"www-template/packages/backend/internal/platform/health"
-	"www-template/packages/backend/internal/platform/observability"
+	producthttp "app-template/packages/backend/internal/adapter/http/product"
+	"app-template/packages/backend/internal/adapter/postgres"
+	productvalkey "app-template/packages/backend/internal/adapter/valkey/product"
+	"app-template/packages/backend/internal/platform/config"
+	"app-template/packages/backend/internal/platform/health"
+	"app-template/packages/backend/internal/platform/observability"
 )
 
 // ProductRuntime は Product Account 向け HTTP API サーバーの起動・停止・設定アクセスを束ねる runtime である。
