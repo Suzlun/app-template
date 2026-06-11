@@ -40,8 +40,6 @@ in
 
   env = {
     AGENT_BROWSER_EXECUTABLE_PATH = lib.mkDefault "/usr/bin/chromium";
-    CONFIG_PATH = lib.mkDefault ".config/local.toml";
-    ADMIN_CONFIG_PATH = lib.mkDefault ".config/local.admin.toml";
     TOOLCHAIN_NODE_VERSION = "24.12.0";
     TOOLCHAIN_PNPM_VERSION = pnpmVersion;
     TOOLCHAIN_GO_VERSION = "1.26.4";
@@ -55,6 +53,8 @@ in
 
   enterShell = ''
     export DEVENV_CACHE_ROOT="$DEVENV_ROOT/.cache"
+    export CONFIG_PATH="$DEVENV_ROOT/.config/local.toml"
+    export ADMIN_CONFIG_PATH="$DEVENV_ROOT/.config/local.admin.toml"
     export GOPATH="$DEVENV_CACHE_ROOT/go"
     export GOMODCACHE="$GOPATH/pkg/mod"
     export GOCACHE="$DEVENV_CACHE_ROOT/go-build"

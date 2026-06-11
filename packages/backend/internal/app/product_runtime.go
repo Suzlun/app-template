@@ -95,7 +95,11 @@ func NewProductRuntimeWithConfig(ctx context.Context, cfg config.Config) (*Produ
 	}
 
 	obs := cfg.Observability
-	closeTracer, err := observability.InitTracer(ctx, obs.OTELExporterOTLPEndpoint, obs.OTELServiceName)
+	traceEndpoint := obs.OTELExporterOTLPTracesEndpoint
+	if traceEndpoint == "" {
+		traceEndpoint = obs.OTELExporterOTLPEndpoint
+	}
+	closeTracer, err := observability.InitTracer(ctx, traceEndpoint, obs.OTELServiceName)
 	if err != nil {
 		return nil, err
 	}

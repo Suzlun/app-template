@@ -7,7 +7,7 @@
 - Node.js / pnpm / Go / OpenSpec は Nix/devenv shell で固定
 - `compose.yaml` が local infra/runtime stack の唯一の定義
 - host / `devenv shell` の開発起動は `.config/local.toml` と `.config/local.admin.toml` を使い、接続先は `pnpm infra:up` が公開する localhost port を向く
-- Docker Compose runtime は `compose.yaml` から `.config/compose.toml` と `.config/compose.admin.toml` を受け取る
+- optional な Docker Compose runtime は `pnpm runtime:up` で起動し、`compose.yaml` から `.config/compose.toml` と `.config/compose.admin.toml` を受け取る
 - 本番向け設定の雛形は `.config/example.toml` と `.config/example.admin.toml`
 
 Zed で作業する場合は repository root を通常の worktree として開き、初回に worktree を trust してください。Zed の terminal、task、LSP、formatter は Nix/devenv shell の toolchain を使います。

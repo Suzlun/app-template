@@ -55,38 +55,28 @@ func (h *traceContextHandler) WithGroup(name string) slog.Handler {
 // InitLogger は OTLP logs exporter を初期化し、slog の default ロガーを OTLP 対応に差し替える。
 //
 // 役割:
-//   - OTELExporterOTLPLogsEndpoint が設定されている場合、OTLP gRPC 経由で SigNoz にログを送信する。
+//   - OTELExporterOTLPLogsEndpoint が設定されている場合、OTLP gRPC で SigNoz にログを送信する。
 //   - endpoint が空の場合は OTELExporterOTLPEndpoint をフォールバックとして使用し、
-//     それも空の場合は localhost:4317 をデフォルトとする。
+//     それも空の場合は local SigNoz の gRPC endpoint を使う。
 //   - slog.SetDefault を呼び、既存の observability.Logger() 呼び出しを OTLP 対応に変更する。
 //   - stdout JSON 出力と OTLP 出力を dual-write し、開発環境でもログ確認を可能にする。
 //
 // 引数:
 //   - ctx: OTel exporter 接続に使う context。
-//   - logsEndpoint: OTLP logs エンドポイント（例: localhost:4317）。空の場合はフォールバック。
+//   - logsEndpoint: OTLP logs エンドポイント（例: 127.0.0.1:4317 または signoz-otel-collector:4317）。空の場合はフォールバック。
 //   - serviceName: OTel resource に付与するサービス名。
 //
 // 戻り値:
 //   - func(context.Context) error: LoggerProvider をシャットダウンする関数。
 //   - error: exporter 初期化失敗時。
 func InitLogger(ctx context.Context, logsEndpoint string, serviceName string) (func(context.Context) error, error) {
-	// endpoint のフォールバック: logsEndpoint → OTELExporterOTLPEndpoint → localhost:4317
 	endpoint := logsEndpoint
 	if endpoint == "" {
-		endpoint = "localhost:4317"
+		endpoint = "127.0.0.1:4317"
 	}
 
 	if serviceName == "" {
 		serviceName = "app-template-api"
-	}
-
-	// OTLP logs exporter を gRPC で作成する。
-	exporter, err := otlploggrpc.New(ctx,
-		otlploggrpc.WithEndpoint(endpoint),
-		otlploggrpc.WithInsecure(),
-	)
-	if err != nil {
-		return nil, fmt.Errorf("create otlp log exporter: %w", err)
 	}
 
 	// OTel resource を構築する。tracer/meter と同じ属性を使用する。
@@ -103,7 +93,13 @@ func InitLogger(ctx context.Context, logsEndpoint string, serviceName string) (f
 		return nil, fmt.Errorf("create otel resource for logs: %w", err)
 	}
 
-	// LoggerProvider を構築する。
+	exporter, exportErr := otlploggrpc.New(ctx,
+		otlploggrpc.WithEndpoint(endpoint),
+		otlploggrpc.WithInsecure(),
+	)
+	if exportErr != nil {
+		return nil, fmt.Errorf("create otlp log exporter: %w", exportErr)
+	}
 	lp := log.NewLoggerProvider(
 		log.WithProcessor(log.NewBatchProcessor(exporter, log.WithExportInterval(5*time.Second))),
 		log.WithResource(res),

@@ -29,6 +29,8 @@ func run(logger *slog.Logger) error {
 		stop()
 		return fmt.Errorf("build runtime: %w", err)
 	}
+	// runtime 初期化後は InitLogger が差し替えた default logger を使い、起動・停止ログを stdout と OTLP の両方へ送る。
+	logger = slog.Default()
 	defer stop()
 	defer func() {
 		if closeErr := runtime.Close(context.Background()); closeErr != nil {

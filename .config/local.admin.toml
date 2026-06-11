@@ -33,9 +33,9 @@ operator_audit_index_prefix = "admin-audit"
 product_index_prefix = "app-template"
 
 [observability]
-otel_exporter_otlp_endpoint = "localhost:4317"
-otel_exporter_otlp_traces_endpoint = "localhost:4317"
-otel_exporter_otlp_logs_endpoint = "localhost:4317"
+otel_exporter_otlp_endpoint = "127.0.0.1:4317"
+otel_exporter_otlp_traces_endpoint = "127.0.0.1:4317"
+otel_exporter_otlp_logs_endpoint = "127.0.0.1:4317"
 otel_service_name = "app-template-admin-api"
 otel_resource_attributes = "service.namespace=app-template,deployment.environment=development"
 

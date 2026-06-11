@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"go.opentelemetry.io/contrib/instrumentation/runtime"
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/resource"
@@ -13,9 +14,10 @@ import (
 )
 
 // InitMeter initializes the OTel MeterProvider and starts Go runtime metrics collection.
+// endpoint 未設定時は local SigNoz の gRPC endpoint を使う。
 func InitMeter(ctx context.Context, endpoint, serviceName string) (func(context.Context) error, error) {
 	if endpoint == "" {
-		endpoint = "localhost:4317"
+		endpoint = "127.0.0.1:4317"
 	}
 
 	if serviceName == "" {
@@ -47,6 +49,7 @@ func InitMeter(ctx context.Context, endpoint, serviceName string) (func(context.
 		sdkmetric.WithReader(sdkmetric.NewPeriodicReader(exporter, sdkmetric.WithInterval(15*time.Second))),
 		sdkmetric.WithResource(res),
 	)
+	otel.SetMeterProvider(mp)
 
 	if err := runtime.Start(
 		runtime.WithMeterProvider(mp),

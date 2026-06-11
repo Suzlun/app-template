@@ -30,7 +30,8 @@ const productSecurityReferrerPolicy = sharedhttp.SecurityReferrerPolicy
 func appAuthMiddleware(cfg config.Config, auth application.ProductAuthService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if !strings.HasPrefix(c.Request.URL.Path, "/api/v1/") ||
-			strings.HasPrefix(c.Request.URL.Path, "/api/v1/auth/") {
+			strings.HasPrefix(c.Request.URL.Path, "/api/v1/auth/") ||
+			c.Request.URL.Path == "/api/v1/status" {
 			c.Next()
 			return
 		}

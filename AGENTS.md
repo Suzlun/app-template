@@ -32,6 +32,7 @@ Before beginning any work, you MUST summarize your understanding of the Credo be
 - Typecheck: `pnpm check`
 - Dev (all): `pnpm dev:all`
 - Infra (Compose stack): `pnpm infra:up`
+- Runtime (Compose profile): `pnpm runtime:up`
 - Dev (server): `pnpm dev:server` (Product Go API on `http://localhost:8080`)
 - Dev (admin server): `pnpm dev:admin-server` (Admin Go API on `http://localhost:8081`)
 - Dev (client entry): `pnpm dev:client` (alias of `pnpm dev:web`, Vite on `http://www.localhost:5173`)
@@ -42,7 +43,8 @@ Before beginning any work, you MUST summarize your understanding of the Credo be
 
 - For both backend and frontend work, lint, typecheck, build, and test MUST be invoked through `pnpm` scripts.
 - `./setup.sh` is the standard bootstrap entrypoint; it ensures Nix, devenv, Docker/Compose, `pnpm install`, and `pnpm gen` are in place before normal work begins.
-- When local infra is required, start the Compose-defined stack via `devenv shell -- pnpm infra:up` or `pnpm infra:up`; do not replace `compose.yaml` with ad hoc subset startup guidance.
+- When local infra is required, start the Compose-defined shared infra via `devenv shell -- pnpm infra:up` or `pnpm infra:up`.
+- Start the optional Compose runtime container only when needed via `devenv shell -- pnpm runtime:up` or `pnpm runtime:up`; do not replace `compose.yaml` with ad hoc subset startup guidance.
 - When running verification from Codex Desktop or any host-side shell, invoke the required `pnpm` script from the Nix/devenv shell so the command uses the pinned toolchain instead of host Node.js, Go, bash, or pnpm. Example: `devenv shell -- pnpm check` or `nix develop --command pnpm check`.
 - When already inside the Nix/devenv shell, run the same `pnpm` scripts directly.
 - Use `pnpm lint` for lint, `pnpm check` for typecheck, `pnpm build` or package-specific `pnpm build:*` scripts for build, and `pnpm test:*` scripts for tests.
@@ -96,7 +98,7 @@ Before beginning any work, you MUST summarize your understanding of the Credo be
 ## Observability
 
 - SigNoz UI: `http://localhost:3301`
-- SigNoz OTLP endpoint: `http://localhost:4317` (gRPC), `http://localhost:4318` (HTTP)
+- SigNoz OTLP endpoint: host local config uses `127.0.0.1:4317` (gRPC); Compose runtime uses `signoz-otel-collector:4317`
 - Go backend exports traces and metrics to SigNoz via OTLP gRPC
 - Frontend browsers send traces to SigNoz via `PUBLIC_OTEL_COLLECTOR_URL`
 - Docker Compose runtime wiring MUST keep SigNoz services integrated with the infra profile.

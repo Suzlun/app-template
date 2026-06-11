@@ -103,9 +103,9 @@ from_address = "noreply@your-domain.com"
 
 [observability]
 # OpenTelemetry OTLP endpoints.
-otel_exporter_otlp_endpoint = "signoz-otel-collector:4317"
-otel_exporter_otlp_traces_endpoint = "signoz-otel-collector:4317"
-otel_exporter_otlp_logs_endpoint = "signoz-otel-collector:4317"
+otel_exporter_otlp_endpoint = "otlp-collector.your-domain.com:4317"
+otel_exporter_otlp_traces_endpoint = "otlp-collector.your-domain.com:4317"
+otel_exporter_otlp_logs_endpoint = "otlp-collector.your-domain.com:4317"
 
 # OTel service identification.
 otel_service_name = "app-template-api"

@@ -30,12 +30,12 @@ rp_name = "Your Admin Console"
 admin_role = "admin_console_write"
 
 # Admin backend connects with a minimum-privilege login role granted admin_console_write.
-url = "postgres://admin-console-role:password@postgres:5432/app-db?sslmode=require"
+url = "postgres://admin-console-role:password@db-host:5432/app-db?sslmode=require"
 
 [valkey]
 # Admin and Product must use the same Valkey endpoint with different logical DB numbers.
-admin_url = "redis://valkey:6379/1"
-product_url = "redis://valkey:6379/0"
+admin_url = "redis://valkey-host:6379/1"
+product_url = "redis://valkey-host:6379/0"
 
 [opensearch]
 # Admin audit and Product domain indexes may share a cluster but must not share prefixes.
@@ -46,9 +46,9 @@ product_index_prefix = "product-domain"
 
 [observability]
 # Admin API exports telemetry to the same collector infrastructure as Product, while using its own service name.
-otel_exporter_otlp_endpoint = "signoz-otel-collector:4317"
-otel_exporter_otlp_traces_endpoint = "signoz-otel-collector:4317"
-otel_exporter_otlp_logs_endpoint = "signoz-otel-collector:4317"
+otel_exporter_otlp_endpoint = "otlp-collector.your-domain.com:4317"
+otel_exporter_otlp_traces_endpoint = "otlp-collector.your-domain.com:4317"
+otel_exporter_otlp_logs_endpoint = "otlp-collector.your-domain.com:4317"
 otel_service_name = "app-template-admin-api"
 otel_resource_attributes = "service.namespace=app-template,deployment.environment=production"
 

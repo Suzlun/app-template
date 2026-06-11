@@ -57,7 +57,11 @@ func NewAdminRuntimeWithConfig(ctx context.Context, cfg config.Config) (*AdminRu
 
 	// Step 4: Admin API process 用の tracer / meter / logger を初期化し、startup 以後の観測情報を収集できる状態にする。
 	obs := cfg.Observability
-	closeTracer, err := observability.InitTracer(ctx, obs.OTELExporterOTLPEndpoint, obs.OTELServiceName)
+	traceEndpoint := obs.OTELExporterOTLPTracesEndpoint
+	if traceEndpoint == "" {
+		traceEndpoint = obs.OTELExporterOTLPEndpoint
+	}
+	closeTracer, err := observability.InitTracer(ctx, traceEndpoint, obs.OTELServiceName)
 	if err != nil {
 		return nil, err
 	}

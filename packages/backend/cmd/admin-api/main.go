@@ -41,14 +41,16 @@ func run(logger *slog.Logger) error {
 	if err != nil {
 		return fmt.Errorf("build admin runtime: %w", err)
 	}
+	// Step 3: runtime 初期化後は InitLogger が差し替えた default logger を使い、起動・停止ログを stdout と OTLP の両方へ送る。
+	logger = slog.Default()
 	defer func() {
-		// Step 3: runtime が確保した observability resource を process 終了時に解放し、close error は shutdown を妨げず観測だけ行う。
+		// Step 4: runtime が確保した observability resource を process 終了時に解放し、close error は shutdown を妨げず観測だけ行う。
 		if closeErr := runtime.Close(context.Background()); closeErr != nil {
 			logger.Error("close admin runtime", slog.Any("error", closeErr))
 		}
 	}()
 
-	// Step 4: Admin runtime が所有する HTTP server を取得し、Product server とは独立した graceful shutdown を設定する。
+	// Step 5: Admin runtime が所有する HTTP server を取得し、Product server とは独立した graceful shutdown を設定する。
 	server := runtime.Server()
 	go func() {
 		<-ctx.Done()
@@ -59,7 +61,7 @@ func run(logger *slog.Logger) error {
 		}
 	}()
 
-	// Step 5: Admin API binary として待受を開始し、正常 shutdown 以外の ListenAndServe error だけを呼び出し元へ返す。
+	// Step 6: Admin API binary として待受を開始し、正常 shutdown 以外の ListenAndServe error だけを呼び出し元へ返す。
 	logger.Info("app-template admin api listening", slog.String("addr", runtime.Config().Port))
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, stdhttp.ErrServerClosed) {
 		return fmt.Errorf("listen and serve admin api: %w", err)

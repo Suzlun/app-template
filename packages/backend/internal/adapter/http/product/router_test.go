@@ -28,6 +28,20 @@ func TestHealthRoute(t *testing.T) {
 	}
 }
 
+func TestStatusRouteIsPublic(t *testing.T) {
+	t.Parallel()
+
+	router := newTestRouter(t)
+	request := httptest.NewRequest(stdhttp.MethodGet, "/api/v1/status", nil)
+	recorder := httptest.NewRecorder()
+
+	router.ServeHTTP(recorder, request)
+
+	if recorder.Code != stdhttp.StatusOK {
+		t.Fatalf("expected status 200, got %d body=%s", recorder.Code, recorder.Body.String())
+	}
+}
+
 func TestAppSurfaceFallsBackToNotFound(t *testing.T) {
 	t.Parallel()
 

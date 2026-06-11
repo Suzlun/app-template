@@ -9,13 +9,14 @@ import (
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
-	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	"go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
 )
 
+// InitTracer は OTLP gRPC exporter を初期化し、trace endpoint 未設定時は local SigNoz の gRPC endpoint を使う。
 func InitTracer(ctx context.Context, endpoint, serviceName string) (func(context.Context) error, error) {
 	if endpoint == "" {
-		endpoint = "localhost:4317"
+		endpoint = "127.0.0.1:4317"
 	}
 
 	if serviceName == "" {
@@ -43,10 +44,10 @@ func InitTracer(ctx context.Context, endpoint, serviceName string) (func(context
 		return nil, fmt.Errorf("create otel resource: %w", err)
 	}
 
-	tp := sdktrace.NewTracerProvider(
-		sdktrace.WithBatcher(exporter, sdktrace.WithBatchTimeout(1*time.Second)),
-		sdktrace.WithResource(res),
-		sdktrace.WithSampler(sdktrace.AlwaysSample()),
+	tp := trace.NewTracerProvider(
+		trace.WithBatcher(exporter, trace.WithBatchTimeout(1*time.Second)),
+		trace.WithResource(res),
+		trace.WithSampler(trace.AlwaysSample()),
 	)
 
 	otel.SetTracerProvider(tp)
