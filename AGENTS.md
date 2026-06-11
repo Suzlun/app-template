@@ -27,10 +27,11 @@ Before beginning any work, you MUST summarize your understanding of the Credo be
 
 ## Commands
 
-- Install: `corepack enable && pnpm install`
+- Install: `./setup.sh`
 - Generate all contracts: `pnpm gen`
 - Typecheck: `pnpm check`
 - Dev (all): `pnpm dev:all`
+- Infra (Compose stack): `pnpm infra:up`
 - Dev (server): `pnpm dev:server` (Product Go API on `http://localhost:8080`)
 - Dev (admin server): `pnpm dev:admin-server` (Admin Go API on `http://localhost:8081`)
 - Dev (client entry): `pnpm dev:client` (alias of `pnpm dev:web`, Vite on `http://www.localhost:5173`)
@@ -40,7 +41,9 @@ Before beginning any work, you MUST summarize your understanding of the Credo be
 ## Command Policy
 
 - For both backend and frontend work, lint, typecheck, build, and test MUST be invoked through `pnpm` scripts.
-- When running verification from Codex Desktop or any host-side shell, invoke the required `pnpm` script from the Nix/devenv shell so the command uses the pinned toolchain instead of host Node.js, Go, bash, or pnpm. Example: `devenv shell pnpm check` or `nix develop --command pnpm check`.
+- `./setup.sh` is the standard bootstrap entrypoint; it ensures Nix, devenv, Docker/Compose, `pnpm install`, and `pnpm gen` are in place before normal work begins.
+- When local infra is required, start the Compose-defined stack via `devenv shell -- pnpm infra:up` or `pnpm infra:up`; do not replace `compose.yaml` with ad hoc subset startup guidance.
+- When running verification from Codex Desktop or any host-side shell, invoke the required `pnpm` script from the Nix/devenv shell so the command uses the pinned toolchain instead of host Node.js, Go, bash, or pnpm. Example: `devenv shell -- pnpm check` or `nix develop --command pnpm check`.
 - When already inside the Nix/devenv shell, run the same `pnpm` scripts directly.
 - Use `pnpm lint` for lint, `pnpm check` for typecheck, `pnpm build` or package-specific `pnpm build:*` scripts for build, and `pnpm test:*` scripts for tests.
 - Do not call direct verification tools such as `go test`, `go vet`, `go build`, `tsc`, `vitest`, `svelte-check`, `vite build`, `eslint`, or `stylelint`; route them through the existing `pnpm` scripts instead.

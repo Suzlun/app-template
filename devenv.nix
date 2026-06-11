@@ -5,6 +5,8 @@ let
   go = if pkgs ? go_1_26 then pkgs.go_1_26 else pkgs.go;
   postgresql = if pkgs ? postgresql_18 then pkgs.postgresql_18 else pkgs.postgresql;
   openspecVersion = "1.3.1";
+  pnpmVersion = "11.5.1";
+  corepackBin = "${nodejs}/bin/corepack";
 
   openspec = pkgs.writeShellApplication {
     name = "openspec";
@@ -40,13 +42,8 @@ in
     AGENT_BROWSER_EXECUTABLE_PATH = lib.mkDefault "/usr/bin/chromium";
     CONFIG_PATH = lib.mkDefault ".config/local.toml";
     ADMIN_CONFIG_PATH = lib.mkDefault ".config/local.admin.toml";
-    GOPATH = lib.mkDefault "$DEVENV_ROOT/.cache/go";
-    GOMODCACHE = lib.mkDefault "$DEVENV_ROOT/.cache/go/pkg/mod";
-    GOCACHE = lib.mkDefault "$DEVENV_ROOT/.cache/go-build";
-    PLAYWRIGHT_BROWSERS_PATH = lib.mkDefault "$DEVENV_ROOT/.cache/ms-playwright";
-    PNPM_HOME = lib.mkDefault "$DEVENV_ROOT/.cache/pnpm";
     TOOLCHAIN_NODE_VERSION = "24.12.0";
-    TOOLCHAIN_PNPM_VERSION = "11.5.1";
+    TOOLCHAIN_PNPM_VERSION = pnpmVersion;
     TOOLCHAIN_GO_VERSION = "1.26.4";
     TOOLCHAIN_GORM_VERSION = "1.31.0";
     TOOLCHAIN_GOLANG_MIGRATE_VERSION = "4.18.3";
@@ -57,13 +54,24 @@ in
   };
 
   enterShell = ''
+    export DEVENV_CACHE_ROOT="$DEVENV_ROOT/.cache"
+    export GOPATH="$DEVENV_CACHE_ROOT/go"
+    export GOMODCACHE="$GOPATH/pkg/mod"
+    export GOCACHE="$DEVENV_CACHE_ROOT/go-build"
+    export PLAYWRIGHT_BROWSERS_PATH="$DEVENV_CACHE_ROOT/ms-playwright"
+    export PNPM_HOME="$DEVENV_CACHE_ROOT/pnpm"
+    export COREPACK_HOME="$DEVENV_CACHE_ROOT/corepack"
+
     mkdir -p \
-      "$DEVENV_ROOT/.cache/go" \
-      "$DEVENV_ROOT/.cache/go-build" \
-      "$DEVENV_ROOT/.cache/ms-playwright" \
-      "$DEVENV_ROOT/.cache/pnpm"
+      "$GOPATH" \
+      "$GOMODCACHE" \
+      "$GOCACHE" \
+      "$PLAYWRIGHT_BROWSERS_PATH" \
+      "$PNPM_HOME" \
+      "$COREPACK_HOME"
+
     export PATH="$PNPM_HOME:$GOPATH/bin:$PATH"
-    corepack enable --install-directory "$PNPM_HOME" >/dev/null
-    corepack prepare pnpm@11.5.1 --activate >/dev/null
+    "${corepackBin}" enable --install-directory "$PNPM_HOME" >/dev/null
+    hash -r
   '';
 }

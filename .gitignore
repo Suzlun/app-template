@@ -46,6 +46,7 @@ lerna-debug.log*
 .devenv/
 .direnv/
 devenv.local.nix
+devenv.lock
 
 # Testing
 coverage/
@@ -54,8 +55,10 @@ coverage/
 # Config files (only local/product examples and local/admin examples are committed)
 .config/*.toml
 !.config/local.toml
+!.config/compose.toml
 !.config/example.toml
 !.config/local.admin.toml
+!.config/compose.admin.toml
 !.config/example.admin.toml
 
 # Misc

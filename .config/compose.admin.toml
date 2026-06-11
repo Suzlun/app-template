@@ -1,4 +1,4 @@
-# Admin Console local development configuration.
+# Admin Console Docker Compose runtime development configuration.
 # The local bootstrap plaintext is: dev-admin-bootstrap-secret
 
 [server]
@@ -20,22 +20,22 @@ rp_name = "Admin Console Dev"
 
 [database]
 admin_role = "admin_console_write"
-url = "postgres://admin_console:admin_console@localhost:5432/app-template?sslmode=disable"
+url = "postgres://admin_console:admin_console@postgres:5432/app-template?sslmode=disable"
 
 [valkey]
-admin_url = "redis://localhost:6379/1"
-product_url = "redis://localhost:6379/0"
+admin_url = "redis://valkey:6379/1"
+product_url = "redis://valkey:6379/0"
 
 [opensearch]
-url = "http://localhost:9200"
+url = "http://opensearch:9200"
 admin_audit_replicas = 0
 operator_audit_index_prefix = "admin-audit"
 product_index_prefix = "app-template"
 
 [observability]
-otel_exporter_otlp_endpoint = "localhost:4317"
-otel_exporter_otlp_traces_endpoint = "localhost:4317"
-otel_exporter_otlp_logs_endpoint = "localhost:4317"
+otel_exporter_otlp_endpoint = "signoz-otel-collector:4317"
+otel_exporter_otlp_traces_endpoint = "signoz-otel-collector:4317"
+otel_exporter_otlp_logs_endpoint = "signoz-otel-collector:4317"
 otel_service_name = "app-template-admin-api"
 otel_resource_attributes = "service.namespace=app-template,deployment.environment=development"
 

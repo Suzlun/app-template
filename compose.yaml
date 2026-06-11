@@ -18,12 +18,12 @@ services:
       signoz-otel-collector:
         condition: service_healthy
     environment:
-      CONFIG_PATH: /workspace/app-template/.config/local.toml
+      CONFIG_PATH: /workspace/app-template/.config/compose.toml
       GOPATH: /go
       GOMODCACHE: /go/pkg/mod
       GOCACHE: /home/node/.cache/go-build
       PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
-      ADMIN_CONFIG_PATH: /workspace/app-template/.config/local.admin.toml
+      ADMIN_CONFIG_PATH: /workspace/app-template/.config/compose.admin.toml
       NODE_ENV: development
       TOOLCHAIN_GO_VERSION: 1.26.4
       TOOLCHAIN_PNPM_VERSION: 11.5.1
@@ -65,12 +65,16 @@ services:
       retries: 10
       start_period: 5s
     restart: unless-stopped
+    ports:
+      - '127.0.0.1:5432:5432'
     volumes:
       - postgres18-data:/var/lib/postgresql
 
   valkey:
     image: valkey/valkey:9.0.3-alpine
     command: ['valkey-server', '--save', '', '--appendonly', 'no']
+    ports:
+      - '127.0.0.1:6379:6379'
     restart: unless-stopped
     volumes:
       - valkey-data:/data
@@ -102,6 +106,7 @@ services:
       MINIO_ROOT_PASSWORD: minioadmin
       MINIO_ROOT_USER: minioadmin
     ports:
+      - '127.0.0.1:9000:9000'
       - '127.0.0.1:9001:9001'
     restart: unless-stopped
     volumes:
@@ -110,6 +115,7 @@ services:
   mailpit:
     image: axllent/mailpit:latest
     ports:
+      - '127.0.0.1:1025:1025'
       - '127.0.0.1:8025:8025'
     restart: unless-stopped
 

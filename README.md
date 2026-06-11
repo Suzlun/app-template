@@ -19,7 +19,7 @@ TypeSpec を API 契約の正とし、Svelte の Web surface と Go バックエ
 - [API 契約と生成物](#api-契約と生成物)
 - [現在の API surface](#現在の-api-surface)
 - [Auth surface と認証仕様](#auth-surface-と認証仕様)
-- [環境変数リファレンス](#環境変数リファレンス)
+- [設定ファイルリファレンス](#設定ファイルリファレンス)
 - [データベースマイグレーション](#データベースマイグレーション)
 - [CI/CD](#cicd)
 - [Git hooks とコミット規約](#git-hooks-とコミット規約)
@@ -58,6 +58,7 @@ TypeSpec を API 契約の正とし、Svelte の Web surface と Go バックエ
 ├── docker/runtime/Dockerfile     # Compose runtime image
 ├── devenv.nix                    # Nix/devenv toolchain definition
 ├── flake.nix                     # Nix flake entrypoint
+├── setup.sh                      # Nix / devenv / Docker / repo bootstrap
 ├── scripts/                     # CI / lint / codegen / migration ヘルパースクリプト
 │   ├── codegen/check.sh         # codegen drift check
 │   ├── go/                      # Go build / lint / format / test / migrate
@@ -184,28 +185,40 @@ Zed で repository root を開き、初回に `.zed/settings.json` の LSP / for
 
 terminal、task、language server は Nix/devenv shell の toolchain を使います。infra は Docker Compose で起動します。
 
-| サービス                 | 接続先                                                        |
-| ------------------------ | ------------------------------------------------------------- |
-| PostgreSQL 18            | `postgres:5432`                                               |
-| Valkey 9（Redis 互換）   | `valkey:6379`                                                 |
-| OpenSearch 3             | `http://opensearch:9200`                                      |
-| MinIO（S3 互換）         | `http://minio:9000`（Console: `http://localhost:9001`）       |
-| Mailpit（SMTP + Web UI） | SMTP: `mailpit:1025` / UI: `http://localhost:8025`            |
-| SigNoz UI                | `http://localhost:3301`                                       |
-| SigNoz OTLP              | gRPC: `http://localhost:4317` / HTTP: `http://localhost:4318` |
+最初の 1 回は root の `setup.sh` を実行してください。script が `Nix -> devenv -> Docker / Docker Compose -> pnpm install -> pnpm gen` の順で確認し、不足していれば導入します。
+
+```bash
+./setup.sh
+```
+
+導入内容だけ確認したい場合は `./setup.sh --dry-run`、対話確認を省いて一気に進めたい場合は `./setup.sh --yes` を使います。
+
+`compose.yaml` がローカル infra/runtime の唯一の定義です。setup 後はまず `devenv shell -- pnpm infra:up` を実行し、Compose stack 全体を起動してください。これにより PostgreSQL / Valkey / OpenSearch / MinIO / Mailpit / SigNoz と runtime container がそろい、`.config/local*.toml` が参照する localhost ポートも同時に公開されます。
+
+| サービス                 | host / `devenv shell` からの接続先                              | Compose runtime からの接続先       |
+| ------------------------ | --------------------------------------------------------------- | ---------------------------------- |
+| PostgreSQL 18            | `localhost:5432`                                                | `postgres:5432`                    |
+| Valkey 9（Redis 互換）   | `localhost:6379`                                                | `valkey:6379`                      |
+| OpenSearch 3             | `http://localhost:9200`                                         | `http://opensearch:9200`           |
+| MinIO（S3 互換）         | API: `http://localhost:9000` / Console: `http://localhost:9001` | API: `http://minio:9000`           |
+| Mailpit（SMTP + Web UI） | SMTP: `localhost:1025` / UI: `http://localhost:8025`            | SMTP: `mailpit:1025`               |
+| SigNoz UI                | `http://localhost:3301`                                         | `http://signoz:8080`               |
+| SigNoz OTLP              | gRPC: `localhost:4317` / HTTP: `localhost:4318`                 | gRPC: `signoz-otel-collector:4317` |
+
+host / `devenv shell` で起動する Product/Admin backend は `.config/local.toml` と `.config/local.admin.toml` を使い、その接続先は `pnpm infra:up` が起動する `compose.yaml` の公開ポートに向きます。`docker compose exec runtime ...` で動かす runtime container には `compose.yaml` から `.config/compose.toml` と `.config/compose.admin.toml` を渡します。`setup.sh` は Docker daemon と Compose 構文だけを確認し、長時間生きる stack の起動までは行いません。
 
 Zed の project task から `pnpm dev:*`、`pnpm lint`、`pnpm check`、`pnpm test:run`、`pnpm build` を実行できます。すべて Nix/devenv shell の `pnpm` と toolchain を使います。
 
 Codex Desktop や host 側 terminal から検証する場合は、host の Node.js / Go / bash 差分を避けるため Nix/devenv shell 経由で実行します。
 
 ```bash
-devenv shell pnpm check
-devenv shell pnpm lint
-devenv shell pnpm test:run
-devenv shell pnpm build
+devenv shell -- pnpm check
+devenv shell -- pnpm lint
+devenv shell -- pnpm test:run
+devenv shell -- pnpm build
 ```
 
-初回は `devenv shell pnpm install` と `devenv shell pnpm gen` で依存と生成物をそろえます。OpenSpec CLI も Nix/devenv shell から利用します。
+`setup.sh` を使わず手で進める場合は、`devenv shell -- pnpm install` と `devenv shell -- pnpm gen` で依存と生成物をそろえます。OpenSpec CLI も Nix/devenv shell から利用します。
 
 ### オプション B: ローカルセットアップ（手動）
 
@@ -214,11 +227,7 @@ devenv shell pnpm build
 - Node.js 24.12+
 - pnpm 11.5.1（`corepack enable` で有効化）
 - Go 1.26.4+
-- PostgreSQL 18
-- Valkey 9（または Redis 7+）
-- OpenSearch 3
-- MinIO または S3 互換ストレージ
-- SMTP サーバー（開発時は Mailpit 推奨）
+- Docker / Docker Compose
 
 **手順**
 
@@ -230,14 +239,17 @@ pnpm install
 # 2. 生成物をそろえる（TypeSpec -> OpenAPI -> Admin SDK -> Go bindings）
 pnpm gen
 
-# 3. 環境変数を設定（.env.example を参考に）
-cp .env.example .env
-# .env を編集して DATABASE_URL, VALKEY_URL 等を設定
+# 3. host / devenv shell 用の tracked local config を確認
+# Product API: .config/local.toml
+# Admin API:   .config/local.admin.toml
 
-# 4. DB マイグレーションを実行
-pnpm db:migrate:up
+# 4. compose.yaml で local infra/runtime stack を起動
+pnpm infra:up
 
-# 5. 全サービスを起動
+# 5. DB マイグレーションを実行
+pnpm migrate:up
+
+# 6. 全サービスを起動
 pnpm dev:all
 ```
 
@@ -263,6 +275,14 @@ pnpm dev:admin-server # Admin Go API のみ（http://localhost:8081）
 pnpm dev:web          # 公開面 LP のみ（http://www.localhost:5173）
 pnpm dev:admin        # Admin Console のみ（http://admin.localhost:5176）
 pnpm dev:client       # dev:web のエイリアス
+```
+
+### Compose
+
+```bash
+pnpm infra:up         # compose.yaml で定義された local infra/runtime stack を起動
+pnpm infra:down       # compose.yaml の stack を停止
+pnpm infra:ps         # compose.yaml の service 状態を確認
 ```
 
 ### コード生成
@@ -298,9 +318,9 @@ pnpm format:check     # フォーマット確認のみ（変更なし）
 ### DB マイグレーション
 
 ```bash
-pnpm db:migrate:create <name>   # 新規マイグレーションファイルを作成（up + down のペア）
-pnpm db:migrate:up              # 未適用の全マイグレーションを適用
-pnpm db:migrate:down            # 直近 1 つのマイグレーションをロールバック
+pnpm migrate:create <name>      # 新規マイグレーションファイルを作成（up + down のペア）
+pnpm migrate:up                 # 未適用の全マイグレーションを適用
+pnpm migrate:down               # 直近 1 つのマイグレーションをロールバック
 ```
 
 ---
@@ -442,51 +462,48 @@ auth routes (`/login*`, `/logout`) と auth endpoints は `Cache-Control: no-sto
 
 ---
 
-## 環境変数リファレンス
+## 設定ファイルリファレンス
 
-`.env.example` をコピーして `.env` として使用してください。
+backend は個別の `.env` ではなく TOML 設定ファイルを読みます。
 
-```bash
-cp .env.example .env
-```
+- host / `devenv shell` の既定（`pnpm infra:up` が公開する port に接続）:
+  - Product API: `.config/local.toml`
+  - Admin API: `.config/local.admin.toml`
+- Docker Compose runtime の既定:
+  - Product API: `.config/compose.toml`
+  - Admin API: `.config/compose.admin.toml`
+- 上書き方法:
+  - Product API: `CONFIG_PATH`
+  - Admin API: `ADMIN_CONFIG_PATH`
+- 雛形:
+  - Product API: `.config/example.toml`
+  - Admin API: `.config/example.admin.toml`
 
-### 必須
+### compose-backed host local development 既定値
 
-| 変数                   | 説明                                                                               |
-| ---------------------- | ---------------------------------------------------------------------------------- |
-| `DATABASE_URL`         | PostgreSQL 接続先（例: `postgres://user:pass@localhost:5432/app?sslmode=disable`） |
-| `VALKEY_URL`           | Valkey 接続先（例: `redis://localhost:6379/0`）                                    |
-| `OPENSEARCH_URL`       | OpenSearch 接続先（例: `http://localhost:9200`）                                   |
-| `R2_ENDPOINT`          | R2/S3 互換 object storage endpoint                                                 |
-| `R2_REGION`            | object storage region                                                              |
-| `R2_BUCKET`            | object storage bucket 名                                                           |
-| `R2_ACCESS_KEY_ID`     | object storage アクセスキー                                                        |
-| `R2_SECRET_ACCESS_KEY` | object storage シークレットキー                                                    |
-| `SMTP_HOST`            | SMTP サーバーホスト                                                                |
-| `MAIL_FROM_ADDRESS`    | メールの From アドレス                                                             |
+| ファイル                   | 主要な接続先 / origin                                                                                                                                                                                   |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.config/local.toml`       | PostgreSQL `localhost:5432`, Valkey `localhost:6379`, OpenSearch `http://localhost:9200`, MinIO `http://localhost:9000`, Mailpit SMTP `localhost:1025`, OTLP `localhost:4317`                           |
+| `.config/local.admin.toml` | Admin origin `http://admin.localhost:5176`, Product origin `http://www.localhost:5173`, PostgreSQL `localhost:5432`, Valkey `localhost:6379`, OpenSearch `http://localhost:9200`, OTLP `localhost:4317` |
 
-`APP_ENV!=development` の場合は `APP_BEARER_TOKEN` も必須です（未設定では起動しません）。
+### 重要な既定値
 
-### オプション / デフォルトあり
-
-| 変数                        | デフォルト                                         | 説明                                             |
-| --------------------------- | -------------------------------------------------- | ------------------------------------------------ |
-| `APP_ENV`                   | `development`                                      | 実行環境（`development` 以外では厳格モード）     |
-| `APP_BEARER_TOKEN`          | `dev-app-auth`（dev のみ）                         | app API 用 Bearer token                          |
-| `PORT`                      | `8080`                                             | backend listen port                              |
-| `ALLOWED_ORIGINS`           | `http://www.localhost:5173,...`                    | CORS 許可オリジン（カンマ区切り）                |
-| `VALKEY_KEY_PREFIX`         | `app-template`                                     | Valkey key の共通プレフィックス                  |
-| `R2_USE_PATH_STYLE`         | `false`                                            | MinIO 等 path-style endpoint を使う場合は `true` |
-| `WEBAUTHN_RP_ID`            | `www.localhost`                                    | WebAuthn の Relying Party ID                     |
-| `ACCOUNT_RECOVERY_URL_BASE` | `http://www.localhost:5173/login/recovery/consume` | recovery リンクのベース URL                      |
-| `SMTP_PORT`                 | `587`                                              | SMTP ポート（Mailpit の場合は `1025`）           |
-| `SMTP_USERNAME`             | （空）                                             | SMTP ユーザー名                                  |
-| `SMTP_PASSWORD`             | （空）                                             | SMTP パスワード                                  |
+| TOML key                         | 既定値                                             | 説明                                         |
+| -------------------------------- | -------------------------------------------------- | -------------------------------------------- |
+| `app.environment`                | `development`                                      | 実行環境（`development` 以外では厳格モード） |
+| `app.bearer_token`               | `dev-app-auth`                                     | Product app API 用 Bearer token              |
+| `server.port`                    | Product `8080`, Admin `8081`                       | backend listen port                          |
+| `server.allowed_origins`         | `http://www.localhost:5173`                        | Product API の CORS 許可 origin              |
+| `auth.webauthn_rp_id`            | `www.localhost`                                    | Product WebAuthn RP ID                       |
+| `auth.account_recovery_url_base` | `http://www.localhost:5173/login/recovery/consume` | recovery link base URL                       |
+| `smtp.port`                      | `1025`                                             | Mailpit SMTP port                            |
+| `object_storage.use_path_style`  | `true`                                             | MinIO の path-style endpoint を使う          |
 
 ### 重要な起動条件
 
-- backend は起動時に PostgreSQL / Valkey / OpenSearch / object storage の疎通確認を行います。接続失敗時は起動しません
-- `APP_ENV!=development` では `APP_BEARER_TOKEN` 未設定のまま起動できません
+- Product backend は起動時に PostgreSQL / Valkey / OpenSearch / object storage の疎通確認を行います。接続失敗時は起動しません
+- Admin backend は起動時に PostgreSQL / OpenSearch の疎通確認を行います。接続失敗時は起動しません
+- `development` 以外では Product `app.bearer_token` を空にできません
 
 ---
 
@@ -509,13 +526,13 @@ cp .env.example .env
 
 ```bash
 # 新規マイグレーションファイルを作成（up + down のペア自動生成）
-pnpm db:migrate:create add_auth_tables
+pnpm migrate:create add_auth_tables
 
 # 未適用のマイグレーションを全て適用
-pnpm db:migrate:up
+pnpm migrate:up
 
 # 直近 1 つのマイグレーションをロールバック
-pnpm db:migrate:down
+pnpm migrate:down
 ```
 
 GORM の import は `packages/backend/internal/adapter/postgres/**` のみに許可されています。
