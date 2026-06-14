@@ -2,7 +2,11 @@ import { defineConfig, devices } from '@playwright/test';
 
 const chromiumExecutablePath =
   process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ?? process.env.AGENT_BROWSER_EXECUTABLE_PATH;
-const videoMode = process.env.PLAYWRIGHT_DISABLE_VIDEO === '1' ? 'off' : 'retain-on-failure';
+/* host 開発では system Chrome を使うため、Playwright の ffmpeg download が未実行でも E2E を通せるよう動画保存は opt-in にする。 */
+const videoMode =
+  process.env.PLAYWRIGHT_ENABLE_VIDEO === '1' && process.env.PLAYWRIGHT_DISABLE_VIDEO !== '1'
+    ? 'retain-on-failure'
+    : 'off';
 
 /**
  * Playwright E2E テスト設定

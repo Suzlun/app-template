@@ -39,10 +39,9 @@ in
   ];
 
   env = {
-    AGENT_BROWSER_EXECUTABLE_PATH = lib.mkDefault "/usr/bin/chromium";
-    TOOLCHAIN_NODE_VERSION = "24.12.0";
+    TOOLCHAIN_NODE_VERSION = "24.14.1";
     TOOLCHAIN_PNPM_VERSION = pnpmVersion;
-    TOOLCHAIN_GO_VERSION = "1.26.4";
+    TOOLCHAIN_GO_VERSION = "1.26.2";
     TOOLCHAIN_GORM_VERSION = "1.31.0";
     TOOLCHAIN_GOLANG_MIGRATE_VERSION = "4.18.3";
     TOOLCHAIN_OAPI_CODEGEN_VERSION = "2.4.1";
@@ -61,6 +60,18 @@ in
     export PLAYWRIGHT_BROWSERS_PATH="$DEVENV_CACHE_ROOT/ms-playwright"
     export PNPM_HOME="$DEVENV_CACHE_ROOT/pnpm"
     export COREPACK_HOME="$DEVENV_CACHE_ROOT/corepack"
+
+    # host OS ごとに実在する Chromium 系ブラウザだけを Playwright へ渡し、
+    # macOS で Linux 固定の `/usr/bin/chromium` を参照して E2E が落ちることを防ぐ。
+    if [ -z "''${AGENT_BROWSER_EXECUTABLE_PATH:-}" ]; then
+      if [ -x "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" ]; then
+        export AGENT_BROWSER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+      elif [ -x /usr/bin/chromium ]; then
+        export AGENT_BROWSER_EXECUTABLE_PATH="/usr/bin/chromium"
+      elif [ -x /usr/bin/chromium-browser ]; then
+        export AGENT_BROWSER_EXECUTABLE_PATH="/usr/bin/chromium-browser"
+      fi
+    fi
 
     mkdir -p \
       "$GOPATH" \

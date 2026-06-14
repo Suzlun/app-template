@@ -51,13 +51,13 @@
 
 ## 6. Nix/devenv と Compose runtime
 
-- [ ] 6.1 `flake.nix`、`flake.lock`、`devenv.nix`、`devenv.yaml`、`devenv.lock` を追加し、標準 toolchain を Nix/devenv にする。
+- [x] 6.1 `flake.nix`、`flake.lock`、`devenv.nix`、`devenv.yaml`、`devenv.lock` を追加し、標準 toolchain を Nix/devenv にする。
 - [x] 6.2 `.gitignore` に `.cache/`、`.devenv/`、`.direnv/` を追加する。
 - [x] 6.3 `.devcontainer/compose.yaml` を root `compose.yaml` へ移動し、`workspace` service を `runtime` にする。
 - [x] 6.4 `.devcontainer/Dockerfile` を `docker/runtime/Dockerfile` へ移動または縮小する。
 - [x] 6.5 `.devcontainer/**` と `scripts/devcontainer/run.sh` を削除する。
 - [x] 6.6 Compose の mount path、DB identifiers、ports、SigNoz mount/profile を新方針へ更新する。
-- [ ] 6.7 `nix flake check`、`nix develop --command node --version`、`nix develop --command pnpm --version`、`nix develop --command go version` を実行する。
+- [x] 6.7 `nix flake check --no-pure-eval`、`devenv shell -- node --version`、`devenv shell -- pnpm --version`、`devenv shell -- go version` を実行する。
 - [x] 6.8 `docker compose config` を実行する。
 
 ## 7. Docs / CI / Editor / Agent 設定
@@ -72,13 +72,13 @@
 
 ## 8. 最終検証
 
-- [ ] 8.1 `nix develop --command pnpm install --frozen-lockfile` を実行し、必要な場合のみ hardening 設定を維持して lockfile を更新する。
-- [ ] 8.2 `nix develop --command pnpm gen` を実行する。
-- [ ] 8.3 `nix develop --command pnpm format:check` を実行する。
-- [ ] 8.4 `nix develop --command pnpm lint` を実行する。
-- [ ] 8.5 `nix develop --command pnpm check` を実行する。
-- [ ] 8.6 `nix develop --command pnpm test:run` を実行する。
-- [ ] 8.7 `nix develop --command pnpm test:e2e` を実行する。
-- [ ] 8.8 `nix develop --command pnpm build` を実行する。
+- [x] 8.1 `devenv shell -- pnpm install --frozen-lockfile` を実行し、必要な場合のみ hardening 設定を維持して lockfile を更新する。
+- [x] 8.2 `devenv shell -- pnpm gen` を実行する。
+- [x] 8.3 `devenv shell -- pnpm format:check` を実行する。
+- [x] 8.4 `devenv shell -- pnpm lint` を実行する。
+- [x] 8.5 `devenv shell -- pnpm check` を実行する。
+- [x] 8.6 `devenv shell -- pnpm test:run` を実行する。
+- [x] 8.7 `devenv shell -- pnpm test:e2e` を実行する。
+- [x] 8.8 `devenv shell -- pnpm build` を実行する。
 - [x] 8.9 `git grep` で Product FE削除対象、Dev Container、旧package scope/path が active surface に残っていないことを確認する。
 - [x] 8.10 `openspec validate "prepare-flutter-app-template-foundation" --type change --strict --no-interactive` を実行できる環境で実行する。

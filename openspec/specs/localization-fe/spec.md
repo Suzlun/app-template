@@ -1,6 +1,6 @@
 ## Purpose
 
-公開 Web、認証済み Product アプリ、Admin Console の frontend ロケール要件を定義し、URL ロケール、保存済み言語設定、辞書網羅性、表示面ごとの i18n 所有境界を扱う。
+公開 Web LP と Admin Console の frontend ロケール要件を定義し、URL ロケール、保存済み Admin 言語設定、辞書網羅性、表示面ごとの i18n 所有境界を扱う。
 
 ## Requirements
 
@@ -38,49 +38,6 @@
 - **前提** 閲覧者が未対応ロケールを含む公開 URL を開く
 - **操作** システムがロケールを検証する
 - **結果** システムは未対応ロケールのページ内容を表示せず、対応ロケールへの誘導または not found を返す
-
-### Requirement: 認証済みアプリは AccountSetting.locale で SHALL 表示される
-
-システムは、AccountSetting.locale が利用可能になった後、ログイン中 Account の標準言語で認証済みアプリの文言を SHALL 表示する。認証済みアプリの handwritten frontend domain は Account を root state として SHALL 扱い、AccountSetting を Account の child state として公開しなければならない（MUST）。frontend domain の Account entrypoint は `packages/frontend/domain/src/account` と `useAccount` でなければならず（MUST）、`packages/frontend/domain/src/account-settings` や `useAccountSetting` を root entrypoint として提供してはならない（MUST NOT）。認証済みアプリは、ログイン中利用者が AccountSetting.locale を確認・更新できる設定画面を SHALL 提供する。AccountSetting.locale を更新した場合、別ブラウザや別端末の設定を要求せずに、表示中のアプリ文言も SHALL 更新する。認証前に AccountSetting を取得できない場合、未認証画面は端末に保存された対応 locale を最優先し、存在しない場合はアクセス時のブラウザまたは OS 言語から対応 locale へ SHALL 解決し、Product API の認証済みアクセスを要求してはならない（MUST NOT）。アクセストークンリフレッシュ後に DB 由来の AccountSetting snapshot が返った場合、認証済みアプリはその locale を SHALL 採用し、未ログイン fallback 表示を保存済み AccountSetting.locale へ置き換える。認証済みアプリの UI ラベル、検証メッセージ、ナビゲーション、空状態、認証案内はロケール辞書から SHALL 取得する。
-
-**Customer Context**
-
-利用者は仕事用 PC、個人端末、予備端末など複数の環境から認証済みアプリへアクセスする。同じ Account なのに端末ごとに言語を選び直す必要があると、設定の信頼性が低く、メール通知との言語も一致しない。
-
-**要求**
-
-- システムは、AccountSetting.locale が利用可能になった後、ログイン中 Account の標準言語で認証済みアプリの文言を SHALL 表示する。
-- 認証済みアプリの handwritten frontend domain は Account を root state として SHALL 扱い、AccountSetting を Account の child state として公開しなければならない（MUST）。
-- frontend domain の Account entrypoint は `packages/frontend/domain/src/account` と `useAccount` でなければならず（MUST）、`packages/frontend/domain/src/account-settings` や `useAccountSetting` を root entrypoint として提供してはならない（MUST NOT）。
-- 認証済みアプリは、ログイン中利用者が AccountSetting.locale を確認・更新できる設定画面を SHALL 提供する。
-- AccountSetting.locale を更新した場合、別ブラウザや別端末の設定を要求せずに、表示中のアプリ文言も SHALL 更新する。
-- 認証前に AccountSetting を取得できない場合、未認証画面は端末に保存された対応 locale を最優先し、存在しない場合はアクセス時のブラウザまたは OS 言語から対応 locale へ SHALL 解決し、Product API の認証済みアクセスを要求してはならない（MUST NOT）。
-- アクセストークンリフレッシュ後に DB 由来の AccountSetting snapshot が返った場合、認証済みアプリはその locale を SHALL 採用し、未ログイン fallback 表示を保存済み AccountSetting.locale へ置き換える。
-- 認証済みアプリの UI ラベル、検証メッセージ、ナビゲーション、空状態、認証案内はロケール辞書から SHALL 取得する。
-
-#### Scenario: ログイン後は保存済み AccountSetting.locale で表示される (LOCALIZATION-FE-S004)
-
-- **前提** 利用者が AccountSetting.locale `en` を持つ Account でログインしている
-- **操作** 認証済みアプリの画面が表示される
-- **結果** `useAccount` の Account state は AccountSetting.locale `en` を child state として保持し、ナビゲーション、見出し、操作ラベル、説明文は英語で表示される
-
-#### Scenario: AccountSetting.locale を更新すると表示言語が切り替わる (LOCALIZATION-FE-S005)
-
-- **前提** 利用者が認証済みアプリの設定画面を開いている
-- **操作** 利用者が言語を `ja` から `en` に更新する
-- **結果** 設定は成功として表示され、認証済みアプリの表示文言は英語へ切り替わる
-
-#### Scenario: 未認証画面は端末保存言語またはシステム言語で表示される (LOCALIZATION-FE-S006)
-
-- **前提** 利用者が AccountSetting を取得できない状態でログイン画面を開き、端末の `localStorage` またはブラウザ/OS 言語が対応 locale に解決できる
-- **操作** ログイン画面が表示される
-- **結果** 画面は端末保存言語を優先し、存在しない場合はアクセス時のブラウザ/OS 言語に基づく対応ロケール文言を表示し、Product API の認証済み設定取得を要求しない
-
-#### Scenario: refresh 後は DB 由来の AccountSetting snapshot で表示される (LOCALIZATION-FE-S012)
-
-- **前提** 利用者が未ログイン fallback locale `ja` で表示されており、DB の AccountSetting.locale は `en` である
-- **操作** アクセストークンリフレッシュが成功し、AccountSetting snapshot に `locale: "en"` が含まれる
-- **結果** 認証済みアプリの表示文言は保存済み AccountSetting.locale の英語へ切り替わる
 
 ### Requirement: Admin Console はオペレーター言語設定で SHALL 表示される
 
@@ -120,7 +77,7 @@
 
 ### Requirement: Frontend i18n 境界は辞書網羅性と表示面所有を SHALL 強制する
 
-システムは、`packages/web`、`packages/frontend/app`、`packages/admin` が所有する locale JSON files について、対応ロケール `ja` と `en` の辞書 key 差分を SHALL 検出する。システムは、`packages/frontend/i18n` に app/web/admin 固有の locale JSON files が存在しないことを SHALL 検証する。システムは、ユーザー向け UI 文言が各表示面の locale JSON files と共有 i18n 実装を経由することを SHALL 強制し、未翻訳の直書き UI literal を SHALL 拒否する。`packages/frontend/ui` と `packages/frontend/domain` は、`@app-template/i18n` または app/web/admin の i18n module を import してはならない（MUST NOT）。`packages/web`、`packages/frontend/app`、`packages/admin` は互いの locale JSON files を import してはならない（MUST NOT）。再利用 UI package は表示言語、固定 locale formatter、app 固有の認証文言、または `DeviceManager` のように具体的な locale JSON files を必要とする component を所有してはならない（MUST NOT）。
+システムは、公開 Web LP と Admin Console が所有する locale JSON files について、対応ロケール `ja` と `en` の辞書 key 差分を SHALL 検出する。システムは、`packages/web/i18n` に表示面固有の locale JSON files が存在しないことを SHALL 検証する。システムは、ユーザー向け UI 文言が各表示面の locale JSON files と共有 i18n 実装を経由することを SHALL 強制し、未翻訳の直書き UI literal を SHALL 拒否する。`packages/web/ui` は、`@app-template/web-i18n` または表示面固有の i18n module を import してはならない（MUST NOT）。`packages/web/lp` と `packages/web/admin/app` は互いの locale JSON files を import してはならない（MUST NOT）。再利用 UI package は表示言語、固定 locale formatter、app 固有文言、または具体的な locale JSON files を必要とする component を所有してはならない（MUST NOT）。
 
 **Customer Context**
 
@@ -128,27 +85,27 @@
 
 **要求**
 
-- システムは、app/web/admin が所有する locale JSON files について、対応ロケール `ja` と `en` の辞書 key 差分を SHALL 検出する。
-- システムは、`packages/frontend/i18n` に app/web/admin 固有の locale JSON files が存在しないことを SHALL 検証する。
+- システムは、公開 Web LP と Admin Console が所有する locale JSON files について、対応ロケール `ja` と `en` の辞書 key 差分を SHALL 検出する。
+- システムは、`packages/web/i18n` に表示面固有の locale JSON files が存在しないことを SHALL 検証する。
 - システムは、ユーザー向け UI 文言が各表示面の locale JSON files と共有 i18n 実装を経由することを SHALL 強制し、未翻訳の直書き UI literal を SHALL 拒否する。
-- `packages/frontend/ui` と `packages/frontend/domain` は、`@app-template/i18n` または app/web/admin の i18n module を import してはならない（MUST NOT）。
-- `packages/web`、`packages/frontend/app`、`packages/admin` は互いの locale JSON files を import してはならない（MUST NOT）。
-- 再利用 UI package は表示言語、固定 locale formatter、app 固有の認証文言、または具体的な locale JSON files を必要とする component を所有してはならない（MUST NOT）。
+- `packages/web/ui` は、`@app-template/web-i18n` または表示面固有の i18n module を import してはならない（MUST NOT）。
+- `packages/web/lp` と `packages/web/admin/app` は互いの locale JSON files を import してはならない（MUST NOT）。
+- 再利用 UI package は表示言語、固定 locale formatter、app 固有文言、または具体的な locale JSON files を必要とする component を所有してはならない（MUST NOT）。
 
 #### Scenario: 辞書欠落 key は標準検証で失敗する (LOCALIZATION-FE-S010)
 
-- **前提** app/web/admin のいずれかが所有する locale JSON files で、対応ロケール `ja` と `en` の key に差分がある
+- **前提** 公開 Web LP または Admin Console が所有する locale JSON files で、対応ロケール `ja` と `en` の key に差分がある
 - **操作** 標準 lint または辞書網羅性検証を実行する
 - **結果** 欠落 key path と所有 package が報告され、検証は失敗する
 
 #### Scenario: 未翻訳 UI literal と i18n import 境界違反は標準 lint で失敗する (LOCALIZATION-FE-S011)
 
-- **前提** 対象 UI ソースに未翻訳のユーザー向け直書き文言、または UI/domain からの `@app-template/i18n` import が存在する
+- **前提** 対象 UI ソースに未翻訳のユーザー向け直書き文言、または shared UI からの `@app-template/web-i18n` import が存在する
 - **操作** 標準 lint を実行する
 - **結果** 違反した file と rule が報告され、検証は失敗する
 
 #### Scenario: 再利用 UI は表示言語を所有せず具体 component は表示面へ移される (LOCALIZATION-FE-S013)
 
-- **前提** locale JSON files、固定 locale formatter、または app 固有文言を必要とする concrete component が存在する
+- **前提** locale JSON files、固定 locale formatter、または表示面固有文言を必要とする concrete component が存在する
 - **操作** 実装者が component の配置と imports を検証する
-- **結果** concrete component は app/web/admin の所有 package に置かれ、`packages/frontend/ui` は localized label と formatter を props として受け取る reusable primitive だけを提供する
+- **結果** concrete component は `packages/web/lp` または `packages/web/admin/app` の所有 package に置かれ、`packages/web/ui` は localized label と formatter を props として受け取る reusable primitive だけを提供する

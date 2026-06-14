@@ -6,7 +6,7 @@ Admin Console の frontend auth requirements をまとめる。静的 Admin fron
 
 ### Requirement: オペレーターは passkey でログインする
 
-Admin Console は `/login` route で passkey 専用ログイン画面を SHALL 提供する。Login UI は browser WebAuthn API と `packages/admin/domain` の auth flow を使用し、`packages/admin/api` 経由で same-origin の `/api/v1/auth/passkey/*` API を呼び出さなければならない（SHALL）。Login 成功時、Admin frontend は response body の operator accessToken と session metadata を memory state に保持し、operator refreshToken は Admin backend が `HttpOnly; Secure; SameSite=Lax` Cookie として管理しなければならない（SHALL）。Admin auth UI は SvelteKit server hooks、server load/actions、package-local BFF route を認証判断に使用してはならない（MUST NOT）。Admin auth UI は Product auth API または Product SDK を使用して operator session を作成してはならない（MUST NOT）。認証失敗 UI は operator 存在、passkey 登録状態、setup token 状態を推測できない秘匿的な文言を保たなければならない（MUST）。
+Admin Console は `/login` route で passkey 専用ログイン画面を SHALL 提供する。Login UI は browser WebAuthn API と `packages/web/admin/domain` の auth flow を使用し、`packages/web/admin/api` 経由で same-origin の `/api/v1/auth/passkey/*` API を呼び出さなければならない（SHALL）。Login 成功時、Admin frontend は response body の operator accessToken と session metadata を memory state に保持し、operator refreshToken は Admin backend が `HttpOnly; Secure; SameSite=Lax` Cookie として管理しなければならない（SHALL）。Admin auth UI は SvelteKit server hooks、server load/actions、package-local BFF route を認証判断に使用してはならない（MUST NOT）。Admin auth UI は Product auth API または Product SDK を使用して operator session を作成してはならない（MUST NOT）。認証失敗 UI は operator 存在、passkey 登録状態、setup token 状態を推測できない秘匿的な文言を保たなければならない（MUST）。
 
 **Customer Context**
 
@@ -100,7 +100,7 @@ Admin route が cache されると、古い認証状態、顧客 PII、監査ロ
 
 ### Requirement: 認証済みオペレーターは自身の passkey を管理できる
 
-認証済みオペレーターは画面上で自身の登録済み passkey credential 一覧を SHALL 確認できる。新しい passkey を追加する WebAuthn 登録フローを SHALL 提供し、特定 passkey の削除アクションを SHALL 提供する。Passkey management UI は browser WebAuthn API と `packages/admin/domain` の flow を使用し、`packages/admin/api` 経由で same-origin の `/api/v1/auth/passkeys*` API を呼び出さなければならない（SHALL）。credential handle / public key は認証 material として画面に露出せず、削除対象の識別には公開可能な passkey identifier と登録 metadata を使わなければならない（MUST）。最後の 1 件の削除操作は無効化しなければならない（MUST）。
+認証済みオペレーターは画面上で自身の登録済み passkey credential 一覧を SHALL 確認できる。新しい passkey を追加する WebAuthn 登録フローを SHALL 提供し、特定 passkey の削除アクションを SHALL 提供する。Passkey management UI は browser WebAuthn API と `packages/web/admin/domain` の flow を使用し、`packages/web/admin/api` 経由で same-origin の `/api/v1/auth/passkeys*` API を呼び出さなければならない（SHALL）。credential handle / public key は認証 material として画面に露出せず、削除対象の識別には公開可能な passkey identifier と登録 metadata を使わなければならない（MUST）。最後の 1 件の削除操作は無効化しなければならない（MUST）。
 
 **Customer Context**
 
