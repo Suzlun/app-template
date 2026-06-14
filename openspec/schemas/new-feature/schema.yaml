@@ -215,14 +215,14 @@ artifacts:
          - Steps
          - Expected Behavior
 
-      2) `### E2E Test (Playwright)`
+      2) `### Flow/Integration Test`
          Columns:
-         - E2E ID
-         - Playwright Test Name
+         - FIT ID
+         - Test Name
          - Related Scenario
          - Category
          - Summary
-         - Steps (Playwright)
+         - Steps (Test)
          - Expected Behavior
 
       3) `### Integration Test (Endpoint)`
@@ -250,14 +250,14 @@ artifacts:
       - Requirement reference ID: `<DOMAIN>-<LAYER>-R###` (e.g., `USER-MGMT-BE-R002`)
       - Category (`CAT`): `HAP`, `ERR`, `BND`, `PERM`, `SEC`, `A11Y`, `PERF`, `REG`, `SMK`
       - UAT ID: `UAT-<DOMAIN>-<LAYER>-<CAT>-###`
-      - E2E ID: `E2E-<DOMAIN>-<LAYER>-<CAT>-###`
+      - FIT ID: `FIT-<DOMAIN>-<LAYER>-<CAT>-###`
       - IT ID: `IT-<DOMAIN>-<LAYER>-<CAT>-###`
       - UT ID: `UT-<DOMAIN>-<LAYER>-<CAT>-###`
 
       Traceability rules:
       - UAT rows SHOULD reference a requirement reference ID (e.g., `USER-MGMT-FE-R001`) and the requirement name.
-      - E2E/IT/UT rows SHOULD reference a Scenario ID.
-      - A single Scenario ID may be covered by multiple tests (1:N). Add multiple E2E/IT/UT rows referencing the same Scenario ID as needed (happy/error/boundary/security/performance/etc.).
+      - FIT/IT/UT rows SHOULD reference a Scenario ID.
+      - A single Scenario ID may be covered by multiple tests (1:N). Add multiple FIT/IT/UT rows referencing the same Scenario ID as needed (happy/error/boundary/security/performance/etc.).
       - Automated tests MUST include the Scenario ID in the test title in brackets:
         - Example: `test('[USER-MGMT-FE-S001] ユーザー作成が成功する', async () => { ... })`
 

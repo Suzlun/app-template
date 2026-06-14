@@ -67,7 +67,6 @@ Before beginning any work, you MUST summarize your understanding of the Credo be
 - All unit tests: `pnpm test:run`
 - Server tests: `pnpm test:server`
 - Client tests: `pnpm test:client`
-- E2E: `pnpm test:e2e`
 
 ## Architecture Notes
 

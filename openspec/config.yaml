@@ -6,7 +6,7 @@ context: |
   Frontend packages: packages/frontend/app (SvelteKit app on Cloudflare Workers), packages/frontend/domain (shared domain logic), packages/frontend/api (API client), packages/frontend/ui (UI primitives)
   Backend packages: packages/backend/cmd and packages/backend/internal/* (Go API)
   API contract: packages/typespec/main.tsp is the source of truth; pnpm gen regenerates OpenAPI, frontend SDK, and Go bindings
-  Testing: Vitest (unit/component/integration), Playwright (e2e), Go tests
+  Testing: Vitest (unit/component/integration), Go tests
 
   Architecture:
   - frontend/app -> frontend/domain -> frontend/api

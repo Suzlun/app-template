@@ -33,7 +33,7 @@ TypeSpec を API 契約の正とし、Svelte の Web surface と Go バックエ
 | 分類               | 内容                                                         |
 | ------------------ | ------------------------------------------------------------ |
 | フロントエンド     | SvelteKit 2, Svelte 5, TypeScript, Vite                      |
-| テスト（フロント） | Vitest, Playwright                                           |
+| テスト（フロント） | Vitest                                                       |
 | API 契約           | TypeSpec 1.8, OpenAPI 3, Spectral, Orval                     |
 | コード生成         | Orval（Admin SDK）, oapi-codegen 2.4（Go bindings）          |
 | バックエンド       | Go 1.26.4, Gin 1.11, GORM 1.31, golang-migrate 4.18          |
@@ -64,7 +64,7 @@ TypeSpec を API 契約の正とし、Svelte の Web surface と Go バックエ
 │   ├── go/                      # Go build / lint / format / test / migrate
 │   ├── hooks/                   # pre-commit 内で呼ばれるフックスクリプト
 │   └── security/                # govulncheck / gitleaks / osv-scanner
-├── tests/                       # Playwright E2E テスト
+├── tests/                       # root-level Vitest / boundary tests
 ├── packages/
 │   ├── typespec/                # API 契約（唯一の正）
 │   │   ├── main.tsp             # エントリポイント
@@ -306,7 +306,6 @@ pnpm check            # TypeSpec compile + frontend 型チェック + Go build
 pnpm test:run         # web + admin + ui + Go ユニットテスト（全て）
 pnpm test:server      # Go ユニットテストのみ
 pnpm test:client      # web + admin フロントテストのみ
-pnpm test:e2e         # Playwright E2E テスト
 pnpm build            # Go backend + frontend をビルド
 ```
 

@@ -11,7 +11,6 @@ ARG GOLANGCI_LINT_VERSION=1.64.8
 ARG WRANGLER_VERSION=4.57.0
 ARG OPENSPEC_VERSION=1.3.1
 ARG OPENCODE_VERSION=1.15.11
-ARG AGENT_BROWSER_VERSION=0.27.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
@@ -19,14 +18,11 @@ ENV PNPM_HOME=/home/node/.local/share/pnpm
 ENV GOPATH=/go
 ENV GOMODCACHE=/go/pkg/mod
 ENV GOCACHE=/home/node/.cache/go-build
-ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
-ENV AGENT_BROWSER_EXECUTABLE_PATH=/usr/bin/chromium
 ENV PATH=/usr/local/go/bin:/home/node/.local/bin:/home/node/.npm-global/bin:/home/node/.local/share/pnpm:/go/bin:$PATH
 
 RUN apt-get update && apt-get install -y \
     build-essential \
     ca-certificates \
-    chromium \
     curl \
     git \
     jq \
@@ -39,45 +35,6 @@ RUN apt-get update && apt-get install -y \
     redis-tools \
     unzip \
     xz-utils \
-    libnspr4 \
-    libnss3 \
-    libdbus-1-3 \
-    libatk1.0-0 \
-    libatspi2.0-0 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxfixes3 \
-    libxrandr2 \
-    libgbm1 \
-    libxkbcommon0 \
-    libasound2 \
-    libx11-xcb1 \
-    libxcursor1 \
-    libgtk-3-0 \
-    libgtk-4-1 \
-    libgraphene-1.0-0 \
-    libwoff1 \
-    libvpx7 \
-    libopus0 \
-    libgstreamer1.0-0 \
-    libgstreamer-gl1.0-0 \
-    gstreamer1.0-libav \
-    gstreamer1.0-plugins-base \
-    gstreamer1.0-plugins-good \
-    gstreamer1.0-plugins-bad \
-    flite \
-    libavif15 \
-    libharfbuzz-icu0 \
-    libepoxy0 \
-    libenchant-2-2 \
-    libsecret-1-0 \
-    libhyphen0 \
-    libwayland-egl1 \
-    libwayland-client0 \
-    libmanette-0.2-0 \
-    libatk-bridge2.0-0 \
-    libgles2 \
-    libx264-164 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN arch="$(dpkg --print-architecture)" \
@@ -102,7 +59,6 @@ RUN corepack enable
 
 RUN mkdir -p \
     /go/pkg/mod \
-    /ms-playwright \
     /home/node/.cache/go-build \
     /home/node/.local/bin \
     /home/node/.local/share/pnpm \
@@ -110,7 +66,6 @@ RUN mkdir -p \
     /home/node/.npm-global \
     && chown -R node:node \
     /go \
-    /ms-playwright \
     /home/node/.cache \
     /home/node/.local \
     /home/node/.npm-global \
@@ -120,7 +75,6 @@ RUN mkdir -p \
     'export GOPATH="/go"' \
     'export GOMODCACHE="/go/pkg/mod"' \
     'export GOCACHE="/home/node/.cache/go-build"' \
-    'export PLAYWRIGHT_BROWSERS_PATH="/ms-playwright"' \
     'export PATH="/usr/local/go/bin:/home/node/.local/bin:/home/node/.npm-global/bin:/home/node/.local/share/pnpm:/go/bin:$PATH"' \
     > /etc/profile.d/99-template-paths.sh
 
@@ -130,9 +84,7 @@ RUN corepack prepare pnpm@${PNPM_VERSION} --activate
 
 ENV GOBIN=/home/node/.local/bin
 
-# agent-browser install は Chrome for Testing を取得し、Linux ARM64 で失敗する。
-# ブラウザ本体は apt の Chromium に統一し、AGENT_BROWSER_EXECUTABLE_PATH で CLI 全体から参照させる。
-RUN npm install -g "wrangler@${WRANGLER_VERSION}" "@typespec/compiler@${TYPESPEC_VERSION}" "@fission-ai/openspec@${OPENSPEC_VERSION}" "opencode-ai@${OPENCODE_VERSION}" "agent-browser@${AGENT_BROWSER_VERSION}"
+RUN npm install -g "wrangler@${WRANGLER_VERSION}" "@typespec/compiler@${TYPESPEC_VERSION}" "@fission-ai/openspec@${OPENSPEC_VERSION}" "opencode-ai@${OPENCODE_VERSION}"
 
 RUN go install golang.org/x/tools/gopls@latest \
     && go install golang.org/x/tools/cmd/goimports@latest \

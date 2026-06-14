@@ -122,7 +122,7 @@ erDiagram
 - Key Flows: <!-- TODO: 主要 flow を input -> processing -> output の形で日本語記述する。 -->
 - Dependencies: <!-- TODO: 依存する package / external interface と、その理由を日本語で記述する。 -->
 - Error Handling: <!-- TODO: error taxonomy、user-facing message、logging、retry policy を日本語で記述する。 -->
-- Testing Strategy: <!-- TODO: UT/IT/E2E で何を検証し、どの Scenario ID に対応するかを日本語で記述する。 -->
+- Testing Strategy: <!-- TODO: UT/IT/flow で何を検証し、どの Scenario ID に対応するかを日本語で記述する。 -->
 - Non-Functional: <!-- TODO: availability、ops、monitoring、metrics を日本語で記述する。 -->
 - Performance: <!-- TODO: performance 要件、bottleneck、measurement/optimization plan を日本語で記述する。 -->
 - Security: <!-- TODO: authz、validation、PII handling、audit log、threat model highlights を日本語で記述する。 -->
@@ -151,11 +151,11 @@ flowchart TD
 | ------------------------------------------- | ------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------- | ----------------------------------------------------- |
 | <!-- TODO: 例: UAT-USER-MGMT-FE-HAP-001 --> | <!-- TODO: 例: USER-MGMT-FE-R001 + requirement name --> | <!-- TODO: 仕様概要を日本語で 1-2 行記述する。 --> | <!-- TODO: Customer Context 由来の顧客課題を日本語で記述する。 --> | <!-- TODO: login / initial state からの詳細手順を日本語で記述する。 --> | <!-- TODO: 観測可能な期待挙動を日本語で記述する。 --> |
 
-### E2E Test (Playwright)
+### Flow/Integration Test
 
-| E2E ID                                      | Playwright Test Name                                          | Related Scenario                                  | Category                                     | Summary                                      | Steps (Playwright)                                           | Expected Behavior                                     |
-| ------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------- | -------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------- |
-| <!-- TODO: 例: E2E-USER-MGMT-FE-HAP-001 --> | <!-- TODO: 例: [USER-MGMT-FE-S001] ユーザー作成が成功する --> | <!-- TODO: Scenario ID。例: USER-MGMT-FE-S001 --> | <!-- TODO: Category。例: HAP/ERR/BND/... --> | <!-- TODO: 概要を日本語で 1 行記述する。 --> | <!-- TODO: Playwright で実行する手順を日本語で記述する。 --> | <!-- TODO: 観測可能な期待挙動を日本語で記述する。 --> |
+| FIT ID                                      | Test Name                                                     | Related Scenario                                  | Category                                     | Summary                                      | Steps (Test)                                                         | Expected Behavior                                     |
+| ------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------- | -------------------------------------------- | -------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------- |
+| <!-- TODO: 例: FIT-USER-MGMT-FE-HAP-001 --> | <!-- TODO: 例: [USER-MGMT-FE-S001] ユーザー作成が成功する --> | <!-- TODO: Scenario ID。例: USER-MGMT-FE-S001 --> | <!-- TODO: Category。例: HAP/ERR/BND/... --> | <!-- TODO: 概要を日本語で 1 行記述する。 --> | <!-- TODO: setup -> execute -> assert の流れを日本語で記述する。 --> | <!-- TODO: 観測可能な期待挙動を日本語で記述する。 --> |
 
 ### Integration Test (Endpoint)
 
@@ -179,7 +179,7 @@ flowchart TD
 
 ## Acceptance Criteria
 
-- <!-- TODO: acceptance criteria を日本語で記述する。UAT/E2E/IT/UT と non-functional requirements の条件を含める。 -->
+- <!-- TODO: acceptance criteria を日本語で記述する。UAT/FIT/IT/UT と non-functional requirements の条件を含める。 -->
 
 ## Open Issues
 

@@ -1,5 +1,5 @@
 ---
-description: Frontend implementation specialist for packages/web. Loads gpt-ux, coding-guardian, orchestration-playbook, and agent-browser skills to implement, fix, investigate, and iterate until reviewer approval, then returns results to the caller.
+description: Frontend implementation specialist for packages/web. Loads gpt-ux, coding-guardian, and orchestration-playbook skills to implement, fix, investigate, and iterate until reviewer approval, then returns results to the caller.
 mode: subagent
 model: opencode-go/mimo-v2.5-pro
 reasoningEffort: 'high'
@@ -57,7 +57,6 @@ You are the `unit/frontend/engineer` subagent. You implement, fix, and investiga
 - Load `orchestration-playbook` via `skill` and use its templates for replies and stop conditions
 - Load `coding-guardian` via `skill` and follow its workflow for every change
 - Load `claude-ux` via `skill` and follow its UI/UX guidelines for every component and screen
-- Load `agent-browser` via `skill` and use it for browser-based verification, screenshots, and interactive frontend checks when the task requires runtime UI evidence
 - Pin `unit/frontend/reviewer` as the mandatory review gate before completion
 
 ## Required inputs to verify first

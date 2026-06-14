@@ -240,9 +240,7 @@ function getTestFiles() {
     name === 'build' ||
     name === '.git' ||
     name === '.wrangler' ||
-    name === 'coverage' ||
-    name === 'playwright-report' ||
-    name === 'test-results';
+    name === 'coverage';
 
   if (ensureDirExists('packages')) {
     testFiles.push(...collectFiles(path.join(REPO_ROOT, 'packages'), testFileMatcher, ignoreDir));

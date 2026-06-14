@@ -3,6 +3,6 @@
   "compilerOptions": {
     "rootDir": "."
   },
-  "include": ["vitest.config.ts", "playwright.config.ts", "tests/**/*"],
+  "include": ["vitest.config.ts", "tests/**/*"],
   "exclude": ["node_modules", "dist", "build", ".wrangler", "packages"]
 }

@@ -24,7 +24,6 @@ services:
       GOPATH: /go
       GOMODCACHE: /go/pkg/mod
       GOCACHE: /home/node/.cache/go-build
-      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
       ADMIN_CONFIG_PATH: /workspace/app-template/.config/compose.admin.toml
       NODE_ENV: development
       TOOLCHAIN_GO_VERSION: 1.26.4
@@ -34,7 +33,6 @@ services:
       TOOLCHAIN_OAPI_CODEGEN_VERSION: 2.4.1
       TOOLCHAIN_TYPESPEC_VERSION: 1.8.0
       TOOLCHAIN_OPENSPEC_VERSION: 1.3.1
-      TOOLCHAIN_AGENT_BROWSER_VERSION: 0.27.0
     extra_hosts:
       - host.docker.internal:host-gateway
     init: true
@@ -50,9 +48,7 @@ services:
       - .:/workspace/app-template:cached
       - go-build-cache:/home/node/.cache/go-build
       - go-mod-cache:/go/pkg/mod
-      - playwright-cache:/ms-playwright
       - pnpm-store:/home/node/.local/share/pnpm/store
-      - agent-browser-cache:/home/node/.agent-browser
 
   postgres:
     image: postgres:18.4
@@ -306,11 +302,9 @@ volumes:
   go-mod-cache:
   minio-data:
   opensearch-data:
-  playwright-cache:
   pnpm-store:
   postgres18-data:
   valkey-data:
-  agent-browser-cache:
   signoz-clickhouse-data:
   signoz-clickhouse-user-scripts:
   signoz-query-data:

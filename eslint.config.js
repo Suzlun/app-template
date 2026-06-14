@@ -1421,13 +1421,7 @@ const frontendDomainPurityPlugin = {
 export default tseslint.config(
   // 除外対象
   {
-    ignores: [
-      '**/.svelte-kit/**',
-      '**/coverage/**',
-      '**/playwright-report/**',
-      '**/test-results/**',
-      'scripts/eslint-gc.js',
-    ],
+    ignores: ['**/.svelte-kit/**', '**/coverage/**', 'scripts/eslint-gc.js'],
   },
 
   // ベース設定
