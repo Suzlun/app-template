@@ -1,3 +1,299 @@
+@custom-variant dark (&:is(.dark *));
+
+/**
+ * ルートテーマ変数を定義する。
+ * 入力: ブラウザの標準 CSS カスケードと `.dark` クラス。
+ * 出力: UI 全体が参照する色、余白、角丸、書体、動きの CSS カスタムプロパティ。
+ * 副作用: このファイルを import する全ページの Tailwind テーマ値と素の CSS 変数が更新される。
+ */
+:root {
+  color-scheme: light;
+
+  /* ========================================
+     01. Raw Color Palette
+     ======================================== */
+
+  /* ブランドカラーを変更可能なトークンとして一元管理する。 */
+  --brand-400: #4ac6c8;
+  --brand-500: #5fd9db;
+  --brand-600: #3daeb0;
+
+  /* 純粋なグレースケールを定義し、文字色と面色の階調を安定させる。 */
+  --n-50: #fafafa;
+  --n-100: #f4f4f4;
+  --n-200: #e6e6e6;
+  --n-300: #d4d4d4;
+  --n-400: #a3a3a3;
+  --n-500: #737373;
+  --n-600: #575757;
+  --n-700: #424242;
+  --n-800: #333333;
+  --n-900: #292929;
+  --n-950: #1f1f1f;
+
+  /* 状態表示に使う基準色を定義し、成功・警告・情報・エラーの意味を統一する。 */
+  --status-success: #00b894;
+  --status-warning: #fdcb6e;
+  --status-info: #74b9ff;
+  --status-error: #ff7675;
+
+  /* ========================================
+     02. Semantic Tokens (Light Theme)
+     ======================================== */
+
+  /* ページ全体の背景と前景色を定義し、shadcn-svelte 互換変数にも接続する。 */
+  --background: var(--n-50);
+  --foreground: var(--n-900);
+
+  /* surface 系の面色を定義し、通常面・浮遊面・ホバー面を分離する。 */
+  --color-background: var(--n-50);
+  --surface: #ffffff;
+  --surface-floating: #ffffff;
+  --surface-hover: var(--n-100);
+  --color-surface: var(--surface);
+  --color-surface-floating: var(--surface-floating);
+  --color-surface-hover: var(--surface-hover);
+
+  /* テキストの階調を定義し、主文・補助文・弱い表示・ブランド上文字を使い分ける。 */
+  --color-text: var(--n-900);
+  --color-text-secondary: var(--n-600);
+  --color-text-muted: var(--n-400);
+  --color-text-on-brand: var(--n-950);
+
+  /* 境界線とフォーカスリングを定義し、入力・枠線・リングの意味変数へ反映する。 */
+  --color-border: var(--n-200);
+  --color-border-hover: var(--brand-500);
+  --color-border-subtle: var(--n-100);
+  --color-ring: var(--brand-500);
+  --border: var(--color-border);
+  --border-subtle: var(--color-border-subtle);
+  --input: var(--color-border);
+  --ring: var(--color-ring);
+
+  /* 主要アクションの色を定義し、通常・ホバー・押下・文字色を分離する。 */
+  --primary: var(--brand-500);
+  --primary-foreground: var(--n-950);
+  --color-primary: var(--brand-500);
+  --color-primary-hover: var(--brand-400);
+  --color-primary-active: var(--brand-600);
+  --color-primary-contrast: var(--n-950);
+
+  /* 副次アクションの色を定義し、背景に近い操作面を表現する。 */
+  --secondary: var(--n-100);
+  --secondary-foreground: var(--n-900);
+
+  /* 弱い情報表示の色を定義し、説明文や非強調 UI に使う。 */
+  --muted: var(--n-100);
+  --muted-foreground: var(--n-500);
+
+  /* アクセント色を定義し、強調表示が主要色と一貫するようにする。 */
+  --accent: var(--brand-500);
+  --accent-foreground: var(--n-950);
+
+  /* 破壊的操作の色を定義し、背景色と前景色を明確に分ける。 */
+  --destructive: var(--status-error);
+  --destructive-foreground: #ffffff;
+
+  /* Card / Popover / Sidebar の互換変数を定義し、共通コンポーネントが同じ意味色を参照できるようにする。 */
+  --card: var(--color-surface);
+  --card-foreground: var(--color-text);
+  --popover: var(--color-surface);
+  --popover-foreground: var(--color-text);
+
+  /* サイドバー専用の意味変数を定義し、ナビゲーション面の状態表現を統一する。 */
+  --sidebar: var(--color-surface);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--brand-500);
+  --sidebar-primary-foreground: var(--n-950);
+  --sidebar-accent: var(--surface-hover);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--brand-500);
+
+  /* 状態表示の意味変数を定義し、バッジや通知の色を統一する。 */
+  --success: var(--status-success);
+  --success-foreground: #ffffff;
+  --warning: var(--status-warning);
+  --warning-foreground: var(--n-900);
+  --info: var(--status-info);
+  --info-foreground: #ffffff;
+  --error: var(--status-error);
+  --error-foreground: #ffffff;
+
+  /* グラフ色を定義し、可視化で使う系列色を安定させる。 */
+  --chart-1: var(--brand-500);
+  --chart-2: var(--brand-400);
+  --chart-3: var(--brand-600);
+  --chart-4: var(--n-400);
+  --chart-5: var(--n-500);
+
+  /* ========================================
+     03. Radius (Border Radius)
+     ======================================== */
+
+  /* 角丸の基準値を定義し、コンポーネントの丸みを一貫させる。 */
+  --radius: 0.875rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-full: 9999px;
+
+  /* ========================================
+     04. Spacing (8px grid, 4px sub-unit)
+     ======================================== */
+
+  /* 余白の基準値を定義し、画面密度とリズムを揃える。 */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 5rem;
+
+  /* ========================================
+     05. Typography
+     ======================================== */
+
+  /* 書体ファミリーを定義し、見出し・本文・等幅表示の役割を分ける。 */
+  --font-family-display: 'M PLUS 1', system-ui, -apple-system, sans-serif;
+  --font-family-sans: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+  --font-family-mono:
+    'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* 文字サイズを定義し、コンポーネント間でサイズ階層を共有する。 */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2.5rem;
+
+  /* 文字ウェイトを定義し、可読性と強調の差を明確にする。 */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* 行高を定義し、本文・見出し・ゆったりした説明文の読みやすさを調整する。 */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+
+  /* 装飾的な短いラベル用の字間を定義する。 */
+  --letter-spacing-eyebrow: 0.22em;
+
+  /* ========================================
+     06. Effects
+     ======================================== */
+
+  /* 影表現を使わない方針を変数で明示し、コンポーネント側の影指定を無効化する。 */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-glow: none;
+
+  /* ========================================
+     07. Motion (Transition Presets)
+     ======================================== */
+
+  /* 操作時の遷移時間を定義し、UI の反応速度を統一する。 */
+  --transition-fast: 150ms ease-out;
+  --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/**
+ * ダークテーマ用の変数上書きを定義する。
+ * 入力: 祖先要素に付与された `.dark` クラス。
+ * 出力: 明度反転後も同じ意味変数で UI が描画される。
+ * 副作用: `.dark` 配下のすべての子要素が暗色テーマの CSS 変数を継承する。
+ */
+.dark {
+  color-scheme: dark;
+
+  /* 背景と前景を暗色階調へ切り替え、ページ全体の基準色を更新する。 */
+  --background: var(--n-950);
+  --foreground: var(--n-50);
+
+  /* surface 系の面色を暗色階調へ切り替え、浮遊面とホバー面の差を維持する。 */
+  --color-background: var(--n-950);
+  --surface: var(--n-900);
+  --surface-floating: var(--n-900);
+  --surface-hover: var(--n-800);
+  --color-surface: var(--surface);
+  --color-surface-floating: var(--surface-floating);
+  --color-surface-hover: var(--surface-hover);
+
+  /* 暗色背景で読めるよう、文字色の階調を反転したニュートラルへ切り替える。 */
+  --color-text: var(--n-50);
+  --color-text-secondary: var(--n-300);
+  --color-text-muted: var(--n-400);
+  --color-text-on-brand: var(--n-950);
+
+  /* 暗色面で視認できる境界線とフォーカスリングを定義する。 */
+  --color-border: var(--n-800);
+  --color-border-hover: var(--brand-500);
+  --color-border-subtle: var(--n-900);
+  --color-ring: var(--brand-500);
+  --border: var(--color-border);
+  --border-subtle: var(--color-border-subtle);
+  --input: var(--color-border);
+  --ring: var(--color-ring);
+
+  /* 主要アクションは明暗テーマで同じ識別色を使い、操作の意味を保つ。 */
+  --primary: var(--brand-500);
+  --primary-foreground: var(--n-950);
+  --color-primary: var(--brand-500);
+  --color-primary-hover: var(--brand-400);
+  --color-primary-active: var(--brand-600);
+  --color-primary-contrast: var(--n-950);
+
+  /* 副次アクションと弱い情報表示を暗色面に合わせて更新する。 */
+  --secondary: var(--n-800);
+  --secondary-foreground: var(--n-50);
+  --muted: var(--n-800);
+  --muted-foreground: var(--n-400);
+
+  /* アクセントと破壊的操作は意味を保ったまま前景色を維持する。 */
+  --accent: var(--brand-500);
+  --accent-foreground: var(--n-950);
+  --destructive: var(--status-error);
+  --destructive-foreground: #ffffff;
+
+  /* Card / Popover / Sidebar の互換変数を暗色テーマの surface へ接続する。 */
+  --card: var(--color-surface);
+  --card-foreground: var(--color-text);
+  --popover: var(--color-surface);
+  --popover-foreground: var(--color-text);
+  --sidebar: var(--color-surface);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--brand-500);
+  --sidebar-primary-foreground: var(--n-950);
+  --sidebar-accent: var(--surface-hover);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--brand-500);
+
+  /* 状態表示とグラフ色を再宣言し、暗色テーマ内でも同じ意味変数を参照できるようにする。 */
+  --success: var(--status-success);
+  --success-foreground: #ffffff;
+  --warning: var(--status-warning);
+  --warning-foreground: var(--n-900);
+  --info: var(--status-info);
+  --info-foreground: #ffffff;
+  --error: var(--status-error);
+  --error-foreground: #ffffff;
+  --chart-1: var(--brand-500);
+  --chart-2: var(--brand-400);
+  --chart-3: var(--brand-600);
+  --chart-4: var(--n-400);
+  --chart-5: var(--n-500);
+}
+
 @theme inline {
   /* shadcn-svelte / Tailwind v4 semantic color mapping */
   --color-background: var(--background);
